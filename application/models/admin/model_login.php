@@ -9,37 +9,34 @@ class Model_login extends CI_Model {
 	
 
 	function login($userid,$password) 
-{
+	{
 		$md5_pass = md5($password);	
+		$rand_code = "admin-123456789";
+        $this->db->select('*');
+		$this->db->from('gmt_user');
+		$this->db->where('user_email',$userid);
+		$this->db->where('user_pass',$md5_pass);
+		$this->db->where('user_rand_id',$rand_code);
+		$query = $this->db->get();
+		$resultRows = $query->num_rows();
+		$result = $query->result();
+		if ($resultRows > 0) {
 
-	        $this->db->select('*');
-			$this->db->from('admin');
-			$this->db->where('email',$userid);
-			$this->db->where('password',$md5_pass);
-			$query = $this->db->get();
-			$resultRows = $query->num_rows();
-			$result = $query->result();
-			if ($resultRows > 0) {
-
-			//while(list($user_id) =result_array($query)) 
-			//{ 
-				$user_session_data['user_id_admin'] = $userid;
-				$user_session_data['logged_in_admin']	= 'TRUE';
-			//}
-			
-			$this->session->set_userdata($user_session_data); 
-			$datas=array('logged_in'=>'yes');
-	        $this->db->where('email',$this->session->userdata('user_id_admin'));
-	        $this->db->update('admin',$datas);
-				return "true";
-            }else{
-            	return "false";
-            }
-        
+		//while(list($user_id) =result_array($query)) 
+		//{ 
+			$user_session_data['user_id_admin'] = $userid;
+			$user_session_data['logged_in_admin']	= 'TRUE';
+		//}
 		
-
-
-}
+			$this->session->set_userdata($user_session_data); 
+			$datas=array('user_status'=>'active');
+	        $this->db->where('user_email',$this->session->userdata('user_id_admin'));
+	        $this->db->update('gmt_user',$datas);
+			return "true";
+        }else{
+        	return "false";
+        }
+	}
 
 function check_mail($email)
 {

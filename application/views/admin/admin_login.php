@@ -40,7 +40,7 @@
                         echo "<div class='alert alert-success'>Login with Your Member Code & Password</div>";
                     }
                  ?>
-                                <form role="form" method="post" action="<?php echo site_url('welcome/login');?>">
+                                <form role="form" method="post" action="<?php echo site_url('admin/welcome/login');?>">
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="E-mail" name="email_userid" type="email" autofocus>
@@ -51,7 +51,7 @@
                                 <div class="checkbox" align="right">
                                     <label>
 <!--                                         <input name="remember" type="checkbox" value="Remember Me">Remember Me
- -->                            <a href="<?php echo site_url('welcome/change_password');?>"> <button type="button" value="Change Password">Change password</button></a>
+ -->                            <a href="<?php echo site_url('admin/welcome/change_password');?>"> <button type="button" value="Change Password">Change password</button></a>
 
                                     </label>
                                 </div>
