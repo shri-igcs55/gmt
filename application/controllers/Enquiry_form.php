@@ -49,11 +49,11 @@
 			$validation_array = 1;
 			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "user_id is empty.");
 									
-					$ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
+			$ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
 
-					$ip_array[] = array("to_city", $ip['to_city'], "not_null", "to_city", "To city is empty.");
+			$ip_array[] = array("to_city", $ip['to_city'], "not_null", "to_city", "To city is empty.");
 					
-					$ip_array[] = array("material_type", $ip['material_type'], "not_null", "material_type", "Material type is empty.");
+			$ip_array[] = array("material_type", $ip['material_type'], "not_null", "material_type", "Material type is empty.");
 
 					$validation_array = $this->validator->validate($ip_array);
 					

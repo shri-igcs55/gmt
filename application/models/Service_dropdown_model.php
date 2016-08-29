@@ -14,7 +14,7 @@
   	//$ipJson = json_encode($input);
   	$this->db->select('sf_type');
   	$this->db->from('gmt_service_for'); 
-    //$this->db->order by('vehicle_id');
+  
 
 
   

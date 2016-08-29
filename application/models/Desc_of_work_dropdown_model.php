@@ -14,7 +14,7 @@
   	//$ipJson = json_encode($input);
   	$this->db->select('dw_type');
   	$this->db->from('gmt_desc_work'); 
-    //$this->db->order by('vehicle_id');
+   
 
 
   

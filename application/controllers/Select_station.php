@@ -46,7 +46,19 @@
       $ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "user_id is empty.");
                   
           $ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
+          $ip_array[] = array("from_city2", $ip['from_city2'], "not_null", "from_city2", "From City2 is empty.");
+          $ip_array[] = array("from_city3", $ip['from_city3'], "not_null", "from_city3", "From City3 is empty.");
+          $ip_array[] = array("to_city", $ip['to_city'], "not_null", "to_city", "to City is empty.");
+          $ip_array[] = array("to_city2", $ip['to_city2'], "not_null", "to_city2", "to City2 is empty.");
+          $ip_array[] = array("to_city3", $ip['to_city3'], "not_null", "to_city3", "to City3 is empty.");
+          $ip_array[] = array("from_state", $ip['from_state'], "not_null", "from_state", "From State is empty.");
+          $ip_array[] = array("from_state2", $ip['from_state2'], "not_null", "from_state2", "From State2 is empty.");
+          $ip_array[] = array("from_state3", $ip['from_state3'], "not_null", "from_state3", "From State3 is empty.");
+          $ip_array[] = array("to_state", $ip['to_state'], "not_null", "to_state", "To State is empty.");
 
+          $ip_array[] = array("to_state2", $ip['to_state2'], "not_null", "to_state2", "To State2 is empty.");
+
+          $ip_array[] = array("to_state3", $ip['to_state3'], "not_null", "to_state3", "To State3 is empty.");
           
           
           

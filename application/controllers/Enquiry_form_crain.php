@@ -33,8 +33,8 @@
       $ip['weight']              = trim($this->input->post('weight'));      
       $ip['desc_of_goods']       = trim($this->input->post('desc_of_goods'));
       $ip['sechdule_date']       = trim($this->input->post('sechdule_date'));
-      $ip['created_ip']          = $_SERVER['REMOTE_ADDR'];
-      $ip['modified_ip']         = $_SERVER['REMOTE_ADDR'];
+      $ip['created_ip'] =  $ip['modified_ip'] = $_SERVER['REMOTE_ADDR'];
+      //$ip['modified_ip']         = $_SERVER['REMOTE_ADDR'];
 
       $ipJson = json_encode($ip);
                 
@@ -43,7 +43,13 @@
       $validation_array = 1;
       $ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "user_id is empty.");
                   
-          $ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
+          $ip_array[] = array("city", $ip['city'], "not_null", "city", "City is empty.");
+
+          $ip_array[] = array("state", $ip['state'], "not_null", "state", "State is empty.");
+
+          $ip_array[] = array("address", $ip['address'], "not_null", "address", "Address is empty.");
+
+          $ip_array[] = array("desc_of_goods", $ip['desc_of_goods'], "not_null", "desc_of_goods", "Desc_of_goods is empty.");
 
           
           

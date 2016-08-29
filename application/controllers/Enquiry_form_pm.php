@@ -49,9 +49,13 @@
 			$validation_array = 1;
 			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "user_id is empty.");
 									
-					$ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
+			$ip_array[] = array("from_city", $ip['from_city'], "not_null", "from_city", "From City is empty.");
 
-					$ip_array[] = array("to_city", $ip['to_city'], "not_null", "to_city", "To city is empty.");
+			$ip_array[] = array("to_city", $ip['to_city'], "not_null", "to_city", "To city is empty.");
+
+			$ip_array[] = array("from_state", $ip['from_state'], "not_null", "from_state", "From State is empty.");
+
+			$ip_array[] = array("to_state", $ip['to_state'], "not_null", "to_state", "To State is empty.");
 					
 					
 
