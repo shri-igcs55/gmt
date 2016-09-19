@@ -12,7 +12,7 @@
   function view_station($input)
   {
   	$ipJson = json_encode($input);
-  	$this->db->select('a.source_state_fk, b.city_name AS Source_city, a.destination_state_fk, c.city_name AS Destination_city, trans_stn_datetime');
+  	$this->db->select('a.source_state_fk, b.city_name AS Source_city, a.destination_state_fk, c.city_name AS Destination_city');
   	$this->db->from('gmt_transporter_station a'); 
     $this->db->join('gmt_statelist b', 'a.source_city_id_fk=b.city_id', 'left');
     $this->db->join('gmt_statelist c', 'a.destination_city_id_fk=c.city_id', 'left');
@@ -27,15 +27,5 @@
   }  
 
 
-
-
-
-
-
-
-
 	}
-	
-
-
 ?>

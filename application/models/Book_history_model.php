@@ -5,10 +5,6 @@
 	*/
 	class Book_history_model extends CI_model
 	{
-		
-	  
-
- 
   function book_history($input)
   {
   	$ipJson = json_encode($input);
@@ -22,27 +18,13 @@
     $this->db->join('gmt_desc_work g', 'a.dw_id_fk = g.dw_id', 'left');
     $this->db->join('gmt_transporter_cat h', 'a.trans_cat_id_fk = h.trans_cat_id', 'left');
     $this->db->join('gmt_user_type i', 'a.u_type_id_fk = i.u_type_id', 'left');
-
   	$this->db->where('user_id',$input['user_id']);
   	$query = $this->db->get();
   	//echo $this->db->last_query();
-
   	$details = $query->result();
   //print_r($details);
 			//exit();
   	return $details;
   }  
-
-
-
-
-
-
-
-
-
 	}
-	
-
-
 ?>

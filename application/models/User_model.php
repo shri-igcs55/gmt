@@ -38,13 +38,16 @@ class User_model extends CI_model
       
         $signup_data = array(
                           'user_rand_id'     => $input['user_rand_id'],
+                          'user_fname'       => $input['first_name'],
+                          'user_lname'       => $input['last_name'],
+                          'user_firm_name'   => $input['firm_name'],
                           'user_email'       => $input['user_email'],
                           'user_mob'         => $input['user_mob'],
                           'user_pass'        => md5($input['user_pass']),
                           'user_otp'         => $input['user_otp'],
                           'user_status'      => $input['user_status'],
-                          'u_type_id'        => $input['u_type_id'],
-                          'trans_cat_id'     => $input['trans_cat_id'] ,
+                          'u_type_id'        => $input['user_type'],
+                          //'trans_cat_id'     => $input['trans_cat_id'] ,
                           'pkg_id'           => $input['pkg_id'],
                           'created_datetime' => $input['created_datetime'],
                           'created_ip'       => $input['created_ip']
@@ -83,21 +86,20 @@ class User_model extends CI_model
 /*User Brief detail*/
 /*breif Up*/
 
-  /*function user_breif($input, $serviceName) {
+  function user_breif($input, $serviceName) {
       $ipJson = json_encode($input);
       //var_dump($ipJson);exit();
       $breif_data = array( 
-                        'user_id'            => $input['user_id'],
-                        'u_detail_name'      => $input['u_detail_name'],
-                        'u_detail_firm_name' => $input['u_detail_firm_name'],
-                        'state_fk'           => $input['state_fk'],
-                        'city_fk'            => $input['city_fk'],
-                        'u_detail_pin'       => $input['u_detail_pin'],
-                        'u_detail_pan'       => $input['u_detail_pan'],
-                        'u_detail_tin'       => $input['u_detail_tin'],
-                        'u_detail_stax'      => $input['u_detail_stax'] ,
-                        'comp_type_id_fk'    => $input['comp_type_id_fk'],
-                        'trans_cat_id_fk'    => $input['trans_cat_id_fk'],
+                        'user_id'            => 8,
+                        //'u_detail_name'      => $input['u_detail_name'],
+                        'state_fk'           => $input['state'],
+                        'city_fk'            => $input['city'],
+                        'u_detail_pin'       => $input['pin'],
+                        'u_detail_pan'       => $input['pan'],
+                        //'u_detail_tin'       => $input['u_detail_tin'],
+                        //'u_detail_stax'      => $input['u_detail_stax'] ,
+                        'comp_type_id_fk'    => $input['company_type'],
+                        //'trans_cat_id_fk'    => $input['trans_cat_id_fk'],
                         'created_datetime'   => $input['created_datetime'],
                         'created_ip'         => $input['created_ip'],   
                         'modified_datetime'  => $input['modified_datetime'],
@@ -109,14 +111,25 @@ class User_model extends CI_model
         if ($query == 1) {
 
             $last_id = $this->db->insert_id();
-            $this->db->select('u_detail_name,u_detail_firm_name,
-                               state_fk,city_fk,u_detail_pin,
+            $flag = "post";
+        $add_post['user_id'] = "user_image/". $last_id;
+        $add_post['flag'] = $flag;
+        if(!empty($_FILES['user_image']['name']))
+        {
+            $target_file = $this->uploader->upload_image($_FILES['user_image'], $flag,$add_post);
+        }
+        $this->db->where('u_detail_id',$last_id);
+        $this->db->update('gmt_user_details', 
+                array( 'u_detail_profile_org_url' => $target_file['profile_org_url'], 'u_detail_profile_thumb_url' => $target_file['profile_thumb_url']));
+
+            $this->db->select('state_fk,city_fk,u_detail_pin,
                                u_detail_pan,u_detail_tin,
                                u_detail_stax,comp_type_id_fk,
                                trans_cat_id_fk,created_datetime,
                                created_ip');
             $this->db->from('gmt_user_details');
             $this->db->where('u_detail_id', $last_id );
+
 
             $detail_last_user = $this->db->get();
             $resultq = $detail_last_user->result();
@@ -133,7 +146,7 @@ class User_model extends CI_model
           $status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
         }
       return $status;
-    }*/
+    }
 /*End of user Brief*/
 
     function check_email($input) 

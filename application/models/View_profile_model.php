@@ -1,14 +1,9 @@
 <?php if(! defined('BASEPATH')) exit('No direct script access allowed');
-
 	/**
 	*  signup model
 	*/
 	class View_profile_model extends CI_model
 	{
-		
-	  
-
- 
   function view_profile($input)
   {
   	$ipJson = json_encode($input);
@@ -22,23 +17,10 @@
   	$this->db->where('a.user_id',$input['user_id']);
   	$query = $this->db->get();
   	//echo $this->db->last_query();
-
   	$details = $query->result();
   //print_r($details);
 			//exit();
   	return $details;
   }  
-
-
-
-
-
-
-
-
-
 	}
-	
-
-
 ?>

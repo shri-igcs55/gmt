@@ -4,11 +4,9 @@ date_default_timezone_set('Asia/Kolkata');
 	*  signup model
 	*/
 	class Enquiry_form_crain_model extends CI_model
-	{
-		
+	{		
 		function enquiry_form_crain($input, $serviceName) {
-			$ipJson = json_encode($input);
-			
+			$ipJson = json_encode($input);		
 			 	$enquiry_data_crain = array(
 					    'user_id'                    => $input['user_id'],
 					    'u_type_id_fk'               => $input['user_type_id'],
@@ -26,9 +24,7 @@ date_default_timezone_set('Asia/Kolkata');
 						
 					);
 				$query = $this->db->insert('gmt_place_order', $enquiry_data_crain);
-
 				if ($query == 1) {
-					
 					$last_id = $this->db->insert_id();
 					$this->db->select('user_id,
 						from_city,
@@ -37,16 +33,12 @@ date_default_timezone_set('Asia/Kolkata');
 						plc_odr_schedule_date');
 				    $this->db->from('gmt_place_order');
 					$this->db->where('plc_odr_id', $last_id );
-
 				    $detail_last_user = $this->db->get();
 				    $resultq = $detail_last_user->result();
-				    
 					//$data['detail'] = $resultq;
 					$data = $resultq;
 					//$data['id'] = $profile_thumb_url;
-
 					$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
-
 				}
 				else {
 					$data['message'] = 'Something went wrong while signup. Try Again.';
@@ -54,18 +46,5 @@ date_default_timezone_set('Asia/Kolkata');
 				}
 			return $status;
 		}
-
-	
-      
-
-
-
-
-
-
-
 	}
-	
-
-
 ?>

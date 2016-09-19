@@ -4,11 +4,9 @@ date_default_timezone_set('Asia/Kolkata');
 	*  signup model
 	*/
 	class Enquiry_form_model extends CI_model
-	{
-		
+	{		
 		function enquiry_form($input, $serviceName) {
-			$ipJson = json_encode($input);
-			
+			$ipJson = json_encode($input);		
 			 	$enquiry_data = array(
 					    'user_id'                    => $input['user_id'],
 					    'trans_cat_id_fk'            => $input['trans_cat_id_fk'],
@@ -30,13 +28,11 @@ date_default_timezone_set('Asia/Kolkata');
 						'created_datetime'           => Date('Y-m-d h:i:s'),
 						'created_ip'                 => $input['created_ip'],
                         'modified_datetime'          => Date('Y-m-d h:i:s'),
-                        'modified_ip'                 => $input['modified_ip']
+                        'modified_ip'                => $input['modified_ip']
 						
 					);
 				$query = $this->db->insert('gmt_place_order', $enquiry_data);
-
 				if ($query == 1) {
-					
 					$last_id = $this->db->insert_id();
 					$this->db->select('user_id,
 						from_city,
@@ -46,16 +42,12 @@ date_default_timezone_set('Asia/Kolkata');
 						plc_odr_schedule_date');
 				    $this->db->from('gmt_place_order');
 					$this->db->where('plc_odr_id', $last_id );
-
 				    $detail_last_user = $this->db->get();
 				    $resultq = $detail_last_user->result();
-				    
 					//$data['detail'] = $resultq;
 					$data = $resultq;
 					//$data['id'] = $profile_thumb_url;
-
 					$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
-
 				}
 				else {
 					$data['message'] = 'Something went wrong while signup. Try Again.';
@@ -63,18 +55,6 @@ date_default_timezone_set('Asia/Kolkata');
 				}
 			return $status;
 		}
-
-	
-      
-
-
-
-
-
-
-
 	}
 	
-
-
 ?>
