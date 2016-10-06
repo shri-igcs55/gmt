@@ -201,21 +201,21 @@
             	$data['message'] = "All * marked fields must not be empty.";
 			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
             } 
-			else if ($model_mob = $this->User_model->check_mob($ip)) 
+			else if ($model_mob = $this->User_model->check_mob_reg($ip)) 
 			{
                 $data['message'] = 'Mobile number alerady registered.';
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
-			else if ($model_email = $this->User_model->check_email($ip)) 
+			else if ($model_email = $this->User_model->check_email_reg($ip)) 
 			{
                 $data['message'] = 'Email address alerady registered.';
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			}
 			else if ($validation_array !=1) 
 			{
-				print_r($model_mob);
-				echo "<br/>";
-				print_r($model_email);
+				// print_r($model_mob);
+				// echo "<br/>";
+				// print_r($model_email);
                 $data['message'] = $validation_array['msg'];
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 

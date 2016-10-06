@@ -325,6 +325,43 @@ class User_model extends CI_model
       return false;
     }
 
+
+    function check_email_reg($input) 
+    {
+      $this->db->select('*');
+      $this->db->from('gmt_user');
+      $this->db->where('user_email', $input['user_email']);
+      // $this->db->where('u_type_id', $utype);
+      $query = $this->db->get();
+      $details = $query->result();    
+      $result = $query->num_rows();
+      if ($result > 0 ){
+        return $details;
+      }
+      return false;
+    }
+ 
+    function check_mob_reg($input) 
+    {
+      
+      $this->db->select('*');
+      $this->db->from('gmt_user');
+      $this->db->where('user_mob', $input['user_mob']);
+      // $this->db->where('u_type_id', $utype);
+      $query = $this->db->get();
+      $details = $query->result(); 
+      $result = $query->num_rows();
+      if ($result > 0 ){
+        return $details;
+      }
+      return false;
+    }
+
+
+
+
+
+
 /*Verification Section Starts*/
 
 
