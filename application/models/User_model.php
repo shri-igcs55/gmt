@@ -154,8 +154,8 @@ class User_model extends CI_model
             'state_fk'           => $input['state'],
             'district_fk'        => $input['district'],
             'city'               => $input['city'],
-            'address1'           => $input['address1'];
-            'address2'           => $input['address2'];
+            'address1'           => $input['address1'],
+            'address2'           => $input['address2'],
             'u_detail_pin'       => $input['pin'],
             'u_detail_pan'       => $input['pan'],
             'comp_type_id_fk'    => $input['company_type'],
