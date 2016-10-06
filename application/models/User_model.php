@@ -154,6 +154,8 @@ class User_model extends CI_model
             'state_fk'           => $input['state'],
             'district_fk'        => $input['district'],
             'city'               => $input['city'],
+            'address1'           => $input['address1'];
+            'address2'           => $input['address2'];
             'u_detail_pin'       => $input['pin'],
             'u_detail_pan'       => $input['pan'],
             'comp_type_id_fk'    => $input['company_type'],
@@ -174,7 +176,7 @@ class User_model extends CI_model
               (select `sta_name` from `gmt_status` where `sta_id` = 1) AS status, 
               u.user_otp AS otp, u.u_type_id AS user_type_id, 
               (select `u_type_name` from `gmt_user_type` where `u_type_id` = '.$input['user_type'].') AS user_type_name, 
-              ud.state_fk AS state, ud.district_fk AS district, ud.city AS city_id, 
+              ud.state_fk AS state, ud.district_fk AS district, ud.city AS city_id, ud.address1 AS addr1, ud.address2 AS addr2,
               (select `city` from `gmt_indian_city_list` where `id` = '.$input['city'].') AS city, 
               ud.u_detail_pin AS pincode, ud.u_detail_pan AS pan_num');
             $this->db->from('gmt_user u');
