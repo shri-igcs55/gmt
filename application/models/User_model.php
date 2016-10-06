@@ -6,20 +6,109 @@
 class User_model extends CI_model
 {
   
+  public function get_user_type(){
+    $this->db->select('u_type_id AS uid, u_type_name AS utype');
+    $this->db->from('gmt_user_type'); 
+    $this->db->where('u_parent_id', '7');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+
+  public function get_login_user_type(){
+    $this->db->select('u_type_id AS uid, u_type_name AS utype');
+    $this->db->from('gmt_user_type'); 
+    $this->db->where('u_type_id NOT IN (1,2,7)');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+
+  public function get_comp_type(){
+    $this->db->select('comp_type_id AS cid, comp_type AS ctype, comp_status AS cstatus');
+    $this->db->from('gmt_company_type'); 
+    // $this->db->where('comp_status', '1');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+  
+  public function get_vehicle_type(){
+    $this->db->select('vehicle_id AS vid, vehicle_typ AS vtype, vehicle_status AS vstatus');
+    $this->db->from('gmt_vehicle'); 
+    // $this->db->where('vehicle_status', '1');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+  
+  public function get_work_type(){
+    $this->db->select('dw_id AS wdid, dw_type AS wdtype, dw_status AS wdstatus');
+    $this->db->from('gmt_desc_work'); 
+    // $this->db->where('dw_status', '1');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+
+  public function get_material_type(){
+    $this->db->select('mat_id AS mid, mat_type AS mtype, mat_status AS mstatus');
+    $this->db->from('gmt_material'); 
+    // $this->db->where('mat_status', '1');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+
+  public function get_service_type(){
+    $this->db->select('sf_id AS sid, sf_type AS stype, sf_status AS sstatus');
+    $this->db->from('gmt_service_for'); 
+    // $this->db->where('sf_status', '1');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }
+
+  /*public function get_city_by_id(){
+    $this->db->select('id, city');
+    $this->db->from('gmt_indian_city_list');
+    $query = $this->db->get();
+    $details = $query->result_array();
+    return $details;
+  }*/
+
   public function check_signin($input, $serviceName) {
       $ipJson = json_encode($input);
       
-      $this->db->select('user_id,user_rand_id,user_email,user_mob,user_status,u_type_id,trans_cat_id,pkg_id');
+      $this->db->select('user_id, user_rand_id, user_email AS email, user_mob AS mobile, user_status, 
+        u_type_id, pkg_id AS package, user_fname AS first_name, user_lname AS last_name');
       $this->db->from('gmt_user');
-      $this->db->where('user_email', $input['email']);
+      $this->db->where('user_email', $input['email_mob']);
+      $this->db->or_where('user_mob', $input['email_mob']);
       $this->db->where('user_pass', md5($input['password']));
+      $this->db->where('u_type_id', $input['user_type_id']);
       $query = $this->db->get();
       $resultRows = $query->num_rows();
       //print_r($resultRows);exit();
-      $result = $query->result();
-      
+      $result_row = $query->row();
+      $result = $query->result_array();
+
+      // print_r($result[0]);exit();
       if ($resultRows > 0) {
         //print_r($result[0]->pass);exit();
+        $this->session->set_userdata('logged_in_user', 
+                array('user_type'     =>$result_row->u_type_id,
+                      'user_id'       =>$result_row->user_id,
+                      'id'            =>$result_row->user_rand_id,
+                      'first_name'    =>$result_row->first_name,
+                      'last_name'     =>$result_row->last_name,
+                      'email'         =>$result_row->email,
+                      'mobile'        =>$result_row->mobile,
+                      'package'       =>$result_row->package
+                      )
+                );
+        // $this->session->set_userdata('logged_in_user', $result[0]);
+        
         $data['details'] = $result;
         $data['message'] = 'Login Successfully';
         $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
@@ -33,50 +122,80 @@ class User_model extends CI_model
 
 /*Sign Up*/
 
-  function signup($input, $serviceName) {
+  public function signup($input, $serviceName) {
       $ipJson = json_encode($input);
-      
+        
         $signup_data = array(
-                          'user_rand_id'     => $input['user_rand_id'],
-                          'user_fname'       => $input['first_name'],
-                          'user_lname'       => $input['last_name'],
-                          'user_firm_name'   => $input['firm_name'],
-                          'user_email'       => $input['user_email'],
-                          'user_mob'         => $input['user_mob'],
-                          'user_pass'        => md5($input['user_pass']),
-                          'user_otp'         => $input['user_otp'],
-                          'user_status'      => $input['user_status'],
-                          'u_type_id'        => $input['user_type'],
-                          //'trans_cat_id'     => $input['trans_cat_id'] ,
-                          'pkg_id'           => $input['pkg_id'],
-                          'created_datetime' => $input['created_datetime'],
-                          'created_ip'       => $input['created_ip']
-                          
-                            );
+          'user_rand_id'     => $input['user_rand_id'],
+          'user_fname'       => $input['first_name'],
+          'user_lname'       => $input['last_name'],
+          'user_firm_name'   => $input['firm_name'],
+          'user_email'       => $input['user_email'],
+          'user_mob'         => $input['user_mob'],
+          'user_pass'        => md5($input['user_pass']),
+          'user_otp'         => $input['user_otp'],
+          'user_status'      => $input['user_status'],
+          'u_type_id'        => $input['user_type'],
+          // 'pkg_id'           => $input['pkg_id'],
+          'created_datetime' => $input['created_datetime'],
+          'created_ip'       => $input['created_ip'],   
+          'modified_datetime'=> $input['modified_datetime'],
+          'modified_ip'      => $input['modified_ip']
+        );
+        //print_r($signup_data);exit();
+      
+        $query_signup_data = $this->db->insert('gmt_user', $signup_data);
+        $signup_data_last_id = $this->db->insert_id();
 
-        $query = $this->db->insert('gmt_user', $signup_data);
-
-        if ($query == 1) {
+        if (!empty($signup_data_last_id)) {
           
-            $last_id = $this->db->insert_id();
-            $this->db->select('user_email,
-            user_mob,
-            user_status');
-            $this->db->from('gmt_user');
-            $this->db->where('user_id', $last_id );
+          $breif_data = array( 
+            'user_id'            => $signup_data_last_id,
+            'state_fk'           => $input['state'],
+            'district_fk'        => $input['district'],
+            'city'               => $input['city'],
+            'u_detail_pin'       => $input['pin'],
+            'u_detail_pan'       => $input['pan'],
+            'comp_type_id_fk'    => $input['company_type'],
+            'created_datetime'   => $input['created_datetime'],
+            'created_ip'         => $input['created_ip'],   
+            'modified_datetime'  => $input['modified_datetime'],
+            'modified_ip'        => $input['modified_ip']
+          );
+          // print_r($breif_data);exit();
+          $query_breif_data = $this->db->insert('gmt_user_details', $breif_data);
+          $breif_data_last_id = $this->db->insert_id();
+
+          if(!empty($breif_data_last_id)){
+            
+            $this->db->select('u.user_id, u.user_rand_id, u.user_fname AS first_name, 
+              u.user_lname AS last_name, u.user_email AS email, u.user_mob AS mobile, 
+              u.user_firm_name AS firm_name, u.user_status AS status_id, 
+              (select `sta_name` from `gmt_status` where `sta_id` = 1) AS status, 
+              u.user_otp AS otp, u.u_type_id AS user_type_id, 
+              (select `u_type_name` from `gmt_user_type` where `u_type_id` = '.$input['user_type'].') AS user_type_name, 
+              ud.state_fk AS state, ud.district_fk AS district, ud.city AS city_id, 
+              (select `city` from `gmt_indian_city_list` where `id` = '.$input['city'].') AS city, 
+              ud.u_detail_pin AS pincode, ud.u_detail_pan AS pan_num');
+            $this->db->from('gmt_user u');
+            $this->db->join('gmt_user_details ud', 'u.user_id = ud.user_id', 'LEFT');
+            $this->db->where('u.user_id', $signup_data_last_id );
+            // $this->db->where('ud.user_id', $last_id );
 
             $detail_last_user = $this->db->get();
-            $resultq = $detail_last_user->result();
-            
-          //$data['detail'] = $resultq;
-          $data = $resultq;
-          //$data['id'] = $profile_thumb_url;
-
-          $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
-
+            // echo $this->db->last_query($detail_last_user);exit();
+            $result_data = $detail_last_user->result_array();
+            //print_r($resultq);exit();
+            $data['details'] = $result_data;
+            $data['message'] = "Registered Successfully.";
+            $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+          }else{
+            $data['message'] = 'Something went wrong while storing other details (not basic details). Try Again.';
+            $status=$this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+          }
         }
         else {
-          $data['message'] = 'Something went wrong while signup. Try Again.';
+          $data['message'] = 'Something went wrong while storing baisc details (not other details). Try Again.';
           $status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
         }
       return $status;
@@ -86,7 +205,7 @@ class User_model extends CI_model
 /*User Brief detail*/
 /*breif Up*/
 
-  function user_breif($input, $serviceName) {
+  /*function user_breif($input, $serviceName) {
       $ipJson = json_encode($input);
       //var_dump($ipJson);exit();
       $breif_data = array( 
@@ -146,15 +265,28 @@ class User_model extends CI_model
           $status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
         }
       return $status;
-    }
+    }*/
 /*End of user Brief*/
 
     function check_email($input) 
     {
-      //echo $email;die();
+      // print_r($input['email_mob']);exit();
+      if(is_array($input)){
+        if($input['email_mob'] && $input['user_type_id']){
+          $email = $input['email_mob'];
+          $utype = $input['user_type_id'];
+        }else{
+          $email = $input['user_email'];
+          $utype = $input['user_type'];
+        }
+      }else{
+        $email = $input;
+        $utype = $input;
+      }
       $this->db->select('*');
       $this->db->from('gmt_user');
-      $this->db->where('user_email', $input['user_email']);
+      $this->db->where('user_email', $email);
+      $this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result();    
       $result = $query->num_rows();
@@ -165,12 +297,24 @@ class User_model extends CI_model
       return false;
     }
  
-        function check_mob($input) 
+    function check_mob($input) 
     {
-      //echo $email;die();
+      if(is_array($input)){
+        if($input['email_mob'] && $input['user_type_id']){
+          $mob = $input['email_mob'];
+          $utype = $input['user_type_id'];
+        }else{
+          $mob = $input['user_mob'];
+          $utype = $input['user_type'];
+        }
+      }else{
+        $mob = $input;
+        $utype = $input;
+      }
       $this->db->select('*');
       $this->db->from('gmt_user');
-      $this->db->where('user_mob', $input['user_mob']);
+      $this->db->where('user_mob', $mob);
+      $this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result(); 
       //echo $this->db->last_query();   
@@ -184,7 +328,7 @@ class User_model extends CI_model
 /*Verification Section Starts*/
 
 
-function check_otp($input) 
+    function check_otp($input) 
     {
       $ipJson = json_encode($input);
       
@@ -210,7 +354,7 @@ function check_otp($input)
           $ins=$this->db->update('gmt_user', $up_status);
           return $ins;
     }
- function check_mob_for_otp($input) 
+    function check_mob_for_otp($input) 
     {
       //echo $email;die();
       $this->db->select('*');
@@ -240,31 +384,26 @@ function check_otp($input)
 /*Change pass Section Starts*/
 
   function c_pass($input)
+  {
+    $ipJson = json_encode($input);
+    $this->db->select('*');
+    $this->db->from('gmt_user');
+    $this->db->where('user_id', $input['user_id']);
+    $this->db->where('user_pass', md5($input['old_pass']));
+    $query = $this->db->get();
+    $details = $query->result();    
+    if ($details)
     {
-            $ipJson = json_encode($input);
-            $this->db->select('*');
-            $this->db->from('gmt_user');
-            $this->db->where('user_rand_id', $input['cust_id']);
-            $ins=$this->db->where('user_pass', md5($input['old_pass']));
-            $query = $this->db->get();
-            $details = $query->result();    
-            $result =  $query->num_rows();
-                         
-            if ($result > 0 )
-          {
-            $ipJson = json_encode($input);
-            $up_status = array(
-                              'user_pass' => md5($input['new_pass']) 
-                              );
-            $this->db->where('user_rand_id',$input['cust_id']);
-            $ins=$this->db->update('gmt_user', $up_status);
-               return True;
-          }
-          else
-          {  
-            return False;
-          }
-      
+      $ipJson = json_encode($input);
+      $up_status = array('user_pass' => md5($input['new_pass']));
+      $this->db->where('user_id',$input['user_id']);
+      $ins=$this->db->update('gmt_user', $up_status);
+      return True;
+    }
+    else
+    {  
+      return False;
+    }
   }
 
     

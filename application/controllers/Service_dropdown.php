@@ -13,8 +13,19 @@
 		public function service_get()
 		{			
 			$serviceName = 'Service_for';
-			$retVals1 =$this->Service_dropdown_model->Service_dropdown();
-			$data['Service'] = $retVals1;	
+			$data =$this->Service_dropdown_model->Service_dropdown();
+			// $data['Service'] = $retVals1;	
+            $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, '');
+			header("content-type: application/json");
+			echo $retVals1;
+			exit;
+	    }
+
+	    public function available_service_get()
+		{			
+			$serviceName = 'available_Service';
+			$data =$this->Service_dropdown_model->avail_service_dropdown();
+			// $data['Service'] = $retVals1;	
             $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, '');
 			header("content-type: application/json");
 			echo $retVals1;

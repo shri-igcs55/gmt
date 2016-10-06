@@ -18,16 +18,16 @@
 			$ipJson = json_encode($ip);
 			//validation
 			$validation_array = 1;									
-			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "Field is empty.");
+			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "User id field is empty.");
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) 
 			{
-			    $data['message'] = $validation_array;
+			    $data['message'] = $validation_array['user_id'];
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
 			else
 			{
-                $data['View_profile'] =$this->View_profile_model->view_profile($ip, $serviceName);
+                $data = $this->View_profile_model->view_profile($ip, $serviceName);
                 $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
             header("content-type: application/json");

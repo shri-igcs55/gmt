@@ -9,7 +9,9 @@ date_default_timezone_set('Asia/Kolkata');
 			$ipJson = json_encode($input);		
 			 	$enquiry_data = array(
 					    'user_id'                    => $input['user_id'],
-					    'trans_cat_id_fk'            => $input['trans_cat_id_fk'],
+				        'plc_odr_by_fname'           => $input['odr_by_fname'],
+				        'plc_odr_by_lname'           => $input['odr_by_lname'],
+	       				'plc_odr_by_mob'             => $input['odr_by_mob'],
 						'from_state'                 => $input['from_state'],
 						'from_city'                  => $input['from_city'],
 						'plc_odr_from_area_location' => $input['from_location'],
@@ -24,22 +26,23 @@ date_default_timezone_set('Asia/Kolkata');
 						'plc_odr_item_qty'           => $input['no_of_vehicle'],
 						'plc_odr_pick_points'        => $input['pickup_points'],
 						'plc_odr_drop_points'        => $input['destination_points'],
-						'plc_odr_schedule_date'      => $input['sechdule_date'],
+						'plc_odr_schedule_date'      =>date("d-m-Y",strtotime($input['sechdule_date'])),
+						
 						'created_datetime'           => Date('Y-m-d h:i:s'),
 						'created_ip'                 => $input['created_ip'],
                         'modified_datetime'          => Date('Y-m-d h:i:s'),
                         'modified_ip'                => $input['modified_ip']
-						
 					);
 				$query = $this->db->insert('gmt_place_order', $enquiry_data);
 				if ($query == 1) {
 					$last_id = $this->db->insert_id();
-					$this->db->select('user_id,
-						from_city,
-						to_city,
-						mat_id_fk,
-						vehicle_id_fk,
-						plc_odr_schedule_date');
+					$this->db->select('plc_odr_id AS order_id, user_id AS uid,
+						from_city AS f_city,
+						to_city AS t_city,
+						mat_id_fk AS material_id,
+						vehicle_id_fk AS vehicle_id,
+						plc_odr_schedule_date AS schedule_date
+					');
 				    $this->db->from('gmt_place_order');
 					$this->db->where('plc_odr_id', $last_id );
 				    $detail_last_user = $this->db->get();
