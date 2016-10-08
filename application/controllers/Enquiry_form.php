@@ -13,7 +13,11 @@
 		public function enquiry_form_post()
 		{	
 			$serviceName = 'enquiry_form';
+			
 			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 	        $ip['odr_by_fname']        = trim($this->input->post('odr_by_fname'));
 	        $ip['odr_by_lname']        = trim($this->input->post('odr_by_lname'));
 	        $ip['odr_by_mob']          = trim($this->input->post('odr_by_mob'));

@@ -36,6 +36,17 @@ date_default_timezone_set('Asia/Kolkata');
 				$query = $this->db->insert('gmt_place_order', $enquiry_data);
 				if ($query == 1) {
 					$last_id = $this->db->insert_id();
+					
+					$this->db->insert('gmt_order_location',
+							array('plc_odr_id'=>$last_id,
+								'orl_from_city_id'=>$enquiry_data['from_city'],
+								'orl_to_city_id'=>$enquiry_data['to_city'],
+								'orl_pickup_location'=>$input['from_location'],
+								'orl_drop_location'=>$input['to_location']));
+							
+					
+					
+					
 					$this->db->select('plc_odr_id AS order_id, user_id AS uid,
 						from_city AS f_city,
 						to_city AS t_city,
