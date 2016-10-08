@@ -108,6 +108,20 @@
 		    exit;
      	}
 
+     	// service type list
+     	public function designation_type_list_get()
+		{	
+			$serviceName = 'Designation_type_list';
+			$ip = '';
+			$ipJson = json_encode($ip);			
+			$data =$this->User_model->get_designation_list();
+		    $data = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+			header("content-type: application/json");
+		    echo $data;
+		    exit;
+     	}
+
+
      	// user signup
 		public function user_signup_post()
 		{

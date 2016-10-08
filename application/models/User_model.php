@@ -69,13 +69,14 @@ class User_model extends CI_model
     return $details;
   }
 
-  /*public function get_city_by_id(){
-    $this->db->select('id, city');
-    $this->db->from('gmt_indian_city_list');
+  public function get_designation_list(){
+    $this->db->select('desg_id AS id, desg_type AS designation');
+    $this->db->from('gmt_designation');
+    $this->db->where('desg_status', 1);
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
-  }*/
+  }
 
   public function check_signin($input, $serviceName) {
       $ipJson = json_encode($input);
