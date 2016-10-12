@@ -13,11 +13,11 @@ date_default_timezone_set('Asia/Kolkata');
 				        'plc_odr_by_lname'           => $input['odr_by_lname'],
 	       				'plc_odr_by_mob'             => $input['odr_by_mob'],
 						'from_state'                 => $input['from_state'],
-						'from_city'                  => $input['from_city'],
-						'plc_odr_from_area_location' => $input['from_location'],
+						//'from_city'                  => $input['from_city'],
+						//'plc_odr_from_area_location' => $input['from_location'],
 						'to_state'                   => $input['to_state'],
-						'to_city'                    => $input['to_city'],
-						'plc_odr_to_area_location'   => $input['to_location'],
+						//'to_city'                    => $input['to_city'],
+						//'plc_odr_to_area_location'   => $input['to_location'],
 						'mat_id_fk'                  => $input['material_type'],
 						'plc_odr_item_qty'           => $input['no_of_quantity'],
 						'plc_odr_weight'             => $input['weight'],
@@ -36,17 +36,16 @@ date_default_timezone_set('Asia/Kolkata');
 				$query = $this->db->insert('gmt_place_order', $enquiry_data);
 				if ($query == 1) {
 					$last_id = $this->db->insert_id();
-					
-					$this->db->insert('gmt_order_location',
+					$index = 0;										
+					foreach($input['from_city'] as $form_city):						
+						$this->db->insert('gmt_order_location',
 							array('plc_odr_id'=>$last_id,
-								'orl_from_city_id'=>$enquiry_data['from_city'],
-								'orl_to_city_id'=>$enquiry_data['to_city'],
-								'orl_pickup_location'=>$input['from_location'],
-								'orl_drop_location'=>$input['to_location']));
-							
-					
-					
-					
+								'orl_from_city_id'=>$form_city,
+								'orl_to_city_id'=>$input['to_city'][$index],
+								'orl_pickup_location'=>$input['from_location'][$index],
+								'orl_drop_location'=>$input['to_location'][$index++]));						
+					endforeach;
+															
 					$this->db->select('plc_odr_id AS order_id, user_id AS uid,
 						from_city AS f_city,
 						to_city AS t_city,

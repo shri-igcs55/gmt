@@ -12,6 +12,11 @@
 		}
 		public function enquiry_form_post()
 		{	
+			/*
+			echo '<pre>';
+			print_r($_POST);
+			exit;
+			*/
 			$serviceName = 'enquiry_form';
 			
 			$ip['user_id']             = trim($this->input->post('user_id'));
@@ -22,11 +27,11 @@
 	        $ip['odr_by_lname']        = trim($this->input->post('odr_by_lname'));
 	        $ip['odr_by_mob']          = trim($this->input->post('odr_by_mob'));
 			$ip['from_state']          = trim($this->input->post('from_state'));
-			$ip['from_city']           = trim($this->input->post('from_city'));
-			$ip['from_location']       = trim($this->input->post('from_location'));
+			$ip['from_city']           = $this->input->post('from_city');
+			$ip['from_location']       = $this->input->post('from_location');
 			$ip['to_state']            = trim($this->input->post('to_state'));
-			$ip['to_city']             = trim($this->input->post('to_city'));
-			$ip['to_location']         = trim($this->input->post('to_location'));
+			$ip['to_city']             = $this->input->post('to_city');
+			$ip['to_location']         = $this->input->post('to_location');
 			$ip['material_type']       = trim($this->input->post('material_type'));
 			$ip['no_of_quantity']      = trim($this->input->post('no_of_quantity'));
 			$ip['weight']              = trim($this->input->post('weight'));
