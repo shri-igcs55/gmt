@@ -16,24 +16,31 @@
 		{
 			$serviceName = 'Book_history';
 			//getting posted values
-			$ip['user_id']             = trim($this->input->post('user_id'));
+			$ip['user_id']          = trim($this->input->post('user_id'));
+			$ip['order_status']		= trim($this->input->post('order_status'));
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ipJson = json_encode($ip);
 			//validation
 			$validation_array = 1;
-			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "Field is empty.");
+			$ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "usser id is empty.");
+			$ip_array[] = array("msg", $ip['order_status'], "not_null", "order_status", "order status is empty.");
 			$validation_array = $this->validator->validate($ip_array);
         	if ($validation_array !=1) 
 			{
-				 $data['message'] = $validation_array;
-				 $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+				$data['message'] = $validation_array['msg'];
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
 			else
 			{
-                 $data['Search_order'] =$this->Book_history_model->book_history($ip, $serviceName);
-                 $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+                $data =$this->Book_history_model->book_history($ip, $serviceName);
+                if($data){
+                	$data = $data;
+                }else{
+                	$data = "No Data.";
+                }
+                $retVals1 =$this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
 		    header("content-type: application/json");
 		    echo $retVals1;
