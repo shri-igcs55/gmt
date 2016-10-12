@@ -16,7 +16,10 @@
 		{
 			$serviceName = 'current_order';
 			//getting posted values
-			$ip['user_id'] = trim($this->input->post('user_id'));
+			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ipJson = json_encode($ip);
 			$validation_array = 1;
 			$ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "Field is empty.");

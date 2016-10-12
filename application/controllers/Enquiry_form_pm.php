@@ -14,7 +14,10 @@
 		{			
 			$serviceName = 'enquiry_form_pm';
 			//getting posted values
-			$ip['user_id']               = trim($this->input->post('user_id'));
+			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['user_type_id']          = trim($this->input->post('user_type_id'));
 	        $ip['odr_by_fname']          = trim($this->input->post('odr_by_fname'));
 	        $ip['odr_by_lname']          = trim($this->input->post('odr_by_lname'));

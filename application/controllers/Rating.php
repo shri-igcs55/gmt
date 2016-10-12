@@ -15,6 +15,9 @@
 			$serviceName = 'rating';
 			//getting posted values
 			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['to_user_id']          = trim($this->input->post('to_user_id'));
 			$ip['subject']             = trim($this->input->post('subject'));
 			$ip['feadback']            = trim($this->input->post('feadback'));

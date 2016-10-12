@@ -1,7 +1,4 @@
-<?php
-// User API
-
- if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 	require('application/libraries/REST_Controller.php');  
 	//error_reporting(0);
 	class User extends REST_Controller
@@ -212,7 +209,7 @@
 			}
 			else if($ip['user_pass'] != $ip['c_pass'])
             {
-            	$data['message'] = "All * marked fields must not be empty.";
+            	$data['message'] = "Password and Confirm Password not matched.";
 			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
             } 
 			else if ($model_mob = $this->User_model->check_mob_reg($ip)) 
@@ -312,10 +309,13 @@
 		{
 			$serviceName = 'change password';
 			//getting posted values
+			$ip['user_id']  = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] 	= ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['old_pass'] = trim($this->input->post('old_pass'));
 			$ip['new_pass'] = trim($this->input->post('new_pass'));
 		    $ip['c_pass']   = trim($this->input->post('c_pass'));
-		    $ip['user_id']  = trim($this->input->post('user_id'));
 			
 			$ipJson = json_encode($ip);
 			//validation
@@ -355,6 +355,152 @@
 	    }
 		/*End of chng_pass Section*/
 
+		/* User Profile update */
+		public function user_update_profile_post()
+		{
+			// print_r($_POST);exit();
+			$serviceName = 'user_update';
+			$validation_array = 1;
+
+			$ip['user_id'] = trim($this->input->post('user_id'));
+			$ip['user_type'] = trim($this->input->post('user_type'));
+			
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+			$ip['user_type'] = ($logged_in_user['user_type']!='' ? $logged_in_user['user_type']:$ip['user_type']);
+
+			//getting posted values
+			$ip['first_name']       = trim($this->input->post('first_name'));
+			$ip['last_name']        = trim($this->input->post('last_name'));
+			// $ip['user_email']       = trim($this->input->post('user_email'));
+			// $ip['user_mob']         = trim($this->input->post('user_mob'));
+			// $ip['user_pass']        = trim($this->input->post('user_pass'));
+			// $ip['c_pass']           = trim($this->input->post('c_pass'));
+			$ip['firm_name']        = trim($this->input->post('firm_name'));
+            $ip['pan']              = trim($this->input->post('pan'));
+            $ip['company_type']     = trim($this->input->post('company_type'));
+            $ip['designation']      = trim($this->input->post('designation'));
+            $ip['address1']         = trim($this->input->post('address1'));
+            $ip['address2']         = trim($this->input->post('address2'));
+            // $ip['country']          = trim($this->input->post('country'));
+            $ip['state']            = trim($this->input->post('state'));
+            $ip['district']         = trim($this->input->post('district'));
+            $ip['city']             = trim($this->input->post('city'));
+            $ip['pin']              = trim($this->input->post('pin'));
+            // $ip['tc']               = trim($this->input->post('tc'));
+         	// $ip['user_image']       = trim($this->input->post('user_image'));
+            // $ip['device_token']     = trim($this->input->post('device_token'));
+            // $ip['pkg_id']     	   = trim($this->input->post('pkg_id'));
+            // $ip['user_otp']         = $six_digit_random_number;
+            // $ip['user_status']      = '1';
+            $ip['tin'] 				= trim($this->input->post('tin'));
+            $ip['stax'] 			= trim($this->input->post('stax'));
+            $ip['modified_datetime']= Date('Y-m-d h:i:s');
+            $ip['modified_ip']      = $_SERVER['REMOTE_ADDR'];
+
+	        	/* if($ip['user_type'] == 3) { $user_code = 'cust_indv-';	} //Customer 
+	        else if($ip['user_type'] == 4) { $user_code = 'cust_comp-';	} //Customer company
+	        else if($ip['user_type'] == 5) { $user_code = 'pm-'; 		} //packers and movers
+	        else if($ip['user_type'] == 6) { $user_code = 'cp-';		} //crain provider
+	        else if($ip['user_type'] == 8) { $user_code = 'tprt_cs-';	} //tr container 
+	        else if($ip['user_type'] == 9) { $user_code = 'tprt_ca-';	} //tr commission 
+	        else if($ip['user_type'] == 10){ $user_code = 'tprt_fo-';	} //tr fleet owner
+	        else if($ip['user_type'] == 11){ $user_code = 'tprt_tnls-';	} //transporter 
+	        else if($ip['user_type'] == 12){ $user_code = 'tprt_tp-';	} //trolly tanker
+	        else {
+				$user_code = "";
+	        }
+	        $ip['user_rand_id']     = $user_code.strtotime(Date('Y-m-d H:i:s'));*/
+
+	        //validation
+			$ip_array[] = array("msg", $ip['user_type'], "not_null", "user_type","User type is empty");
+			// $ip_array[] = array("msg", $ip['user_email'], "not_null", "user_email","E-Mail is empty.");
+			// $ip_array[] = array("msg", $ip['user_mob'], "not_null", "user_mob", "Mobile number is empty.");
+			$ip_array[] = array("msg", $ip['first_name'], "not_null", "first_name", "First name is empty.");
+			$ip_array[] = array("msg", $ip['address1'], "not_null", "address1", "Address is empty.");
+			$ip_array[] = array("msg", $ip['state'], "not_null", "state", "State is empty.");
+			$ip_array[] = array("msg", $ip['district'], "not_null", "district", "District is empty.");
+			$ip_array[] = array("msg", $ip['city'], "not_null", "city", "City is empty.");
+			$ip_array[] = array("msg", $ip['pin'], "not_null", "pin", "Pincode is empty.");
+			// $ip_array[] = array("msg", $ip['pkg_id'], "not_null", "pkg_id", "Package id is empty.");
+			// print_r($ip_array[2][0]);exit();
+
+			if($ip['user_type']==4)
+			{
+                $ip_array[] = array("msg", $ip['company_type'], "not_null", "company_type", "Company Type is empty.");
+			    $ip_array[] = array("msg", $ip['designation'], "not_null", "designation", "Designation is empty.");
+			    $ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
+			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			}
+			else if($ip['user_type']== 5 || $ip['user_type']== 6 || $ip['user_type']== 8 || 
+			   		$ip['user_type']== 9 || $ip['user_type']==10 || $ip['user_type']==11 || 
+			   		$ip['user_type']==12)
+			{
+				$ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
+			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			    $ip_array[] = array("msg", $ip['tin'], "not_null", "tin", "VAT-TIN Number is empty.");
+			    $ip_array[] = array("msg", $ip['stax'], "not_null", "stax", "Service Tax Number is empty.");
+			}
+
+			$validation_array = $this->validator->validate($ip_array);
+			$ipJson = json_encode($ip);
+	                
+			/*if(empty($ip['user_pass']))
+			{
+				$data['message'] = "All * marked fields must not be empty.";
+			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			}
+			else if($ip['user_pass'] != $ip['c_pass'])
+            {
+            	$data['message'] = "Password and Confirm Password not matched.";
+			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+            } 
+			else if ($model_mob = $this->User_model->check_mob_reg($ip)) 
+			{
+                $data['message'] = 'Mobile number alerady registered.';
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			} 
+			else if ($model_email = $this->User_model->check_email_reg($ip)) 
+			{
+                $data['message'] = 'Email address alerady registered.';
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			}
+			else */
+			if ($validation_array !=1) 
+			{
+				// print_r($model_mob);
+				// echo "<br/>";
+				// print_r($model_email);
+                $data['message'] = $validation_array['msg'];
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			} 
+			else  
+			{
+                // $retVals1 = $this->User_model->user_breif($ip, $serviceName);
+    			//   if (!null==($ip['user_mob']) || !empty($ip['user_mob']))
+	   			//   {
+	   			// 	 	/*=================GENRAING OTP=====================*/
+		  		//     	$user="developer11112@indglobal-consulting.com:indglobal123";
+				//     	$sender="TEST SMS";
+				//     	$number = $ip['user_mob'];
+				//     	$message="Your One Time Password is :".$six_digit_random_number." For confirm the registration. Please do not share this password with Anyone - Getmytruck.com"; 
+				//     	/*=========ENDING OF GENRAING OTP=================*/
+				// 	  }
+				$retVals1 = $this->User_model->update_user($ip, $serviceName);
+            	/*$ch = curl_init();
+              	curl_setopt($ch,CURLOPT_URL,"http://api.mVaayoo.com/mvaayooapi/MessageCompose");
+              	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              	curl_setopt($ch, CURLOPT_POST, 1);
+              	curl_setopt($ch, CURLOPT_POSTFIELDS,"user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
+			    $buffer = curl_exec($ch);
+			    curl_close($ch);*/
+			    json_decode($retVals1);	
+			}
+            header("content-type: application/json");
+	        echo $retVals1;
+	        exit;
+	   	}
 
 
 
@@ -366,8 +512,7 @@
 
 
 
-
-/*----------------------------------------------------------------------------*/		
+		/*----------------------------------------------------------------------------*/		
 		/*Verification Section*/
         public function verify_post()
 		{
@@ -472,79 +617,6 @@
      	}
 		/*End of Resend Otp Section*/
 
-		/* chng_pass Section*/
-  //       public function chng_pass_post()
-		// {
-		// 	$serviceName = 'change password';
-		// 	//getting posted values
-		// 	$ip['old_pass']    = trim($this->input->post('old_pass'));
-		// 	$ip['new_pass']    = trim($this->input->post('new_pass'));
-		//     $ip['c_pass']      = trim($this->input->post('cn_pass'));
-		//     $ip['mobile']      = trim($this->input->post('mobile'));
-		//     $ip['cust_id']     = trim($this->input->post('cust_id'));
-		//     $ip['user_name']   = trim($this->input->post('user_name'));
-		// 	//var_dump($_FILES['user_pic']);exit();
-  //           // print_r($ip); exit();
-		// 	if (!null==($ipJson = json_encode($ip)))
-  //           {
-  //              	/*=================GENRAING OTP=====================*/
-	 //            $user="developer22211@indglobal-consulting.com:indglobal123";
-		// 	    $sender ="TEST SMS";
-		// 	    $number = $ip['mobile'];
-		// 	    $name   = "Dear User";//$ip['user_name'];
-		// 	    $message="Hi:".$name." Your Password is Changed Successfully You can Login in Few minutes - Getmytruck.com"; 
-		// 	    $ipJson = json_encode($ip);  
-		// 	    $chk_pass=$this->User_model->c_pass($ip);
-  //               /*=================ENDING OF GENRAING OTP=====================*/
-		// 	}
-		// 	//validation
-		// 	$validation_array = 1;
-		// 	$ip_array[] = array("old_pass", $ip['old_pass'], "not_null", "old_pass", "Old password is empty.");
-		// 	$ip_array[] = array("new_pass", $ip['new_pass'], "not_null", "new_pass", "New password is Empty.");
-		// 	$ip_array[] = array("c_pass", $ip['c_pass'], "not_null", "c_pass", "Conifirm password is empty.");
-		// 	$ip_array[] = array("mobile", $ip['mobile'], "not_null", "mobile", "Mobile number is empty.");
-		// 	$ip_array[] = array("cust_id", $ip['cust_id'], "not_null", "cust_id", "customer id is empty.");
-		// 	$validation_array = $this->validator->validate($ip_array);		
-  //           if($ip['new_pass'] != $ip['c_pass'])
-		//     {
-		// 	   	$data['message'] = "Password missmatch.";
-		// 	   	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-  //           }
-		// 	else if ($validation_array !=1) 
-		// 	{
-		// 	 	$data['message'] = $validation_array;
-		// 	 	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-		// 	} 
-		// 	else if ($chk_pass=="True") 
-		// 	{
-		// 	    $change=$this->User_model->c_pass($ip);
-		// 		$data['message'] = "Paasword Changed Successfully";
-		// 	 	$retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
-		// 		 /*===============Sending Otp==================*/
-  //               $ch = curl_init();
-		// 	    curl_setopt($ch,CURLOPT_URL,"http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-		// 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		// 	    curl_setopt($ch, CURLOPT_POST, 1);
-		// 	    curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-		// 	    $buffer = curl_exec($ch);
-		// 	    curl_close($ch);
-		// 	     /*===============Sending Otp===================*/
-		// 	} 
-		// 	else  
-		// 	{
-		// 	  	//$done_otp=$this->update_model->updt_status_with($ip);
-		// 	  	$data['message'] = "Paasword Not Correct";
-		// 	  	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-		// 	  	json_decode($retVals1);	  
-		// 	}
-  //    		//echo $retVals1 = $this->signup_model->signup($ip, $serviceName);
-		// 	header("content-type: application/json");
-		// 	echo $retVals1;
-		// 	exit;
-	 //    }
-
-
-		
 
 		/* Update Section*/
         public function update_brief_post()
@@ -553,6 +625,9 @@
 			$serviceName = 'update_breif';
 			//getting posted values
 			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['u_detail_name']       = trim($this->input->post('u_detail_name'));
 			$ip['u_detail_firm_name']  = trim($this->input->post('u_detail_firm_name'));
 			$ip['state_fk']            = trim($this->input->post('state_fk'));
@@ -697,7 +772,10 @@
 		{
 			$serviceName = 'view_profile';
 			//getting posted values
-			$ip['user_id'] = trim($this->input->post('user_id'));
+			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ipJson = json_encode($ip);
 				//validation
 		    $validation_array = 1;	
@@ -719,5 +797,106 @@
 	    }
 		/*End of View details Section*/
 	}
-?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/* chng_pass Section*/
+  		//       public function chng_pass_post()
+	// {
+		// 	$serviceName = 'change password';
+		// 	//getting posted values
+		// 	$ip['old_pass']    = trim($this->input->post('old_pass'));
+		// 	$ip['new_pass']    = trim($this->input->post('new_pass'));
+		//     $ip['c_pass']      = trim($this->input->post('cn_pass'));
+		//     $ip['mobile']      = trim($this->input->post('mobile'));
+		//     $ip['cust_id']     = trim($this->input->post('cust_id'));
+		//     $ip['user_name']   = trim($this->input->post('user_name'));
+		// 	//var_dump($_FILES['user_pic']);exit();
+  		//           // print_r($ip); exit();
+		// 	if (!null==($ipJson = json_encode($ip)))
+  		//           {
+  		//              	/*=================GENRAING OTP=====================*/
+	 	//            $user="developer22211@indglobal-consulting.com:indglobal123";
+		// 	    $sender ="TEST SMS";
+		// 	    $number = $ip['mobile'];
+		// 	    $name   = "Dear User";//$ip['user_name'];
+		// 	    $message="Hi:".$name." Your Password is Changed Successfully You can Login in Few minutes - Getmytruck.com"; 
+		// 	    $ipJson = json_encode($ip);  
+		// 	    $chk_pass=$this->User_model->c_pass($ip);
+  		//               /*=================ENDING OF GENRAING OTP=====================*/
+		// 	}
+		// 	//validation
+		// 	$validation_array = 1;
+		// 	$ip_array[] = array("old_pass", $ip['old_pass'], "not_null", "old_pass", "Old password is empty.");
+		// 	$ip_array[] = array("new_pass", $ip['new_pass'], "not_null", "new_pass", "New password is Empty.");
+		// 	$ip_array[] = array("c_pass", $ip['c_pass'], "not_null", "c_pass", "Conifirm password is empty.");
+		// 	$ip_array[] = array("mobile", $ip['mobile'], "not_null", "mobile", "Mobile number is empty.");
+		// 	$ip_array[] = array("cust_id", $ip['cust_id'], "not_null", "cust_id", "customer id is empty.");
+		// 	$validation_array = $this->validator->validate($ip_array);		
+  		//           if($ip['new_pass'] != $ip['c_pass'])
+		//     {
+		// 	   	$data['message'] = "Password missmatch.";
+		// 	   	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+  		//           }
+		// 	else if ($validation_array !=1) 
+		// 	{
+		// 	 	$data['message'] = $validation_array;
+		// 	 	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+		// 	} 
+		// 	else if ($chk_pass=="True") 
+		// 	{
+		// 	    $change=$this->User_model->c_pass($ip);
+		// 		$data['message'] = "Paasword Changed Successfully";
+		// 	 	$retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+		// 		 /*===============Sending Otp==================*/
+  		//               $ch = curl_init();
+		// 	    curl_setopt($ch,CURLOPT_URL,"http://api.mVaayoo.com/mvaayooapi/MessageCompose");
+		// 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		// 	    curl_setopt($ch, CURLOPT_POST, 1);
+		// 	    curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
+		// 	    $buffer = curl_exec($ch);
+		// 	    curl_close($ch);
+		// 	     /*===============Sending Otp===================*/
+		// 	} 
+		// 	else  
+		// 	{
+		// 	  	//$done_otp=$this->update_model->updt_status_with($ip);
+		// 	  	$data['message'] = "Paasword Not Correct";
+		// 	  	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+		// 	  	json_decode($retVals1);	  
+		// 	}
+  		//    		//echo $retVals1 = $this->signup_model->signup($ip, $serviceName);
+		// 	header("content-type: application/json");
+		// 	echo $retVals1;
+		// 	exit;
+//    }
+?>

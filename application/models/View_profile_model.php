@@ -7,7 +7,7 @@
     function view_profile($input)
     {
     	$ipJson = json_encode($input);
-    	$this->db->select('b.user_id AS id, b.user_fname AS fname, b.user_lname AS lname, b.user_email AS email, b.user_mob AS mobile, d.id AS c_id, d.city, a.state_fk AS state, d.district AS dstrt, a.address1 AS addr1, a.address2 AS addr2, a.u_detail_pin AS pincode, a.u_detail_pan AS pan_no, a.u_detail_tin AS tin_no, a.u_detail_stax AS stax, e.comp_type_id AS ctype_id, IFNULL(e.comp_type, 0) AS company_type, c.u_type_name AS user_type_name, b.user_firm_name AS firm_name, b.user_designation AS designation_id, f.desg_type AS designation');
+    	$this->db->select('b.user_id AS id, b.user_fname AS first_name, b.user_lname AS last_name, b.user_email AS email, b.user_mob AS mobile, d.id AS c_id, d.city, a.state_fk AS state, d.district AS district, a.address1 AS address1, a.address2 AS address2, a.u_detail_pin AS pin, a.u_detail_pan AS pan, a.u_detail_tin AS tin, a.u_detail_stax AS stax, IFNULL(e.comp_type_id, 0) AS ctype_id, IFNULL(e.comp_type, 0) AS company_type, c.u_type_name AS user_type_name, b.user_firm_name AS firm_name, IFNULL(b.user_designation, 0) AS designation_id, IFNULL(f.desg_type, 0) AS designation');
     	$this->db->from('gmt_user_details a'); 
       $this->db->join('gmt_user b', 'a.user_id = b.user_id', 'left');
       $this->db->join('gmt_user_type c', 'b.u_type_id = c.u_type_id', 'left');

@@ -16,6 +16,9 @@
             $serviceName = 'save_contact';
             //getting posted values
             $ip['user_id']             = trim($this->input->post('user_id'));
+            $logged_in_user = $this->session->userdata('logged_in_user');   
+            
+            $ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
             $ip['reg_id_fk']           = trim($this->input->post('reg_id_fk'));
             $ip['cont_group_name']     = trim($this->input->post('cont_group_name'));
             $ip['created_ip']          = $_SERVER['REMOTE_ADDR'];

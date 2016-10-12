@@ -16,6 +16,9 @@
         $serviceName = 'select_station';
         //getting posted values
         $ip['user_id']             = trim($this->input->post('user_id'));
+        $logged_in_user = $this->session->userdata('logged_in_user');   
+        
+        $ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
         $ip['from_state']          = trim($this->input->post('from_state'));
         $ip['from_city']           = trim($this->input->post('from_city'));
         $ip['to_state']            = trim($this->input->post('to_state'));

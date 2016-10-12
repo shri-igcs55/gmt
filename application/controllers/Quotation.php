@@ -14,7 +14,10 @@
 		{			
 			$serviceName = 'Quotation';
 			//getting posted values
-			$ip['user_id']                    = trim($this->input->post('user_id'));
+			$ip['user_id']             = trim($this->input->post('user_id'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['plc_odr_id']                 = trim($this->input->post('plc_odr_id'));
 			$ip['odr_qtn_amount']             = trim($this->input->post('odr_qtn_amount'));
 			$ip['odr_qtn_delivered_datetime'] = trim($this->input->post('odr_qtn_delivered_datetime'));
