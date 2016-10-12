@@ -15,11 +15,11 @@ date_default_timezone_set('Asia/Kolkata');
 		        'plc_odr_by_lname'           => $input['odr_by_lname'],
    				'plc_odr_by_mob'             => $input['odr_by_mob'],
 				'from_state'                 => $input['from_state'],
-				'from_city'                  => $input['from_city'],
-				'plc_odr_from_area_location' => $input['from_location'],
+				//'from_city'                  => $input['from_city'],
+				//'plc_odr_from_area_location' => $input['from_location'],
 				'to_state'                   => $input['to_state'],
-				'to_city'                    => $input['to_city'],
-				'plc_odr_to_area_location'   => $input['to_location'],
+				//'to_city'                    => $input['to_city'],
+				//'plc_odr_to_area_location'   => $input['to_location'],
 				'plc_odr_from_address'       => $input['detailed_from_address'],
 				'plc_odr_from_floor'         => $input['shift_floor_from'],
 				'plc_odr_from_lift'          => $input['from_lift_facility'],
@@ -38,6 +38,15 @@ date_default_timezone_set('Asia/Kolkata');
 		$query = $this->db->insert('gmt_place_order', $enquiry_data_pm);
 		if ($query == 1) {			
 			$last_id = $this->db->insert_id();
+			
+			$this->db->insert('gmt_order_location',
+				array('plc_odr_id'=>$last_id,
+					'orl_from_city_id'=>$input['from_city'],
+					'orl_to_city_id'=>$input['to_city'],
+					'orl_pickup_location'=>$input['from_location'],
+					'orl_drop_location'=>$input['to_location']));	
+								
+								
 			$this->db->select('plc_odr_id AS order_id, user_id AS uid,
 						from_city AS f_city,
 						to_city AS t_city,
