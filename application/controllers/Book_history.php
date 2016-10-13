@@ -21,6 +21,7 @@
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+			$ip['order_status'] = ($ip['order_status']=='' ? 3 : $ip['order_status']);
 			$ipJson = json_encode($ip);
 			//validation
 			$validation_array = 1;
