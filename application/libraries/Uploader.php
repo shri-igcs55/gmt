@@ -9,7 +9,8 @@ class uploader
 	
 	function upload_image($value, $flag,$ip) {
 		//print_r($value);exit();
-		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v", "JPG", "JPEG");
+
+		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v", "JPG", "JPEG","PNG");
 		if ($value['type'] == "application/octet-stream"){
 			$imageMime = getimagesize($value['tmp_name']); // get temporary file REAL info
 			if (empty($imageMime['mime'])) {
@@ -17,18 +18,24 @@ class uploader
 			}
 			$value['type'] = $imageMime['mime'];
 		}
-		$extension = end(explode(".", $value["name"]));
+		@$extension = end(explode(".", $value["name"]));
 		if ((($value["type"] == "image/jpeg") || ($value["type"] == "video/mp4")  || ($value["type"] == "video/quicktime") || ($value["type"] == "video/x-m4v") || ($value["type"] == "image/jpg") || ($value["type"] == "image/png") || ($value["type"] == "image/gif"))  && in_array($extension, $allowedExts)) {
 			if ($value["error"] > 0) {
 				return false;
 			}
 			$container = 'uploads/'.$ip['user_id'];
+			$doc = 'uploads/'.$ip['user_id'].'/document';
+			$docThumb = 'uploads/'.$ip['user_id'].'/document/thumbs';
 			$profilePic = 'uploads/'.$ip['user_id'].'/profile/photos';
 			$profileThumb = 'uploads/'.$ip['user_id'].'/profile/thumbs';
 			$postUploadOrg = 'uploads/'.$ip['user_id'].'/post/photos';
 			$postUploadThumb = 'uploads/'.$ip['user_id'].'/post/thumbs';
 			$chatPic = 'uploads/'.$ip['user_id'].'/chat/photos';
 			$chatThumb = 'uploads/'.$ip['user_id'].'/chat/thumbs';
+			if(!file_exists($doc)){
+				mkdir($doc, 0755, true);
+				mkdir($docThumb, 0755, true);
+			}
 			if (!file_exists($container)) {
 				mkdir($container, 0755, true);
 			}
@@ -58,6 +65,10 @@ class uploader
 				$pathName = $chatPic."/". $name;
 				$thumnail_path = $chatThumb."/". $name;
 			}
+			if ($flag == 'document') {
+				$pathName = $doc."/". $name;
+				$thumnail_path = $docThumb."/". $name;
+			}
 			if (move_uploaded_file($value["tmp_name"], $pathName)) {
 				//$out['photo_url'] =  $pathName;
 				$out['profile_org_url'] =  $pathName;
@@ -85,7 +96,7 @@ class uploader
 	}
 	
 	function upload_image_android($value, $flag,$ip) {
-		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v", "JPG", "JPEG");
+		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v", "JPG", "JPEG","PNG");
 		if ($value['type'] == "application/octet-stream"){
 			$imageMime = getimagesize($value['tmp_name']); // get temporary file REAL info
 			if (empty($imageMime['mime'])) {
@@ -285,14 +296,14 @@ class uploader
 		/* read the source image */
 		
 		$ext = pathinfo($src, PATHINFO_EXTENSION);
-		if($ext == 'png')
+		if($ext == 'png' || $ext == 'PNG')
 		{
 			$source_image = imagecreatefrompng($src);
 			$width = imagesx($source_image);
 			$height = imagesy($source_image);
-			/*$source_image = ImageCreateFromPNG($src);
+			$source_image = ImageCreateFromPNG($src);
 			$width = ImageSx($source_image);
-			$height = ImageSy($source_image);*/
+			$height = ImageSy($source_image);
 		}
 		else
 		{
@@ -310,8 +321,8 @@ class uploader
 		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
 		
 		// Fix Orientation
-		if($ext != 'png'){
-			$exif = exif_read_data($src);
+		if($ext != 'png' || $ext != 'PNG'){
+			$exif = @exif_read_data($src);
 			//echo "<pre>";
 			//print_r($exif);exit;
 	            $orientation = @$exif['Orientation'];
@@ -331,7 +342,7 @@ class uploader
   	//echo $virtual_image;
     //exit;
 		/* create the physical thumbnail image to its destination */
-		if($ext == 'png'){
+		if($ext == 'png' || $ext == 'PNG'){
 			imagepng($virtual_image, $dest, 9);
 		}else{
 			imagejpeg($virtual_image, $dest, 90);
@@ -363,7 +374,7 @@ class uploader
 function upload_image_bitly($value, $flag,$ip) {
 		$flag = "post";
 		//echo $value['type'];
-		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v","x-png");
+		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v","x-png","PNG");
 		if ($value['type'] == "application/octet-stream"){
 			$imageMime = getimagesize($value['tmp_name']); // get temporary file REAL info
 			if (empty($imageMime['mime'])) {

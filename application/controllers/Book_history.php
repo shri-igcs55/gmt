@@ -38,7 +38,7 @@
                 if($data){
                 	$data = $data;
                 }else{
-                	$data = "No Data.";
+                	$data['msg'] = "No Data.";
                 }
                 $retVals1 =$this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
