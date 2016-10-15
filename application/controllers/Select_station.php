@@ -18,11 +18,13 @@
 		*/
         $serviceName = 'select_station';
         //getting posted values
-        $ip['user_id']      = trim($this->input->post('user_id'));
+        $ip['user_id'] = trim($this->input->post('user_id'));
+        $ip['to_city'] = $this->input->post('to_city');
+        $ip['from_city'] = $this->input->post('from_city');
         $logged_in_user = $this->session->userdata('logged_in_user');   
         
         $ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
-        
+
         $ip['created_ip']   = $_SERVER['REMOTE_ADDR'];
         $ip['modified_ip']  = $_SERVER['REMOTE_ADDR'];
         $ipJson = json_encode($ip);
