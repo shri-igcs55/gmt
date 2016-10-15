@@ -7,10 +7,11 @@ date_default_timezone_set('Asia/Kolkata');
 	{	
 		function enquiry_form_pm($input, $serviceName) {
 		$ipJson = json_encode($input);		
+		// $input['user_type_id']
 		$enquiry_data_pm = array(
 			
 			    'user_id'                    => $input['user_id'],
-			    'u_type_id_fk'               => $input['user_type_id'],
+			    'ord_to_u_type_id_fk'        => 3,
 		        'plc_odr_by_fname'           => $input['odr_by_fname'],
 		        'plc_odr_by_lname'           => $input['odr_by_lname'],
    				'plc_odr_by_mob'             => $input['odr_by_mob'],
