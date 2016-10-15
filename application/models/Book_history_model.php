@@ -29,11 +29,8 @@
 			$this->db->where('plc_odr_status_id_fk >=', $input['order_status']);
 		  }
       
-    	$query = $this->db->get();
-    	//echo $this->db->last_query();
-    	$details = $query->result_array();
-      //print_r($details);
-			//exit();
+    	$query = $this->db->get();    	
+    	$details = $query->result_array();		
     	return $details;
     }  
 	}

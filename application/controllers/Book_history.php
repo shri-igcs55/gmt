@@ -13,7 +13,7 @@
 			$this->load->library('Validator.php');
 		}
 		public function book_history_post()
-		{
+		{			
 			$serviceName = 'Book_history';
 			//getting posted values
 			$ip['user_id']          = trim($this->input->post('user_id'));
@@ -21,6 +21,7 @@
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+		
 			$ip['order_status'] = ($ip['order_status']=='' ? 3 : $ip['order_status']);
 			$ipJson = json_encode($ip);
 			//validation
@@ -35,9 +36,22 @@
 			} 
 			else
 			{
-                $data =$this->Book_history_model->book_history($ip, $serviceName);
+                $data = $this->Book_history_model->book_history($ip, $serviceName);
                 if($data){
-                	$data = $data;
+					$data = $data;
+					
+					foreach($data as $order):						
+						$FromCity[0] = $order['from_city'];
+						$ToCity[0] = $order['to_city'];
+						//$order1['to_city'][] = $order['to_city'];
+						$order['from_city'] = $FromCity;
+						$order['to_city'] = $ToCity;
+					endforeach;
+					
+					$data = $order; 
+					echo '<pre>';
+					print_r($data);
+					exit;
                 }else{
                 	$data['msg'] = "No Data.";
                 }
