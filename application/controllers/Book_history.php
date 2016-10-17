@@ -41,17 +41,17 @@
 					$data = $data;
 					
 					foreach($data as $order):						
-						$FromCity[0] = $order['from_city'];
-						$ToCity[0] = $order['to_city'];
-						//$order1['to_city'][] = $order['to_city'];
-						$order['from_city'] = $FromCity;
-						$order['to_city'] = $ToCity;
+						$FromCity[$order['order_id']][] = $order['from_city'];
+						$ToCity[$order['order_id']][] = $order['to_city'];						
+						$tmpOrder[$order['order_id']] = $order;
+						$tmpOrder[$order['order_id']]['from_city'] = $FromCity[$order['order_id']];
+						$tmpOrder[$order['order_id']]['to_city'] = $ToCity[$order['order_id']];
 					endforeach;
 					
-					$data = $order; 
-					echo '<pre>';
-					print_r($data);
-					exit;
+					$data = $tmpOrder; 
+					//echo '<pre>';
+					//print_r($data);
+					//exit;
                 }else{
                 	$data['msg'] = "No Data.";
                 }
