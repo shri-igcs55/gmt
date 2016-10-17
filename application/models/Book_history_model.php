@@ -29,6 +29,10 @@
 			$this->db->where('plc_odr_status_id_fk >=', $input['order_status']);
 		  }
       
+		//Define creatreaa wise switch area
+	  
+		//End
+	  
     	$query = $this->db->get();    	
     	$details = $query->result_array();		
     	return $details;
