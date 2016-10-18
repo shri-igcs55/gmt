@@ -11,7 +11,7 @@ date_default_timezone_set('Asia/Kolkata');
 		$enquiry_data_pm = array(
 			
 			    'user_id'                    => $input['user_id'],
-			    'ord_to_u_type_id_fk'        => 3,
+			    'ord_to_u_type_id_fk'        => 5,
 		        'plc_odr_by_fname'           => $input['odr_by_fname'],
 		        'plc_odr_by_lname'           => $input['odr_by_lname'],
    				'plc_odr_by_mob'             => $input['odr_by_mob'],

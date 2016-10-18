@@ -81,13 +81,13 @@ class User_model extends CI_model
   public function check_signin($input, $serviceName) {
     $ipJson = json_encode($input);
     
-    $this->db->select('user_id, user_rand_id, user_email AS email, user_mob AS mobile, user_status, 
-      u_type_id, pkg_id AS package, user_fname AS first_name, user_lname AS last_name');
-    $this->db->from('gmt_user');
-    $this->db->where('user_email', $input['email_mob']);
-    $this->db->or_where('user_mob', $input['email_mob']);
-    $this->db->where('user_pass', md5($input['password']));
-    $this->db->where('u_type_id', $input['user_type_id']);
+    $this->db->select('u.user_id, u.user_rand_id, u.user_email AS email, u.user_mob AS mobile, u.user_status, u.u_type_id, ut.u_parent_id AS user_type_parent, u.pkg_id AS package, u.user_fname AS first_name, u.user_lname AS last_name');
+    $this->db->from('gmt_user u');
+    $this->db->join('gmt_user_type ut', 'u.u_type_id = ut.u_type_id', 'LEFT');
+    $this->db->where('u.user_email', $input['email_mob']);
+    $this->db->or_where('u.user_mob', $input['email_mob']);
+    $this->db->where('u.user_pass', md5($input['password']));
+    $this->db->where('u.u_type_id', $input['user_type_id']);
     $query = $this->db->get();
     $resultRows = $query->num_rows();
     //print_r($resultRows);exit();
@@ -98,14 +98,15 @@ class User_model extends CI_model
     if ($resultRows > 0) {
       //print_r($result[0]->pass);exit();
       $this->session->set_userdata('logged_in_user', 
-                            array('user_type'   =>$result_row->u_type_id,
-                                  'user_id'     =>$result_row->user_id,
-                                  'user_code'   =>$result_row->user_rand_id,
-                                  'first_name'  =>$result_row->first_name,
-                                  'last_name'   =>$result_row->last_name,
-                                  'email'       =>$result_row->email,
-                                  'mobile'      =>$result_row->mobile,
-                                  'package'     =>$result_row->package
+                            array('user_type'           =>$result_row->u_type_id,
+                                  'user_type_parent_id' =>$result_row->user_type_parent,
+                                  'user_id'             =>$result_row->user_id,
+                                  'user_code'           =>$result_row->user_rand_id,
+                                  'first_name'          =>$result_row->first_name,
+                                  'last_name'           =>$result_row->last_name,
+                                  'email'               =>$result_row->email,
+                                  'mobile'              =>$result_row->mobile,
+                                  'package'             =>$result_row->package
                                   )
                             );
       // $this->session->set_userdata('logged_in_user', $result[0]);

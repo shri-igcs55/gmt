@@ -16,18 +16,22 @@
 		{			
 			$serviceName = 'Book_history';
 			//getting posted values
-			$ip['user_id']          = trim($this->input->post('user_id'));
-			$ip['order_status']		= trim($this->input->post('order_status'));
+			$ip['user_id']          	= trim($this->input->post('user_id'));
+			$ip['order_status']			= trim($this->input->post('order_status'));
+			$ip['user_type_parent_id'] 	= trim($this->input->post('user_type_parent_id'));
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+			$ip['user_type_parent_id'] = ($logged_in_user['user_type_parent_id']!='' ? $logged_in_user['user_type_parent_id']:$ip['user_type_parent_id']);
 		
 			$ip['order_status'] = ($ip['order_status']=='' ? 3 : $ip['order_status']);
 			$ipJson = json_encode($ip);
 			//validation
 			$validation_array = 1;
-			$ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "usser id is empty.");
+			$ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "user id is empty.");
 			$ip_array[] = array("msg", $ip['order_status'], "not_null", "order_status", "order status is empty.");
+			$ip_array[] = array("msg", $ip['user_type_parent_id'], "not_null", "user_type_parent_id", "user type parent id is empty.");
+			
 			$validation_array = $this->validator->validate($ip_array);
         	if ($validation_array !=1) 
 			{
@@ -37,9 +41,16 @@
 			else
 			{
                 $data = $this->Book_history_model->book_history($ip, $serviceName);
+                // print_r($data);exit();
                 if($data){
-					$data = $data;
-					
+     //            	print_r($data);exit();
+     //            	foreach($data as $order_to):						
+					// 	$tmpOrder[$order_to['order_place_for_id']] = $order_to;
+					// 	$tmpOrder[$order_to['order_place_for_id']]['from_city'] = $FromCity[$order_to['order_id']];
+					// 	$tmpOrder[$order_to['order_place_for_id']]['to_city'] = $ToCity[$order_to['order_id']];
+					// endforeach;
+					// print_r($tmpOrder);
+					// exit();
 					foreach($data as $order):						
 						$FromCity[$order['order_id']][] = $order['from_city'];
 						$ToCity[$order['order_id']][] = $order['to_city'];						
@@ -47,13 +58,15 @@
 						$tmpOrder[$order['order_id']]['from_city'] = $FromCity[$order['order_id']];
 						$tmpOrder[$order['order_id']]['to_city'] = $ToCity[$order['order_id']];
 					endforeach;
-					
+					/*print_r($tmpOrder);
+					exit();*/
+
 					$data = $tmpOrder; 
 					//echo '<pre>';
 					//print_r($data);
 					//exit;
                 }else{
-                	$data['msg'] = "No Data.";
+                	$data['message'] = "No Order Found.";
                 }
                 $retVals1 =$this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
