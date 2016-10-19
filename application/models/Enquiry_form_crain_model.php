@@ -22,7 +22,7 @@ date_default_timezone_set('Asia/Kolkata');
 						//'plc_odr_to_area_location' 	 => $input['to_location'],
 						'plc_odr_to_address'       	 => $input['to_address'],
 						'plc_odr_weight'             => $input['weight'],
-						'plc_odr_descrp_goods'       => $input['desc_of_goods'],
+						'dw_type'				     => $input['desc_of_goods'],
 						'plc_odr_schedule_date'      =>Date('d-m-Y',strtotime($input['sechdule_date'])),
 						'created_datetime'           => Date('Y-m-d h:i:s'),
 						'created_ip'                 => $input['created_ip'],

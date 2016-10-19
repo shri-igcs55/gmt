@@ -57,10 +57,14 @@
 					// exit();
 					foreach($data as $order):						
 						$FromCity[$order['order_id']][] = $order['from_city'];
-						$ToCity[$order['order_id']][] = $order['to_city'];						
+						$ToCity[$order['order_id']][] = $order['to_city'];
+						$pickup_area_location[$order['order_id']][] = $order['pickup_area_location'];
+						$drop_area_location[$order['order_id']][] = $order['drop_area_location'];
 						$tmpOrder[$order['order_id']] = $order;
 						$tmpOrder[$order['order_id']]['from_city'] = $FromCity[$order['order_id']];
 						$tmpOrder[$order['order_id']]['to_city'] = $ToCity[$order['order_id']];
+						$tmpOrder[$order['order_id']]['pickup_area_location'] = $pickup_area_location[$order['order_id']];
+						$tmpOrder[$order['order_id']]['drop_area_location'] = $drop_area_location[$order['order_id']];
 					endforeach;
 					// print_r($tmpOrder);
 					// exit();
