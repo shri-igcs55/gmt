@@ -47,14 +47,7 @@
                 $data = $this->Book_history_model->book_history($ip, $serviceName);
                 // print_r($data);exit();
                 if($data){
-     //            	print_r($data);exit();
-     //            	foreach($data as $order_to):						
-					// 	$tmpOrder[$order_to['order_place_for_id']] = $order_to;
-					// 	$tmpOrder[$order_to['order_place_for_id']]['from_city'] = $FromCity[$order_to['order_id']];
-					// 	$tmpOrder[$order_to['order_place_for_id']]['to_city'] = $ToCity[$order_to['order_id']];
-					// endforeach;
-					// print_r($tmpOrder);
-					// exit();
+     
 					foreach($data as $order):						
 						$FromCity[$order['order_id']][] = $order['from_city'];
 						$ToCity[$order['order_id']][] = $order['to_city'];

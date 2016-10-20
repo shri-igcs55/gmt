@@ -19,7 +19,7 @@
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id']=($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
-			$ip['user_type'] = ($logged_in_user['user_type']!='' ? $logged_in_user['user_type']:$ip['user_type']);
+			$ip['user_type']=($logged_in_user['user_type']!='' ? $logged_in_user['user_type']:$ip['user_type']);
 
 			$ip['from_city']    = trim($this->input->post('from_city'));
 			$ip['to_city']      = trim($this->input->post('to_city'));
