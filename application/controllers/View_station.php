@@ -30,7 +30,7 @@
 			} 
 			else
 			{
-                $data['View_station'] =$this->View_station_model->view_station($ip, $serviceName);
+                $data = $this->View_station_model->view_station($ip, $serviceName);
                 $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
             header("content-type: application/json");
