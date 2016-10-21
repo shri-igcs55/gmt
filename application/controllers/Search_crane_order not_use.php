@@ -1,18 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 	
 	require('application/libraries/REST_Controller.php');  
 	//error_reporting(0);
-	class Search_order extends REST_Controller
+	class Search_crane_order extends REST_Controller
 	{
-		public function Search_order() 
+		public function Search_crane_order() 
 		{
 			parent::__construct();
-			$this->load->model('Search_order_model');
+			$this->load->model('Search_crane_order_model');
 			$this->load->library('seekahoo_lib');
 			$this->load->library('Validator.php');
 		}
-		public function search_order_post()
+		public function search_crane_order_post()
 		{
-			$serviceName = 'Search_order';
+			$serviceName = 'Search_crane_order';
 			//getting posted values
 			$ip['user_id']				= trim($this->input->post('user_id'));
 			$ip['user_type']			= trim($this->input->post('user_type'));
@@ -22,16 +22,10 @@
 			$ip['user_id']=($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['user_type']=($logged_in_user['user_type']!='' ? $logged_in_user['user_type']:$ip['user_type']);
 
-			$ip['from_city']    		= trim($this->input->post('from_city'));
-			$ip['to_city']      		= trim($this->input->post('to_city'));
-			$ip['vehicle_type'] 		= trim($this->input->post('trans_vehicle_type'));
-			$ip['weight']       		= trim($this->input->post('weight'));
-			$ip['feet_in_length']		= trim($this->input->post('trans_feet_in_length'));
-			$ip['sehdule_date'] 		= trim($this->input->post('schedule_date'));
-
-			$ip['work_desc']			= trim($this->input->post('crane_work_desc'));
-			$ip['service_type_name']	= trim($this->input->post('pm_service_type_name'));
-
+			$ip['from_city']    	= trim($this->input->post('from_city'));
+			$ip['weight']       	= trim($this->input->post('weight'));
+			$ip['work_desc']		= trim($this->input->post('work_desc'));
+			$ip['sehdule_date'] 	= trim($this->input->post('schedule_date'));
 			$ipJson = json_encode($ip);	
 					    
 			//validation
@@ -49,7 +43,7 @@
 			} 
 			else
 			{
-                $data =$this->Search_order_model->search_order($ip, $serviceName);
+                $data =$this->Search_crane_order_model->search_crane_order($ip, $serviceName);
                 if($data){
      
 					foreach($data as $order):						
@@ -63,7 +57,7 @@
 						$tmpOrder[$order['order_id']]['pickup_area_location'] = $pickup_area_location[$order['order_id']];
 						$tmpOrder[$order['order_id']]['drop_area_location'] = $drop_area_location[$order['order_id']];
 					endforeach;
-
+					
 					$data = $tmpOrder;
                 }else{
                 	$data['message'] = "No Order Found.";

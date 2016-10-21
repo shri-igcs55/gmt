@@ -3,10 +3,10 @@
 	/**
 	*  signup model
 	*/
-	class Search_order_model extends CI_model
+	class Search_crane_order_model extends CI_model
 	{
 		
-    function search_order($input)
+    function search_crane_order($input)
     {
     	$ipJson = json_encode($input);
       
@@ -23,19 +23,14 @@
       // $this->db->join('gmt_transporter_cat h', 'a.trans_cat_id_fk = h.trans_cat_id', 'left');
       $this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');
       
-      // $this->db->where('a.ord_to_u_type_id_fk', $input['user_type']);
       $this->db->where('a.plc_odr_status_id_fk =', 3);
       $this->db->where('a.ord_to_u_type_id_fk =',$input['user_type_parent_id']);
       
       $this->db->group_start();
         $this->db->where('a.from_city', $input['from_city']);
-        $this->db->or_where('a.to_city', $input['to_city']);
         $this->db->or_where('a.plc_odr_weight', $input['weight']);
-        $this->db->or_where('a.vehicle_id_fk', $input['vehicle_type']);
+        $this->db->or_where('g.dw_type', $input['work_desc']);
         $this->db->or_where('a.plc_odr_schedule_date', $input['sehdule_date']);
-
-        $this->db->or_where('a.sf_id_fk', $input['service_type_name']); // packers and movers
-        $this->db->or_where('g.dw_type', $input['work_desc']); // crane
       $this->db->group_end();
 
       $query = $this->db->get();
