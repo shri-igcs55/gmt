@@ -15,28 +15,28 @@
     {
       $serviceName = 'enquiry_form_crain';
       //getting posted values
-      $ip['user_id']             = trim($this->input->post('user_id'));
+      $ip['user_id']          = trim($this->input->post('user_id'));
       $logged_in_user = $this->session->userdata('logged_in_user'); 
       
       $ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
-      $ip['user_type_id']        = trim($this->input->post('user_type_id'));
-      $ip['odr_by_fname']        = trim($this->input->post('odr_by_fname'));
-      $ip['odr_by_lname']        = trim($this->input->post('odr_by_lname'));
-      $ip['contact']             = trim($this->input->post('odr_by_mob'));
+      $ip['user_type_id']     = trim($this->input->post('user_type_id'));
+      $ip['odr_by_fname']     = trim($this->input->post('odr_by_fname'));
+      $ip['odr_by_lname']     = trim($this->input->post('odr_by_lname'));
+      $ip['contact']          = trim($this->input->post('odr_by_mob'));
 
-      $ip['from_state']               = trim($this->input->post('from_state'));
-      $ip['from_city']                = trim($this->input->post('from_city'));
-      $ip['from_location']            = trim($this->input->post('from_location'));
-      $ip['from_address']             = trim($this->input->post('from_address'));
+      $ip['from_state']       = trim($this->input->post('from_state'));
+      $ip['from_city']        = trim($this->input->post('from_city'));
+      $ip['from_location']    = trim($this->input->post('from_location'));
+      $ip['from_address']     = trim($this->input->post('from_address'));
 
-      $ip['to_state']               = trim($this->input->post('to_state'));
-      $ip['to_city']                = trim($this->input->post('to_city'));
-      $ip['to_location']            = trim($this->input->post('to_location'));
-      $ip['to_address']             = trim($this->input->post('to_address'));
+      $ip['to_state']         = trim($this->input->post('to_state'));
+      $ip['to_city']          = trim($this->input->post('to_city'));
+      $ip['to_location']      = trim($this->input->post('to_location'));
+      $ip['to_address']       = trim($this->input->post('to_address'));
 
-      $ip['weight']              = trim($this->input->post('weight'));
-      $ip['desc_of_goods']       = trim($this->input->post('desc_of_work'));
-      $ip['sechdule_date']       = trim($this->input->post('sechdule_date'));
+      $ip['weight']           = trim($this->input->post('weight'));
+      $ip['desc_of_goods']    = trim($this->input->post('desc_of_work'));
+      $ip['sechdule_date']    = trim($this->input->post('sechdule_date'));
       $ip['created_ip'] = $ip['modified_ip'] = $_SERVER['REMOTE_ADDR'];
       //$ip['modified_ip']         = $_SERVER['REMOTE_ADDR'];
       $ipJson = json_encode($ip);      
