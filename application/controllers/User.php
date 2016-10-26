@@ -272,7 +272,7 @@
 		    
 		    $ip_array[] = array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
 			$ip_array[] = array("msg", $ip['password'], "not_null", "password", "Password is empty.");
-			$ip_array[] = array("msg", $ip['user_type_id'], "not_null", "user_type_id", "User role is empty.");
+			// $ip_array[] = array("msg", $ip['user_type_id'], "not_null", "user_type_id", "User role is empty.");
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) 
 			{

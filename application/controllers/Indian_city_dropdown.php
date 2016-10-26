@@ -81,12 +81,12 @@
 			$ip['state'] = trim($this->input->post('state'));
 			$ipJson = json_encode($ip);			
 			$validation_array = 1;
-			$ip_array[] = array("district", $ip['district'], "not_null", "district", "Please select District first.");
-			$ip_array[] = array("state", $ip['state'], "not_null", "state", "Please select State first.");					
+			$ip_array[] = array("msg", $ip['district'], "not_null", "district", "Please select District first.");
+			$ip_array[] = array("msg", $ip['state'], "not_null", "state", "Please select State first.");					
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) 
 			{
-			    $data['message'] = $validation_array['district'];
+			    $data['message'] = $validation_array['msg'];
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
 			else  

@@ -355,21 +355,22 @@ class User_model extends CI_model
     {
       // print_r($input['email_mob']);exit();
       if(is_array($input)){
-        if($input['email_mob'] && $input['user_type_id']){
+        // if($input['email_mob'] && $input['user_type_id']){
+        if($input['email_mob']){
           $email = $input['email_mob'];
-          $utype = $input['user_type_id'];
+          // $utype = $input['user_type_id'];
         }else{
           $email = $input['user_email'];
-          $utype = $input['user_type'];
+          // $utype = $input['user_type'];
         }
       }else{
         $email = $input;
-        $utype = $input;
+        // $utype = $input;
       }
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_email', $email);
-      $this->db->where('u_type_id', $utype);
+      // $this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result();    
       $result = $query->num_rows();
@@ -383,21 +384,22 @@ class User_model extends CI_model
     function check_mob($input) 
     {
       if(is_array($input)){
-        if($input['email_mob'] && $input['user_type_id']){
+        // if($input['email_mob'] && $input['user_type_id']){
+        if($input['email_mob']){
           $mob = $input['email_mob'];
-          $utype = $input['user_type_id'];
+          // $utype = $input['user_type_id'];
         }else{
           $mob = $input['user_mob'];
-          $utype = $input['user_type'];
+          // $utype = $input['user_type'];
         }
       }else{
         $mob = $input;
-        $utype = $input;
+        // $utype = $input;
       }
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_mob', $mob);
-      $this->db->where('u_type_id', $utype);
+      // $this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result(); 
       //echo $this->db->last_query();   
