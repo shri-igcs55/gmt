@@ -33,8 +33,10 @@
 			$ip['to_city']             = $this->input->post('to_city');
 			$ip['to_location']         = $this->input->post('to_location');
 			$ip['material_type']       = trim($this->input->post('material_type'));
+			
 			$ip['no_of_quantity']      = trim($this->input->post('no_of_quantity'));
 			$ip['weight']              = trim($this->input->post('weight'));
+			
 			$ip['feet']                = trim($this->input->post('feet'));
 			$ip['vehicle_type']        = trim($this->input->post('vehicle_type'));
             $ip['no_of_vehicle']       = trim($this->input->post('no_of_vehicle'));
@@ -55,24 +57,29 @@
 			$ip_array[] = array("msg", $ip['to_city'], "not_null", "to_city", "To city is empty.");
 			$ip_array[] = array("msg", $ip['vehicle_type'], "not_null", "vehicle_type", "Vehicle type empty.");
 			$ip_array[] = array("msg", $ip['no_of_vehicle'], "not_null", "no_of_vehicle", "No. of Vehicle is empty.");
-			$ip_array[] = array("msg", $ip['pickup_points'], "not_null", "pickup_points", "Pickup Points is empty.");
-			$ip_array[] = array("msg", $ip['destination_points'], "not_null", "destination_points", "Destination Points is empty.");
+			// $ip_array[] = array("msg", $ip['pickup_points'], "not_null", "pickup_points", "Pickup Points is empty.");
+			// $ip_array[] = array("msg", $ip['destination_points'], "not_null", "destination_points", "Destination Points is empty.");
 			$ip_array[] = array("msg", $ip['material_type'], "not_null", "material_type", "Material type is empty.");
 			$ip_array[] = array("msg", $ip['sechdule_date'], "not_null", "sechdule_date", "Sechdule date is empty.");
 			$validation_array = $this->validator->validate($ip_array);
-				if ($validation_array !=1) 
-				{
-	                $data['message'] = $validation_array['msg'];
-					$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-				} 
-				else  
-				{
-					$retVals1 =$this->Enquiry_form_model->enquiry_form($ip, $serviceName);
-					$data['Enquiry_form'] = $retVals1;	
-	            }
-                header("content-type: application/json");
-		        echo $retVals1;
-		        exit;
-	     	}
+			
+			if(empty($ip['no_of_quantity']) && empty($ip['weight'])){
+				$data['message'] = "Any one field must not be empty from Nag & Weight.";
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			}
+			else if ($validation_array !=1) 
+			{
+                $data['message'] = $validation_array['msg'];
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			} 
+			else  
+			{
+				$retVals1 =$this->Enquiry_form_model->enquiry_form($ip, $serviceName);
+				$data['Enquiry_form'] = $retVals1;	
+            }
+            header("content-type: application/json");
+	        echo $retVals1;
+	        exit;
+	    }
 	}
 ?>

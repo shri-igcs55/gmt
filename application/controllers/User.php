@@ -264,7 +264,7 @@
 		    //getting posted values
 		    $ip['email_mob'] = trim($this->input->post('email_mob'));
 		    $ip['password'] = trim($this->input->post('password'));
-		    $ip['user_type_id'] = trim($this->input->post('utype_id'));
+		    // $ip['user_type_id'] = trim($this->input->post('utype_id'));
 		    $ipJson = json_encode($ip);
 
 		    //validation
@@ -665,7 +665,8 @@
 			} 
 			else  
 			{
-				$data['details']=$this->User_model->update_brief($ip);
+				$details_update = $this->User_model->update_brief($ip);
+				$data = $details_update[0];
 			  	$data['message'] = "Profile Details updated ";
 			  	$retVals1 = $this->seekahoo_lib->return_status('success',$serviceName, $data, $ipJson);
 			} 

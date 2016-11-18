@@ -6,7 +6,7 @@
 */
 
 //error_reporting(0);
-class contact_us extends REST_Controller
+class Contact_us extends REST_Controller
 {
 	public function contact_us()
 	{

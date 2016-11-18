@@ -87,7 +87,7 @@ class User_model extends CI_model
     $this->db->where('u.user_email', $input['email_mob']);
     $this->db->or_where('u.user_mob', $input['email_mob']);
     $this->db->where('u.user_pass', md5($input['password']));
-    $this->db->where('u.u_type_id', $input['user_type_id']);
+    // $this->db->where('u.u_type_id', $input['user_type_id']);
     $query = $this->db->get();
     $resultRows = $query->num_rows();
     //print_r($resultRows);exit();
@@ -111,7 +111,7 @@ class User_model extends CI_model
                             );
       // $this->session->set_userdata('logged_in_user', $result[0]);
       
-      $data['details'] = $result;
+      $data = $result[0];
       $data['message'] = 'Login Successfully';
       $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
     }
@@ -136,7 +136,8 @@ class User_model extends CI_model
       'user_pass'        => md5($input['user_pass']),
       'user_otp'         => $input['user_otp'],
       'user_status'      => $input['user_status'],
-      'u_type_id'        => $input['user_type'],
+      'u_type_id'        => $input['user_type'],      
+      // 'user_designation' => $input['designation'],
       // 'pkg_id'           => $input['pkg_id'],
       'created_datetime' => $input['created_datetime'],
       'created_ip'       => $input['created_ip'],   
@@ -175,7 +176,7 @@ class User_model extends CI_model
           u.user_lname AS last_name, u.user_email AS email, u.user_mob AS mobile, 
           u.user_firm_name AS firm_name, u.user_status AS status_id, 
           (select `sta_name` from `gmt_status` where `sta_id` = 1) AS status, 
-          u.user_otp AS otp, u.u_type_id AS user_type_id, 
+          u.user_otp AS otp, u.u_type_id AS u_type_id, 
           (select `u_type_name` from `gmt_user_type` where `u_type_id` = '.$input['user_type'].') AS user_type_name, 
           ud.state_fk AS state, ud.district_fk AS district, ud.city AS city_id, ud.address1 AS addr1, ud.address2 AS addr2,
           (select `city` from `gmt_indian_city_list` where `id` = '.$input['city'].') AS city, 
@@ -188,8 +189,8 @@ class User_model extends CI_model
         $detail_last_user = $this->db->get();
         // echo $this->db->last_query($detail_last_user);exit();
         $result_data = $detail_last_user->result_array();
-        //print_r($resultq);exit();
-        $data['details'] = $result_data;
+        //print_r($result_data[0]);exit();
+        $data = $result_data[0];
         $data['message'] = "Registered Successfully.";
         $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
       }else{
@@ -269,7 +270,7 @@ class User_model extends CI_model
         // echo $this->db->last_query($detail_last_user);exit();
         $result_data = $detail_last_user->result_array();
         
-        $data['details'] = $result_data;
+        $data = $result_data[0];
         $data['message'] = "User detail updated Successfully.";
         $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
       }else{
