@@ -51,6 +51,8 @@ date_default_timezone_set('Asia/Kolkata');
 							trans_doc_thumb_url');
 		    $this->db->from('gmt_transporter_doc');
 			$this->db->where('user_id', $last_id['user_id'] );
+			$this->db->where('del_status', 1);
+			$this->db->order_by('trans_doc_id', 'desc');
 		    $detail_last_user = $this->db->get();
 		    $status = $detail_last_user->result_array();
 		    return $status;

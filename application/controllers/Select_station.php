@@ -12,10 +12,7 @@
     }
     public function select_station_post()
     {
-		/*echo '<pre>';
-		print_r($_POST);
-		exit;
-		*/
+		
         $serviceName = 'select_station';
         //getting posted values
         $ip['user_id'] = trim($this->input->post('user_id'));
@@ -30,14 +27,15 @@
         $ipJson = json_encode($ip);
         //validation
         $validation_array = 1;
-        $ip_array[] = array("user_id", $ip['user_id'], "not_null", "user_id", "user_id is empty.");
-
+        $ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "User id is empty.");
+        $ip_array[] = array("msg", $ip['to_city'], "not_null", "to_city", "To city is empty.");
+        $ip_array[] = array("msg", $ip['from_city'], "not_null","from_city","From city is empty.");
         // print_r($ip);exit();
 
         $validation_array = $this->validator->validate($ip_array);
         if ($validation_array !=1) 
         {
-            $data['message'] = $validation_array;
+            $data['message'] = $validation_array['msg'];
             $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
         } 
         else  

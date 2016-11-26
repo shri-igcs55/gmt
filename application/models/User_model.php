@@ -1,5 +1,5 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
-
+date_default_timezone_set('Asia/Kolkata');
 /**
 * Model for signin
 */
@@ -284,6 +284,29 @@ class User_model extends CI_model
     }
     return $status;
   }
+
+  // forgot password
+  public function new_otp_pass($input, $serviceName){
+    $ipJson = json_encode($input);
+
+    $signup_data = array(
+      'user_pass'        => md5($input['six_digit_random_number']),
+      'modified_datetime'=> date('Y-m-d H:i:s'),
+      'modified_ip'      => $_SERVER['REMOTE_ADDR']
+    );
+    
+    $this->db->where('user_email', $input['email_mob']);
+    $this->db->or_where('user_mob', $input['email_mob']);
+    $updated_info=$this->db->update('gmt_user', $signup_data);
+    // echo $this->db->last_query($updated_info);exit();
+    return $signup_data_last_id = $this->db->affected_rows();
+  }
+
+
+
+
+
+
 
 
     /*User Brief detail*/
@@ -637,43 +660,42 @@ class User_model extends CI_model
         return $details;
       }
       return false;
+    }
+
+
+      /*$uploadPhoto,*/
+    function add_photo($ip) {
+      $serviceName = 'add_media';
+
+      $ipJson = json_encode($ip);
+      //echo $ipJson;exit();
+      if ($ip['flag'] == 'post') {
+          $photoArray = array(
+              'media_type' => $uploadPhoto[0]['type'],
+              'media_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
+              'media_org_url' => $uploadPhoto[0]['photo_url'],
+              'media_created_date' => date('Y-m-d H:i:s'),
+              'media_modified_date' => date('Y-m-d H:i:s')
+          );
+          $photoIns = $this->db->insert('media', $photoArray);
+      } else { 
+          //print_r($uploadPhoto[0]['thumbnail_url']);
+          $photoArray = array(
+              'profile_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
+              'profile_org_url'   => $uploadPhoto[0]['photo_url'],
+              'reg_date_time'     => date('Y-m-d H:i:s')
+          );
+          $this->db->where('id', $ip['user_id']);
+          $photoIns = $this->db->update('signup', $photoArray);
       }
-
-
-        
-          /*$uploadPhoto,*/
-        function add_photo($ip) {
-            $serviceName = 'add_media';
-
-            $ipJson = json_encode($ip);
-            //echo $ipJson;exit();
-            if ($ip['flag'] == 'post') {
-                $photoArray = array(
-                    'media_type' => $uploadPhoto[0]['type'],
-                    'media_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
-                    'media_org_url' => $uploadPhoto[0]['photo_url'],
-                    'media_created_date' => date('Y-m-d H:i:s'),
-                    'media_modified_date' => date('Y-m-d H:i:s')
-                );
-                $photoIns = $this->db->insert('media', $photoArray);
-            } else { 
-                //print_r($uploadPhoto[0]['thumbnail_url']);
-                $photoArray = array(
-                    'profile_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
-                    'profile_org_url'   => $uploadPhoto[0]['photo_url'],
-                    'reg_date_time'     => date('Y-m-d H:i:s')
-                );
-                $this->db->where('id', $ip['user_id']);
-                $photoIns = $this->db->update('signup', $photoArray);
-            }
-            if ($photoIns) {
-                $mediaId = $this->db->insert_id();
-                $uploadPhoto[0]['photo_id'] = $mediaId;
-            } else {
-                return false;
-            }
-            return $uploadPhoto;
-        }
+      if ($photoIns) {
+          $mediaId = $this->db->insert_id();
+          $uploadPhoto[0]['photo_id'] = $mediaId;
+      } else {
+          return false;
+      }
+      return $uploadPhoto;
+    }
    
     /*End of Update Section*/
 

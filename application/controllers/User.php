@@ -118,7 +118,6 @@
 		    exit;
      	}
 
-
      	// user signup
 		public function user_signup_post()
 		{
@@ -271,13 +270,13 @@
 		    $validation_array = 1;
 		    
 		    $ip_array[] = array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
-			$ip_array[] = array("msg", $ip['password'], "not_null", "password", "Password is empty.");
+			$ip_array[]=array("msg",$ip['password'], "not_null", "password", "Password is empty.");
 			// $ip_array[] = array("msg", $ip['user_type_id'], "not_null", "user_type_id", "User role is empty.");
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) 
 			{
 				$data['message'] = $validation_array['msg'];
-				$retVals = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			}else if($em_data = $this->User_model->check_email($ip)){
 				// $ip['email'] = $em_data[0]->user_email;
 				if(!empty($em_data)){
@@ -296,7 +295,7 @@
 				}
 		    }else{
 		    	$data['message'] = 'Please check login details you Entered.';
-          		$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+          		$retVals=$this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 		    }
 			json_decode($retVals);
 			header("content-type: application/json");
@@ -502,6 +501,119 @@
 	        exit;
 	   	}
 
+	   	/* Forget password(Recover) Section*/
+        public function recover_post()
+		{
+			$ip['six_digit_random_number'] = mt_rand(10000000, 99999999);
+		            
+			$serviceName = 'Forgot Password';
+			$ip['email_mob']   = trim($this->input->post('email_mob'));
+			
+			$ipJson = json_encode($ip);
+
+		    //validation
+		    $validation_array = 1;
+		    
+		    $ip_array[] = array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
+			
+			$validation_array = $this->validator->validate($ip_array);
+			if ($validation_array !=1) 
+			{
+				$data['message'] = $validation_array['msg'];
+				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			}else if($em_data = $this->User_model->check_email($ip)){
+				// $ip['email'] = $em_data[0]->user_email;
+				if(!empty($em_data)){
+					
+					/*======================Mailing Part======================*/
+			        $from_email = "noreply@getmytruck.in"; 
+			        $to_email = $ip['email_mob']; 
+			        $this->email->from($from_email, 'Getmytruck.in'); 
+			        $this->email->to($to_email);
+			        $this->email->subject('New Password Email'); 
+			        $this->email->message('Your new password is '.$ip['six_digit_random_number']);
+			        if($this->email->send()):
+
+						if($this->User_model->new_otp_pass($ip, $serviceName)){
+							/*==================Sending Otp Again=====================*/ 
+		                    $user="developer321322@indglobal-consulting.com:indglobal123";
+							$sender="TEST SMS";
+							$number = $ip['email_mob'];
+							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - Doctorway"; 
+							$ch = curl_init();
+							curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							curl_setopt($ch, CURLOPT_POST, 1);
+							curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
+							$buffer = curl_exec($ch);
+							curl_close($ch);
+							/*==================Sending Otp Again=====================*/
+	         				$data['message'] = 'OTP sent, Please check email or mobile.';
+	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
+	          			}
+
+         			endif;
+                    /*=====================Ending Mailing Part====================*/  
+
+				}else{
+					$data['message'] = 'Email id is wrong.';
+          			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+				}
+		    }else if($em_data = $this->User_model->check_mob($ip)){
+		    	// $ip['mobile'] = $em_data[0]->user_mob;
+		    	if(!empty($em_data)){
+
+		    		/*======================Mailing Part======================*/
+			        $from_email = "noreply@getmytruck.in"; 
+			        $to_email = $ip['email_mob']; 
+			        $this->email->from($from_email, 'Getmytruck.in'); 
+			        $this->email->to($to_email);
+			        $this->email->subject('New Password Email'); 
+			        $this->email->message('Your new password is '.$ip['six_digit_random_number']);
+			        if($this->email->send()):
+					
+						if($this->User_model->new_otp_pass($ip, $serviceName)){
+							/*==================Sending Otp Again=====================*/ 
+		                    $user="developer321322@indglobal-consulting.com:indglobal123";
+							$sender="TEST SMS";
+							$number = $ip['email_mob'];
+							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - Doctorway"; 
+							$ch = curl_init();
+							curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							curl_setopt($ch, CURLOPT_POST, 1);
+							curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
+							$buffer = curl_exec($ch);
+							curl_close($ch);
+							/*==================Sending Otp Again=====================*/
+							$data['message'] = 'OTP sent, Please check email or mobile.';
+		          			$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
+	          			}
+	          		endif;
+		    	}else{
+					$data['message'] = 'Mobile id is wrong.';
+          			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+				}
+		    }
+
+	        header("content-type: application/json");
+			echo $retVals;
+			exit;
+	    }  
+		/*End of Forget (Recover) Section*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -617,7 +729,6 @@
      	}
 		/*End of Resend Otp Section*/
 
-
 		/* Update Section*/
         public function update_brief_post()
 		{
@@ -676,62 +787,6 @@
 			exit;
 	    }
 		/*End of Update Section*/
-
-		/* Forget password(Recover) Section*/
-        public function recover_post()
-		{
-			$six_digit_random_number = mt_rand(100000, 999999);
-			$serviceName = 'Forgot Password';
-			$ip['mobile']   = trim($this->input->post('mobile'));
-			$ipJson = json_encode($ip);
-			if (empty($ip['mobile']))
-            {    
-                $data['message'] = "Mobile number is null....";
-				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-		         //json_decode($retVals1);	
-			}
-		    else 
-		    {    
-		        $chkmob=$this->User_model->recover($ip);
-                if($chkmob=="true")
-		        {
-		            $six_digit_random_number = mt_rand(10000000, 99999999);
-		            //echo $six_digit_random_number;exit()
-				    $ipJson = json_encode($ip);
-			        $data['message'] = "Password sent to number";
-					$retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
-					/*==================Sending Otp Again=====================*/ 
-                    $user="developer321322@indglobal-consulting.com:indglobal123";
-					$sender="TEST SMS";
-					$number = $ip['mobile'];
-					$message="Your Temporary Password is :".$six_digit_random_number." To change Your Paasword Login with this Please do not share this password with Anyone - Doctorway"; 
-					$ch = curl_init();
-					curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($ch, CURLOPT_POST, 1);
-					curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-					$buffer = curl_exec($ch);
-					curl_close($ch);
-					/*==================Sending Otp Again=====================*/
-					/*==================Updating Otp Again=====================*/
-                    $upuser = array( 
-                			   'user_pass' => md5($six_digit_random_number),
-                			   );
-                    $user = $this->User_model->updt_pass($ip,$upuser);
-					/*==================Updating Otp Again=====================*/    
-		        }
-		        else
-		        {
-		            $data['message'] = "Please Sign up first";
-					$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);	
-					json_decode($retVals1);
-	            }	        
-	        }
-	        header("content-type: application/json");
-			echo $retVals1;
-			exit;
-	    }  
-		/*End of Forget (Recover) Section*/
 
 		/*Mobile num change Section Starts*/
         public function mobchange_post()

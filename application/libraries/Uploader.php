@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 	
-class uploader
+class Uploader
 {
 	var $CI;
 	function uploader(){
@@ -8,7 +8,7 @@ class uploader
 	}
 	
 	function upload_image($value, $flag,$ip) {
-		//print_r($value);exit();
+		// print_r($value);exit();
 
 		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v", "JPG", "JPEG","PNG");
 		if ($value['type'] == "application/octet-stream"){
@@ -24,7 +24,7 @@ class uploader
 				return false;
 			}
 			$container = 'uploads/'.$ip['user_id'];
-			$doc = 'uploads/'.$ip['user_id'].'/document';
+			$doc = 'uploads/'.$ip['user_id'].'/document/photos';
 			$docThumb = 'uploads/'.$ip['user_id'].'/document/thumbs';
 			$profilePic = 'uploads/'.$ip['user_id'].'/profile/photos';
 			$profileThumb = 'uploads/'.$ip['user_id'].'/profile/thumbs';
@@ -32,22 +32,23 @@ class uploader
 			$postUploadThumb = 'uploads/'.$ip['user_id'].'/post/thumbs';
 			$chatPic = 'uploads/'.$ip['user_id'].'/chat/photos';
 			$chatThumb = 'uploads/'.$ip['user_id'].'/chat/thumbs';
-			if(!file_exists($doc)){
+
+			if(!file_exists($doc) || !file_exists($docThumb)){
 				mkdir($doc, 0755, true);
 				mkdir($docThumb, 0755, true);
 			}
 			if (!file_exists($container)) {
 				mkdir($container, 0755, true);
 			}
-			if (!file_exists($profilePic)) {
+			if (!file_exists($profilePic) || !file_exists($profileThumb)) {
 				mkdir($profilePic, 0755, true);
 				mkdir($profileThumb, 0755, true);	
 			}
-			if (!file_exists($postUploadOrg)) {
+			if (!file_exists($postUploadOrg) || !file_exists($postUploadThumb)) {
 				mkdir($postUploadOrg, 0755, true);
 				mkdir($postUploadThumb, 0755, true);	
 			}
-			if (!file_exists($chatPic))
+			if (!file_exists($chatPic) || !file_exists($chatThumb))
 			{
 				mkdir($chatPic, 0755, true);
 				mkdir($chatThumb, 0755, true);
@@ -70,7 +71,8 @@ class uploader
 				$thumnail_path = $docThumb."/". $name;
 			}
 			if (move_uploaded_file($value["tmp_name"], $pathName)) {
-				//$out['photo_url'] =  $pathName;
+				
+				//echo $out['photo_url'] =  $pathName;
 				$out['profile_org_url'] =  $pathName;
 				 $img = array("jpg","JPG", "jpeg", "JPEG",  "png",  "PNG", "gif");
 				 $video = array("mp4", "mov", "m4v","MOV");
@@ -84,7 +86,9 @@ class uploader
 					$thumbpathVideo = $postUploadThumb;
 					$out['profile_thumb_url'] = $this->makeVideoThumbnails($out['profile_org_url'], $nameVideo,$thumbpathVideo);;
 				} else {
+					// print_r($out);
 					$out['profile_thumb_url'] = $this->make_thumb($out['profile_org_url'],$thumnail_path);
+					// print_r($out);
 				}
 				return $out;
 			} else {
@@ -104,30 +108,36 @@ class uploader
 			}
 			$value['type'] = $imageMime['mime'];
 		}
-		$extension = end(explode(".", $value["name"]));
+		@$extension = end(explode(".", $value["name"]));
 		if ((($value["type"] == "image/jpeg") || ($value["type"] == "video/mp4")  || ($value["type"] == "video/quicktime") || ($value["type"] == "video/x-m4v") || ($value["type"] == "image/jpg") || ($value["type"] == "image/png") || ($value["type"] == "image/gif"))  && in_array($extension, $allowedExts)) {
 			if ($value["error"] > 0) {
 				return false;
 			}
 			$container = 'uploads/'.$ip['user_id'];
+			$doc = 'uploads/'.$ip['user_id'].'/document/photos';
+			$docThumb = 'uploads/'.$ip['user_id'].'/document/thumbs';
 			$profilePic = 'uploads/'.$ip['user_id'].'/profile/photos';
 			$profileThumb = 'uploads/'.$ip['user_id'].'/profile/thumbs';
 			$postUploadOrg = 'uploads/'.$ip['user_id'].'/post/photos';
 			$postUploadThumb = 'uploads/'.$ip['user_id'].'/post/thumbs';
 			$chatPic = 'uploads/'.$ip['user_id'].'/chat/photos';
 			$chatThumb = 'uploads/'.$ip['user_id'].'/chat/thumbs';
+			if(!file_exists($doc) || !file_exists($docThumb)){
+				mkdir($doc, 0755, true);
+				mkdir($docThumb, 0755, true);
+			}
 			if (!file_exists($container)) {
 				mkdir($container, 0755, true);
 			}
-			if (!file_exists($profilePic)) {
+			if (!file_exists($profilePic) || !file_exists($profileThumb)) {
 				mkdir($profilePic, 0755, true);
 				mkdir($profileThumb, 0755, true);	
 			}
-			if (!file_exists($postUploadOrg)) {
+			if (!file_exists($postUploadOrg) || !file_exists($postUploadThumb)) {
 				mkdir($postUploadOrg, 0755, true);
 				mkdir($postUploadThumb, 0755, true);	
 			}
-			if (!file_exists($chatPic))
+			if (!file_exists($chatPic) || !file_exists($chatThumb))
 			{
 				mkdir($chatPic, 0755, true);
 				mkdir($chatThumb, 0755, true);
@@ -205,10 +215,10 @@ class uploader
 	
 	function video_thumb($updir ,$name,$thumbpath)
 	{
-	  // Get the CodeIgniter super object
+	  	// Get the CodeIgniter super object
     	$CI =& get_instance();
-	  // Path to image thumbnail
-		  if(  file_exists($thumbpath))
+	  	// Path to image thumbnail
+		if(  file_exists($thumbpath))
 		{
 			// LOAD LIBRARY
 			$CI->load->library('image_lib');
@@ -225,15 +235,15 @@ class uploader
 			//echo $CI->image_lib->display_errors();
 		}
 
-    return $thumbpath;
+    	return $thumbpath;
 	}
 	
 	function video_thumb_android($updir ,$name,$thumbpath)
 	{
-	  // Get the CodeIgniter super object
+	  	// Get the CodeIgniter super object
     	$CI =& get_instance();
-	  // Path to image thumbnail
-		  if(  file_exists($thumbpath))
+	  	// Path to image thumbnail
+		if(  file_exists($thumbpath))
 		{
 			// LOAD LIBRARY
 			$CI->load->library('image_lib');
@@ -252,9 +262,8 @@ class uploader
 			//echo $CI->image_lib->display_errors();
 		}
 
-    return $thumbpath;
+    	return $thumbpath;
 	}
-	
 	
 	function image_thumb($updir ,$name,$thumbpath,$flag)
 	{
@@ -287,15 +296,15 @@ class uploader
 			//echo $CI->image_lib->display_errors();
 		}
 
-    return $thumbpath;
+    	return $thumbpath;
 	}
-
 
 	function make_thumb($src, $dest) {
 		$desired_width = 190;
 		/* read the source image */
 		
 		$ext = pathinfo($src, PATHINFO_EXTENSION);
+		// print_r($src);
 		if($ext == 'png' || $ext == 'PNG')
 		{
 			$source_image = imagecreatefrompng($src);
@@ -319,12 +328,15 @@ class uploader
 		
 		/* copy source image at a resized size */
 		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
-		
+		// print_r($ext);exit();
 		// Fix Orientation
-		if($ext != 'png' || $ext != 'PNG'){
+		/*if($ext != 'png' || $ext != 'PNG'){
+
 			$exif = @exif_read_data($src);
-			//echo "<pre>";
-			//print_r($exif);exit;
+			// $exif = read_exif_data($src);
+			// echo @$exif;
+			// echo "<pre>";
+			// print_r(@$exif);exit;
 	            $orientation = @$exif['Orientation'];
 		    switch($orientation) {
 		        case 3:
@@ -337,41 +349,43 @@ class uploader
 		            $virtual_image = imagerotate($virtual_image, 90, 0);
 		            break;
 		    }
-		}
+		}*/
 	    //print_r($exif);exit();
-  	//echo $virtual_image;
-    //exit;
+  		//echo $virtual_image;
+    	//exit;
 		/* create the physical thumbnail image to its destination */
 		if($ext == 'png' || $ext == 'PNG'){
+			// echo "string";
 			imagepng($virtual_image, $dest, 9);
 		}else{
 			imagejpeg($virtual_image, $dest, 90);
 		}
 		return $dest;
 	}
-	function make_bitly_url($url,$login,$appkey,$format = 'xml',$version = '2.0.1')
-{
-	//create the URL
-	$bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
-	
-	//get the url
-	//could also use cURL here
-	$response = file_get_contents($bitly);
-	
-	//parse depending on desired format
-	if(strtolower($format) == 'json')
-	{
-		$json = @json_decode($response,true);
-		return $json['results'][$url]['shortUrl'];
-	}
-	else //xml
-	{
-		$xml = simplexml_load_string($response);
-		return 'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
-	}
-}
 
-function upload_image_bitly($value, $flag,$ip) {
+	function make_bitly_url($url,$login,$appkey,$format = 'xml',$version = '2.0.1')
+	{
+		//create the URL
+		$bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
+		
+		//get the url
+		//could also use cURL here
+		$response = file_get_contents($bitly);
+		
+		//parse depending on desired format
+		if(strtolower($format) == 'json')
+		{
+			$json = @json_decode($response,true);
+			return $json['results'][$url]['shortUrl'];
+		}
+		else //xml
+		{
+			$xml = simplexml_load_string($response);
+			return 'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
+		}
+	}
+
+	function upload_image_bitly($value, $flag,$ip) {
 		$flag = "post";
 		//echo $value['type'];
 		$allowedExts = array("jpg", "jpeg", "png", "gif", "mov","MOV", "mp4", "m4v","x-png","PNG");

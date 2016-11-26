@@ -32,28 +32,24 @@ date_default_timezone_set('Asia/Kolkata');
 					endforeach;
 			
 				if ($query == 1) {
+
+					$this->db->select('b.state AS from_state, b.city AS from_city, b.id AS from_city_id, c.state AS to_state, c.city AS to_city, c.id AS to_city_id');
+				  	$this->db->from('gmt_transporter_station a'); 
+				    $this->db->join('gmt_indian_city_list b', 'a.source_city_id_fk=b.id', 'left');
+				    $this->db->join('gmt_indian_city_list c', 'a.destination_city_id_fk=c.id', 'left');
+				  	$this->db->where('a.user_id',$input['user_id']);
+					$this->db->order_by("trans_stn_id", "desc");
+            		$this->db->limit(count($input['to_city']));
+				  	$query = $this->db->get();
+				  	//echo $this->db->last_query();
+
+				  	$data = $query->result();
 					
-					$last_id = $this->db->insert_id();
-					$this->db->select('user_id,
-						source_state_fk,
-						source_city_id_fk,
-						destination_state_fk,
-						destination_city_id_fk');
-				    $this->db->from('gmt_transporter_station');
-					$this->db->where('trans_stn_id', $last_id );
-
-				    $detail_last_user = $this->db->get();
-				    $resultq = $detail_last_user->result();
-				    
-					//$data['detail'] = $resultq;
-					$data = $resultq;
-					//$data['id'] = $profile_thumb_url;
-
 					$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 
 				}
 				else {
-					$data['message'] = 'Something went wrong while signup. Try Again.';
+					$data['message'] = 'Something went wrong while saving station. Try Again.';
 					$status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 				}
 			return $status;

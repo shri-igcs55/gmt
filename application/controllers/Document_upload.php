@@ -49,10 +49,12 @@
 		public function add_document_post() {
 			$this->load->library('upload');
 	      	$this->load->helper(array('url'));
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
 			//ini_set('max_execution_time', 1000);
 			$serviceName = 'add_document';
 			$flag = "document";
-			$ip['user_id'] = $this->input->post('user_id');
+			$ip['user_id'] = trim($this->input->post('user_id'));
 			$ip['doc_name'] = trim($this->input->post('doc_name'));
 			// print_r($upic = $_FILES['user_doc']);
 			// exit;
@@ -61,7 +63,6 @@
 			$upic = $_FILES['user_doc'];
 			// print_r($upic);
 			// exit;
-			$logged_in_user = $this->session->userdata('logged_in_user');	
 			$ip['user_id']=($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			
 			// $ip['flag'] = $flag;
@@ -69,21 +70,24 @@
 			$validation_array = 1;
 			$ip_array[] = array("msg",$ip['user_id'],"not_null","user_id","Wrong or Invalid user_id.");
 			$ip_array[] = array("msg",$ip['doc_name'],"not_null","doc_name","Document name is empty.");
-			$ipJson = json_encode($ip);
+			// $ipJson = json_encode($ip);
 			
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) {
 				$data['message'] = $validation_array['msg'];
-				$retVals = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
 			else {
-				$this->load->library('uploader');
+				// echo "uploader";
+				$this->load->library('Uploader');
 				/*foreach($_FILES as $key => $value) {
 					//print_r($ip);
 					$uploadPhoto[] = $this->uploader->upload_image($value, $flag, $ip);
 				}*/
+				// echo "after uploader";
+				
 				$uploadPhoto[] = $this->uploader->upload_image($upic, $flag,$ip);
-				//print_r($uploadPhoto);exit();
+				// print_r($uploadPhoto);exit();
 				
 				if ($uploadPhoto[0] == 'failed') {
 					$data['message'] = 'Upload Failed. Please try again';
@@ -126,10 +130,10 @@
 			} 
 			else {
 				$data =$this->Document_upload_model->get_uploaded_document($ip);
-		    	$data =$this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+		    	$retVals =$this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			}
 			header("content-type: application/json");
-		    echo $data;
+		    echo $retVals;
 		    exit;
      	}
     }

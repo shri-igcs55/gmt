@@ -12,6 +12,7 @@
 			
 			date_default_timezone_set('Asia/Kolkata');
 		}
+		
 		public function delete_document_post()
 		{
 			$serviceName = 'Delete_document';
@@ -27,8 +28,13 @@
 			} 
 			else
 			{
-				$data['message'] ='Document Deleted Successfully';
-                $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+				if ($this->Delete_document_model->delete_document($ip)) {
+					$data['message'] ='Document Deleted Successfully';
+	                $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+	            }else{
+	            	$data['message'] ='Something went wrong while storing Document.';
+	                $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+	            }
 			}
 		    header("content-type: application/json");
 		    echo $retVals1;
@@ -70,7 +76,6 @@
 	    	header("content-type: application/json");
 		    echo $retVals1;
 		    exit;
-	    	
 	    }
 	}
 ?>
