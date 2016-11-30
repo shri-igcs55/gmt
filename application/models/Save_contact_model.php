@@ -92,23 +92,20 @@
 			$ipJson = json_encode($input);		
 			$save_contact = array(
 				    'user_id'           => $input['user_id'],
-				    'cont_group_name'   => ucwords($input['cont_group_name']),
+				    'cgrp_group_name'   => ucwords($input['cont_group_name']),
 					'created_datetime'  => Date('Y-m-d h:i:s'),
 					'created_ip'        => $_SERVER['REMOTE_ADDR'],
                     'modified_datetime'	=> Date('Y-m-d h:i:s'),
                     'modified_ip'       => $_SERVER['REMOTE_ADDR']	
 				);
-			$query = $this->db->insert('gmt_contact', $save_contact);
+			$query = $this->db->insert('gmt_contact_group', $save_contact);
 			if ($query == 1) {
 				$last_id = $this->db->insert_id();
-				$this->db->select('user_id,
-									cont_name,
-									cont_email,
-									cont_mob,
-									reg_id_fk,
-									cont_group_name');
-				$this->db->from('gmt_contact');
-				$this->db->where('cont_id', $last_id );
+				$this->db->select('cgrp_id AS group_id, user_id,
+									cgrp_group_name AS group_name,
+									cgrp_cont_count AS no_of_contact_in_group');
+				$this->db->from('gmt_contact_group');
+				$this->db->where('cgrp_id', $last_id);
 			    $detail_last_user = $this->db->get();
 			    
 			    return $data = $detail_last_user->result_array();
@@ -123,7 +120,7 @@
 		public function view_contact_group($value, $serviceName){
 			$ipJson = json_encode($value);
 
-			$view_group  = $this->db->select('user_id, cgrp_group_name AS group_name, cgrp_id AS group_id')
+			$view_group  = $this->db->select('user_id, cgrp_group_name AS group_name, cgrp_id AS group_id, cgrp_cont_count AS contact_in_group')
 									->from('gmt_contact_group')
 									->where('user_id', $value['user_id'])
 									->where('cgrp_del_status', 1)
@@ -160,6 +157,25 @@
 			$this->db->where('cont_id', $value['contact_id']);
 			$update_group = $this->db->update('gmt_contact',$edit_cont_count);
 			return $afted_rows = $this->db->affected_rows(); // exit();
+		}
+
+		public function edit_one_contact($value, $serviceName){
+			$ipJson = json_encode($value);		
+			// print_r($value);
+			$this->db->select('gmt_contact.cont_id,
+								gmt_contact.cont_name,
+								gmt_contact.cont_mob,
+								gmt_contact.cont_email, 
+								gmt_contact_group.cgrp_id,
+								gmt_contact_group.cgrp_group_name');
+			$this->db->from('gmt_contact');
+			$this->db->join('gmt_contact_group','gmt_contact_group.cgrp_id = gmt_contact.cont_group_id');
+			$this->db->where('gmt_contact.cont_id', $value['contact_id']);
+			$this->db->where('gmt_contact.user_id', $value['user_id'] );
+		    $detail_last_user = $this->db->get();
+		    // echo $this->db->last_query($detail_last_user);
+		    // print_r($detail_last_user->result_array());exit();
+			return $edit_detail =$detail_last_user->result_array();
 		}
 	}
 ?>
