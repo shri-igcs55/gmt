@@ -42,6 +42,29 @@ date_default_timezone_set('Asia/Kolkata');
         }
         return $status;
     }
+	
+	public function rate_to_order($order, $serviceName){
+		$quotation = array(
+          'user_id'                      => $order['user_id'],
+          'plc_odr_id_fk'                => $order['order_id'],
+          'odr_qtn_amount'               => $order['quoted_rate'],          
+          'status_id_fk'                 => 4,
+          'created_datetime'             => Date('Y-m-d h:i:s'),
+          'created_ip'                   => $order['created_ip'],
+          'modified_datetime'            => Date('Y-m-d h:i:s'),
+          'modified_ip'                 => $order['modified_ip']  
+          );				
+		$query = $this->db->insert('gmt_order_quotation',$quotation);		
+        if ($query == 1) {
+			$data['message'] = 'Order rate has been successfully posted.'; 
+			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
+		}
+		else {
+			$data['message'] = 'Something went wrong while signup. Try Again.';
+			$status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+        }
+        return $status;
+	}
 
   }
   

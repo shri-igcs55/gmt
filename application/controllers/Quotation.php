@@ -44,5 +44,34 @@
 	        echo $retVals1;
 	        exit;
 	   	}
+		
+		public function rateToOrder_post(){			
+			$serviceName = 'Rate to Order by the customer';
+			$logged_in_user = $this->session->userdata('logged_in_user');
+			$order['user_id'] = $logged_in_user['user_id'];
+			$order['order_id'] = trim($this->input->post('order_id'));			
+			$order['quoted_rate'] = trim($this->input->post('quoted_rate'));
+			$order['created_ip']                 = $_SERVER['REMOTE_ADDR'];
+            $order['modified_ip']                = $_SERVER['REMOTE_ADDR'];
+			//echo 'test';exit;
+			$validation_array = 1;
+			$ip_array[] = array("user_id", $order['user_id'], "not_null", "user_id", "user_id is empty.");
+			$validation_array = $this->validator->validate($ip_array);
+		    if ($validation_array !=1) 
+			{
+				$order = json_encode($order);
+			    $data['message'] = $validation_array;
+				$order = $this->seekahoo_lib->return_status('error', $serviceName, $data, $order);
+			} 
+			else  
+			{
+				$order = $this->Quotation_model->rate_to_order($order, $serviceName);
+			}			
+	        header("content-type: application/json");
+	        echo $order;
+	        exit;
+		}
+		
+		
 	}
 ?>
