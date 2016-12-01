@@ -27,7 +27,8 @@ class User_model extends CI_model
   public function get_comp_type(){
     $this->db->select('comp_type_id AS cid, comp_type AS ctype, comp_status AS cstatus');
     $this->db->from('gmt_company_type'); 
-    // $this->db->where('comp_status', '1');
+    $this->db->where('comp_status', '1');
+    $this->db->order_by('comp_type', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
@@ -36,7 +37,8 @@ class User_model extends CI_model
   public function get_vehicle_type(){
     $this->db->select('vehicle_id AS vid, vehicle_typ AS vtype, vehicle_status AS vstatus');
     $this->db->from('gmt_vehicle'); 
-    // $this->db->where('vehicle_status', '1');
+    $this->db->where('vehicle_status', '1');
+    $this->db->order_by('vehicle_typ', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
@@ -45,7 +47,8 @@ class User_model extends CI_model
   public function get_work_type(){
     $this->db->select('dw_id AS wdid, dw_type AS wdtype, dw_status AS wdstatus');
     $this->db->from('gmt_desc_work'); 
-    // $this->db->where('dw_status', '1');
+    $this->db->where('dw_status', '1');
+    $this->db->order_by('dw_type', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
@@ -54,7 +57,8 @@ class User_model extends CI_model
   public function get_material_type(){
     $this->db->select('mat_id AS mid, mat_type AS mtype, mat_status AS mstatus');
     $this->db->from('gmt_material'); 
-    // $this->db->where('mat_status', '1');
+    $this->db->where('mat_status', '1');
+    $this->db->order_by('mat_type', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
@@ -63,7 +67,8 @@ class User_model extends CI_model
   public function get_service_type(){
     $this->db->select('sf_id AS sid, sf_type AS stype, sf_status AS sstatus');
     $this->db->from('gmt_service_for'); 
-    // $this->db->where('sf_status', '1');
+    $this->db->where('sf_status', '1');
+    $this->db->order_by('sf_type', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
@@ -72,7 +77,8 @@ class User_model extends CI_model
   public function get_designation_list(){
     $this->db->select('desg_id AS id, desg_type AS designation');
     $this->db->from('gmt_designation');
-    $this->db->where('desg_status', 1);
+    $this->db->where('desg_status', '1');
+    $this->db->order_by('desg_type', 'ASC');
     $query = $this->db->get();
     $details = $query->result_array();
     return $details;
