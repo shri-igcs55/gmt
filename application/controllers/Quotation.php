@@ -73,5 +73,20 @@
 		}
 		
 		
+		public function acceptOrder_post(){	
+			$serviceName = 'Accept order by customer';
+			$order['order_id'] = trim($this->input->post('order_id'));			
+			$order['transpoter_id'] = trim($this->input->post('transpoter_id'));			
+            $order['modified_ip'] = $_SERVER['REMOTE_ADDR'];
+			
+			$order = $this->Quotation_model->acceptorder($order, $serviceName);
+						
+	        header("content-type: application/json");
+	        echo $order;
+	        exit;
+		}
+		
+		
+		
 	}
 ?>
