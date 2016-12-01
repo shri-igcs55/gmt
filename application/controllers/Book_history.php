@@ -109,19 +109,24 @@
 			{
 				// print_r($ip);exit();
                 $data = $this->Book_history_model->rated_orders($ip, $serviceName);
-                // print_r($data);exit();
+                //print_r($data);exit();
                 if($data){
      
-					foreach($data as $order):						
-						$FromCity[$order['order_id']][] = $order['from_city'];
-						$ToCity[$order['order_id']][] = $order['to_city'];
-						$pickup_area_location[$order['order_id']][] = $order['pickup_area_location'];
-						$drop_area_location[$order['order_id']][] = $order['drop_area_location'];
-						$tmpOrder[$order['order_id']] = $order;
-						$tmpOrder[$order['order_id']]['from_city'] = $FromCity[$order['order_id']];
-						$tmpOrder[$order['order_id']]['to_city'] = $ToCity[$order['order_id']];
-						$tmpOrder[$order['order_id']]['pickup_area_location'] = $pickup_area_location[$order['order_id']];
-						$tmpOrder[$order['order_id']]['drop_area_location'] = $drop_area_location[$order['order_id']];
+					foreach($data['order'] as $order):
+							//print_r($data['quotation'][$order['order_id']][0]);exit;
+							if(isset($data['quotation'][$order['order_id']][0]))
+								$order['quotation'] = $data['quotation'][$order['order_id']][0];
+						
+							$FromCity[$order['order_id']][] = $order['from_city'];
+							$ToCity[$order['order_id']][] = $order['to_city'];
+							$pickup_area_location[$order['order_id']][] = $order['pickup_area_location'];
+							$drop_area_location[$order['order_id']][] = $order['drop_area_location'];
+							$tmpOrder[$order['order_id']] = $order;
+							$tmpOrder[$order['order_id']]['from_city'] = $FromCity[$order['order_id']];
+							$tmpOrder[$order['order_id']]['to_city'] = $ToCity[$order['order_id']];
+							$tmpOrder[$order['order_id']]['pickup_area_location'] = $pickup_area_location[$order['order_id']];
+							$tmpOrder[$order['order_id']]['drop_area_location'] = $drop_area_location[$order['order_id']];
+						
 					endforeach;
 					// print_r($tmpOrder);
 					// exit();

@@ -65,6 +65,12 @@ date_default_timezone_set('Asia/Kolkata');
         }
         return $status;
 	}
+	public function acceptorder($order, $serviceName){
+		$query = $this->db->update('gmt_order_quotation',$quotation);
+		$data['message'] = 'Order rate has been successfully posted.'; 
+		$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
+	}
+	
 
   }
   
