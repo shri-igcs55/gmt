@@ -36,6 +36,7 @@
 
       $ip['weight']           = trim($this->input->post('weight'));
       $ip['desc_of_goods']    = trim($this->input->post('desc_of_work'));
+      $ip['other_desc_of_work']=trim($this->input->post('other_desc_of_work'));
       $ip['sechdule_date']    = trim($this->input->post('sechdule_date'));
       $ip['created_ip'] = $ip['modified_ip'] = $_SERVER['REMOTE_ADDR'];
       //$ip['modified_ip']         = $_SERVER['REMOTE_ADDR'];
@@ -60,7 +61,11 @@
       $ip_array[] = array("msg", $ip['to_location'],"not_null", "to_location","City Location is empty");
       $ip_array[] = array("msg", $ip['to_address'], "not_null", "to_address", "Address is empty.");
 
-      $ip_array[] = array("msg", $ip['desc_of_goods'], "not_null", "desc_of_goods", "Desc_of_goods is empty.");
+      if($ip['desc_of_goods'] == 1){
+        $ip_array[] = array("msg", $ip['other_desc_of_work'], "not_null", "other_desc_of_work", "Other work description is empty.");
+      }else{
+        $ip_array[] = array("msg", $ip['desc_of_goods'], "not_null", "desc_of_goods", "Desc_of_goods is empty.");
+      }
 
       $validation_array = $this->validator->validate($ip_array);
       if ($validation_array !=1) 

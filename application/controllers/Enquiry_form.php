@@ -32,13 +32,18 @@
 			$ip['to_state']            = trim($this->input->post('to_state'));
 			$ip['to_city']             = $this->input->post('to_city');
 			$ip['to_location']         = $this->input->post('to_location');
+
 			$ip['material_type']       = trim($this->input->post('material_type'));
-			
+			$ip['other_material_type'] = trim($this->input->post('other_material_type'));
+
 			$ip['no_of_quantity']      = trim($this->input->post('no_of_quantity'));
 			$ip['weight']              = trim($this->input->post('weight'));
 			
 			$ip['feet']                = trim($this->input->post('feet'));
+			
 			$ip['vehicle_type']        = trim($this->input->post('vehicle_type'));
+            $ip['other_vehicle_type']  = trim($this->input->post('other_vehicle_type'));
+
             $ip['no_of_vehicle']       = trim($this->input->post('no_of_vehicle'));
             $ip['pickup_points']       = trim($this->input->post('pickup_points'));
             $ip['destination_points']  = trim($this->input->post('destination_points'));
@@ -55,11 +60,22 @@
 			$ip_array[] = array("msg",$ip['odr_by_mob'],"not_null","odr_by_mob","Mobile Number empty");
 			$ip_array[] = array("msg", $ip['from_city'], "not_null", "from_city","From City is empty.");
 			$ip_array[] = array("msg", $ip['to_city'], "not_null", "to_city", "To city is empty.");
-			$ip_array[] = array("msg", $ip['vehicle_type'], "not_null", "vehicle_type", "Vehicle type empty.");
+			
+			if($ip['vehicle_type'] == 1){
+				$ip_array[] = array("msg", $ip['other_vehicle_type'], "not_null", "other_vehicle_type", "Other Vehicle type is empty.");
+			}else{
+				$ip_array[] = array("msg", $ip['vehicle_type'], "not_null", "vehicle_type", "Vehicle type empty.");
+			}
+
 			$ip_array[] = array("msg", $ip['no_of_vehicle'], "not_null", "no_of_vehicle", "No. of Vehicle is empty.");
 			// $ip_array[] = array("msg", $ip['pickup_points'], "not_null", "pickup_points", "Pickup Points is empty.");
 			// $ip_array[] = array("msg", $ip['destination_points'], "not_null", "destination_points", "Destination Points is empty.");
-			$ip_array[] = array("msg", $ip['material_type'], "not_null", "material_type", "Material type is empty.");
+			if($ip['material_type'] == 1){
+				$ip_array[] = array("msg", $ip['other_material_type'], "not_null", "other_material_type", "Other Material type is empty.");
+			}else{
+				$ip_array[] = array("msg", $ip['material_type'], "not_null", "material_type", "Material type is empty.");
+			}
+			
 			$ip_array[] = array("msg", $ip['sechdule_date'], "not_null", "sechdule_date", "Sechdule date is empty.");
 			$validation_array = $this->validator->validate($ip_array);
 			

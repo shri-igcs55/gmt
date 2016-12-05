@@ -131,7 +131,15 @@ class User_model extends CI_model
   /*Sign Up*/
   public function signup($input, $serviceName) {
     $ipJson = json_encode($input);
-        
+
+    /*if($input['other_company_type']){
+      $company_type = $input['other_company_type'];
+    }else{
+      $company_type = $input['company_type'];
+    }*/
+    // print_r($input);exit();
+    
+
     $signup_data = array(
       'user_rand_id'     => $input['user_rand_id'],
       'user_fname'       => $input['first_name'],
@@ -143,7 +151,8 @@ class User_model extends CI_model
       'user_otp'         => $input['user_otp'],
       'user_status'      => $input['user_status'],
       'u_type_id'        => $input['user_type'],      
-      // 'user_designation' => $input['designation'],
+      'user_designation' => $input['designation'],
+      'other_user_designation'=>$input['other_designation'],
       // 'pkg_id'           => $input['pkg_id'],
       'created_datetime' => $input['created_datetime'],
       'created_ip'       => $input['created_ip'],   
@@ -167,6 +176,7 @@ class User_model extends CI_model
         'u_detail_pin'       => $input['pin'],
         'u_detail_pan'       => $input['pan'],
         'comp_type_id_fk'    => $input['company_type'],
+        'other_company_type' => $input['other_company_type'],
         'created_datetime'   => $input['created_datetime'],
         'created_ip'         => $input['created_ip'],   
         'modified_datetime'  => $input['modified_datetime'],
@@ -186,7 +196,7 @@ class User_model extends CI_model
           (select `u_type_name` from `gmt_user_type` where `u_type_id` = '.$input['user_type'].') AS user_type_name, 
           ud.state_fk AS state, ud.district_fk AS district, ud.city AS city_id, ud.address1 AS addr1, ud.address2 AS addr2,
           (select `city` from `gmt_indian_city_list` where `id` = '.$input['city'].') AS city, 
-          ud.u_detail_pin AS pincode, ud.u_detail_pan AS pan_num');
+          ud.u_detail_pin AS pincode, ud.u_detail_pan AS pan_num, u.other_user_designation, u.user_designation, ud.other_company_type, ud.comp_type_id_fk');
         $this->db->from('gmt_user u');
         $this->db->join('gmt_user_details ud', 'u.user_id = ud.user_id', 'LEFT');
         $this->db->where('u.user_id', $signup_data_last_id );

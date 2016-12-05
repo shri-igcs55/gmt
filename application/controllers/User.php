@@ -135,8 +135,13 @@
 			$ip['c_pass']           = trim($this->input->post('c_pass'));
 			$ip['firm_name']        = trim($this->input->post('firm_name'));
             $ip['pan']              = trim($this->input->post('pan'));
-            $ip['company_type']     = trim($this->input->post('company_type'));
-            $ip['designation']      = trim($this->input->post('designation'));
+            
+            $ip['company_type']     = trim($this->input->post('company_type_new'));
+            $ip['other_company_type']=trim($this->input->post('other_company_type_new'));
+            
+            $ip['designation']      = trim($this->input->post('designation_new'));
+            $ip['other_designation']= trim($this->input->post('other_designation_new'));
+            
             $ip['address1']         = trim($this->input->post('address1'));
             $ip['address2']         = trim($this->input->post('address2'));
             // $ip['country']          = trim($this->input->post('country'));
@@ -185,8 +190,19 @@
 
 			if($ip['user_type']==4)
 			{
-                $ip_array[] = array("msg", $ip['company_type'], "not_null", "company_type", "Company Type is empty.");
-			    $ip_array[] = array("msg", $ip['designation'], "not_null", "designation", "Designation is empty.");
+				if($ip['company_type'] == 1){
+				    $ip_array[] = array("msg", $ip['other_company_type'], "not_null", "other_company_type", "Other Company Type is empty.");
+				}else{
+					$ip_array[] = array("msg", $ip['company_type'], "not_null", "company_type", "Company Type is empty.");		    
+				}
+               
+
+			    if($ip['designation'] == 1){
+				    $ip_array[] = array("msg", $ip['other_designation'], "not_null", "other_designation", "Other Designation is empty.");
+				}else{
+				    $ip_array[] = array("msg", $ip['designation'], "not_null", "designation", "Designation is empty.");
+				}
+
 			    $ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
 			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
 			}

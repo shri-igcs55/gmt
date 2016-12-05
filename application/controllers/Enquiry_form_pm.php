@@ -34,11 +34,13 @@
 			$ip['detailed_to_address']   = trim($this->input->post('detailed_to_address'));
 			$ip['shift_floor_to']        = trim($this->input->post('shift_floor_to'));
 			$ip['to_lift_facility']      = trim($this->input->post('to_lift_facility'));
-			$ip['service_for']           = trim($this->input->post('service_for'));		
+			$ip['service_for']           = trim($this->input->post('service_for'));
+			$ip['other_service_for']	 = trim($this->input->post('other_service_for'));
 			$ip['desc_of_goods']         = trim($this->input->post('desc_of_goods'));
             $ip['sechdule_date']         = trim($this->input->post('sechdule_date'));
             $ip['created_ip']            = $_SERVER['REMOTE_ADDR'];
             $ip['modified_ip']           = $_SERVER['REMOTE_ADDR'];
+
 			$ipJson = json_encode($ip);
 			//validation
 			$validation_array = 1;
@@ -67,8 +69,13 @@
 			
 			$ip_array[] = array("msg", $ip['desc_of_goods'], "not_null", "desc_of_goods", "Goods Description is empty");
 			$ip_array[] = array("msg", $ip['sechdule_date'], "not_null", "sechdule_date", "Schedule date is empty");
-			
-			
+
+			if($ip['service_for'] == 1){
+				$ip_array[] = array("msg", $ip['other_service_for'], "not_null", "other_service_for", "Other Service required for is empty.");
+			}else{
+				$ip_array[] = array("msg", $ip['service_for'], "not_null", "service_for", "Service required for is empty.");
+			}
+				
 
 			$validation_array = $this->validator->validate($ip_array);
             if ($validation_array !=1) 
