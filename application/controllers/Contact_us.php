@@ -8,7 +8,7 @@
 //error_reporting(0);
 class Contact_us extends REST_Controller
 {
-	public function contact_us()
+	public function Contact_us()
 	{
 		parent::__construct();
 		$this->load->model('contact_us_model');
