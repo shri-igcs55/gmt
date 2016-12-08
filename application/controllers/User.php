@@ -136,10 +136,10 @@
 			$ip['firm_name']        = trim($this->input->post('firm_name'));
             $ip['pan']              = trim($this->input->post('pan'));
             
-            $ip['company_type']     = trim($this->input->post('company_type_new'));
+            $ip['company_type']     = trim($this->input->post('company_type'));
             $ip['other_company_type']=trim($this->input->post('other_company_type_new'));
             
-            $ip['designation']      = trim($this->input->post('designation_new'));
+            $ip['designation']      = trim($this->input->post('designation'));
             $ip['other_designation']= trim($this->input->post('other_designation_new'));
             
             $ip['address1']         = trim($this->input->post('address1'));
@@ -197,7 +197,7 @@
 				}
                
 
-			    if($ip['designation'] == 1){
+			    if($ip['designation'] == 'Other'){
 				    $ip_array[] = array("msg", $ip['other_designation'], "not_null", "other_designation", "Other Designation is empty.");
 				}else{
 				    $ip_array[] = array("msg", $ip['designation'], "not_null", "designation", "Designation is empty.");
