@@ -217,7 +217,7 @@
 			$validation_array = $this->validator->validate($ip_array);
 			$ipJson = json_encode($ip);
 	                
-			if(empty($ip['user_pass']))
+			if(empty($ip['user_pass']) || $ip['user_pass'] == '')
 			{
 				$data['message'] = "All * marked fields must not be empty.";
 			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
