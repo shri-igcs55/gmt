@@ -123,7 +123,7 @@
                     $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
                 }
                 else{
-                    $data['message'] = "No Contact deleted.";
+                    $data['message'] = "Contact not deleted.";
                     $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
                 }
             }
@@ -150,7 +150,7 @@
             $validation_array = 1;
             $ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "user id is empty.");
             $ip_array[] = array("msg", $ip['cont_group_id'], "not_null", "cont_group_id", "contact group name id is empty.");
-            $ip_array[] = array("msg",$ip['contact_id'],"not_null","contact_id","Contact number id is empty.");
+            $ip_array[] = array("msg",$ip['contact_id'],"not_null","contact_id","Please select Contact number first.");
 
             $validation_array = $this->validator->validate($ip_array);
             if ($validation_array !=1) 
