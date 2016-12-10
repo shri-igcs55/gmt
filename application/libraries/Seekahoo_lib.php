@@ -40,35 +40,35 @@ class seekahoo_lib
 	}
 	
 	function make_bitly_url_post($post_id)
-{	
-	$url = "http://50.62.164.79/seekahoo_v3/before_layout.php?post_id=".$post_id;
-	
-	$login = 'o_3mpt05ddoa';
-	$appkey = 'R_6b5126719f134c0a84101132fa7bbed0';
-	$version = '2.0.1';
-	$format = 'json';
-	//create the URL
-	 $bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
-	
-	//get the url
-	//could also use cURL here
-	$response = file_get_contents($bitly);
-	
-	//parse depending on desired format
-	if(strtolower($format) == 'json')
-	{    
-		$json = @json_decode($response,true);
-		//header("content-type: application/json");
-		echo $this->format_json($json['results'][$url]['shortUrl']);
-		// $json['results'][$url]['shortUrl'];
-		exit;
+	{	
+		$url = "http://50.62.164.79/seekahoo_v3/before_layout.php?post_id=".$post_id;
+		
+		$login = 'o_3mpt05ddoa';
+		$appkey = 'R_6b5126719f134c0a84101132fa7bbed0';
+		$version = '2.0.1';
+		$format = 'json';
+		//create the URL
+		 $bitly = 'http://api.bit.ly/shorten?version='.$version.'&longUrl='.urlencode($url).'&login='.$login.'&apiKey='.$appkey.'&format='.$format;
+		
+		//get the url
+		//could also use cURL here
+		$response = file_get_contents($bitly);
+		
+		//parse depending on desired format
+		if(strtolower($format) == 'json')
+		{    
+			$json = @json_decode($response,true);
+			//header("content-type: application/json");
+			echo $this->format_json($json['results'][$url]['shortUrl']);
+			// $json['results'][$url]['shortUrl'];
+			exit;
+		}
+		else //xml
+		{
+			$xml = simplexml_load_string($response);
+			echo  'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
+		}
 	}
-	else //xml
-	{
-		$xml = simplexml_load_string($response);
-		echo  'http://bit.ly/'.$xml->results->nodeKeyVal->hash;
-	}
-}
 
 }
 

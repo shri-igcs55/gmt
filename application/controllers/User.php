@@ -521,6 +521,8 @@
 	   	/* Forget password(Recover) Section*/
         public function recover_post()
 		{
+			$this->load->library('Email_sms');
+					
 			$ip['six_digit_random_number'] = mt_rand(10000000, 99999999);
 		            
 			$serviceName = 'Forgot Password';
@@ -540,30 +542,26 @@
 				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			}else if($em_data = $this->User_model->check_email($ip)){
 				// $ip['email'] = $em_data[0]->user_email;
+				// print_r($em_data);exit();
 				if(!empty($em_data)){
 					
 					/*======================Mailing Part======================*/
 			        $from_email = "noreply@getmytruck.in"; 
-			        $to_email = $ip['email_mob']; 
-			        $this->email->from($from_email, 'Getmytruck.in'); 
-			        $this->email->to($to_email);
-			        $this->email->subject('New Password Email'); 
-			        $this->email->message('Your new password is '.$ip['six_digit_random_number']);
-			        if($this->email->send()):
+			        $to_email = $em_data[0]->user_email; 
+			        $subject = 'New Password Email'; 
+			        $message = 'Your new password is '.$ip['six_digit_random_number'];
+
+					$mailstatus = $this->email_sms->send_email_method($from_email, $to_email, $subject, $message);
+			        if($mailstatus):
 
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
 							/*==================Sending Otp Again=====================*/ 
-		                    $user="developer321322@indglobal-consulting.com:indglobal123";
-							$sender="TEST SMS";
-							$number = $ip['email_mob'];
-							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - Doctorway"; 
-							$ch = curl_init();
-							curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-							curl_setopt($ch, CURLOPT_POST, 1);
-							curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-							$buffer = curl_exec($ch);
-							curl_close($ch);
+		                    $sender="TEST SMS";
+							$number = $em_data[0]->user_mob;
+							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - GetmyTruck.in"; 
+							// echo $ip['six_digit_random_number'];
+							$smsstatus = $this->email_sms->send_sms_method($sender, $number, $message);
+							
 							/*==================Sending Otp Again=====================*/
 	         				$data['message'] = 'OTP sent, Please check email or mobile.';
 	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
@@ -578,30 +576,26 @@
 				}
 		    }else if($em_data = $this->User_model->check_mob($ip)){
 		    	// $ip['mobile'] = $em_data[0]->user_mob;
+		    	// print_r($em_data);exit();
 		    	if(!empty($em_data)){
 
 		    		/*======================Mailing Part======================*/
 			        $from_email = "noreply@getmytruck.in"; 
-			        $to_email = $ip['email_mob']; 
-			        $this->email->from($from_email, 'Getmytruck.in'); 
-			        $this->email->to($to_email);
-			        $this->email->subject('New Password Email'); 
-			        $this->email->message('Your new password is '.$ip['six_digit_random_number']);
-			        if($this->email->send()):
+			        $to_email = $em_data[0]->user_email; 
+			        $subject = 'New Password Email'; 
+			        $message = 'Your new password is '.$ip['six_digit_random_number'];
+
+					$mailstatus = $this->email_sms->send_email_method($from_email, $to_email, $subject, $message);
+					if($mailstatus):
 					
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
 							/*==================Sending Otp Again=====================*/ 
-		                    $user="developer321322@indglobal-consulting.com:indglobal123";
-							$sender="TEST SMS";
-							$number = $ip['email_mob'];
-							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - Doctorway"; 
-							$ch = curl_init();
-							curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-							curl_setopt($ch, CURLOPT_POST, 1);
-							curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-							$buffer = curl_exec($ch);
-							curl_close($ch);
+		                    $sender="TEST SMS";
+							$number = $em_data[0]->user_mob;
+							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - GetmyTruck.in"; 
+							// echo $ip['six_digit_random_number'];
+							$smsstatus = $this->email_sms->send_sms_method($sender, $number, $message);
+							
 							/*==================Sending Otp Again=====================*/
 							$data['message'] = 'OTP sent, Please check email or mobile.';
 		          			$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
