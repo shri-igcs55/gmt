@@ -540,6 +540,8 @@
 			{
 				$data['message'] = $validation_array['msg'];
 				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+		        header("content-type: application/json");
+				echo $retVals;
 			}else if($em_data = $this->User_model->check_email($ip)){
 				// $ip['email'] = $em_data[0]->user_email;
 				// print_r($em_data);exit();
@@ -564,15 +566,18 @@
 							
 							/*==================Sending Otp Again=====================*/
 	         				$data['message'] = 'OTP sent, Please check email or mobile.';
-	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
+	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+					        header("content-type: application/json");
+							echo $retVals; 
 	          			}
 
          			endif;
                     /*=====================Ending Mailing Part====================*/  
-
 				}else{
 					$data['message'] = 'Email id is wrong.';
           			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			        header("content-type: application/json");
+					echo $retVals;
 				}
 		    }else if($em_data = $this->User_model->check_mob($ip)){
 		    	// $ip['mobile'] = $em_data[0]->user_mob;
@@ -599,16 +604,18 @@
 							/*==================Sending Otp Again=====================*/
 							$data['message'] = 'OTP sent, Please check email or mobile.';
 		          			$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
+					        header("content-type: application/json");
+							echo $retVals;
 	          			}
 	          		endif;
 		    	}else{
 					$data['message'] = 'Mobile id is wrong.';
           			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			        header("content-type: application/json");
+					echo $retVals;
 				}
 		    }
 
-	        header("content-type: application/json");
-			echo $retVals;
 			exit;
 	    }  
 		/*End of Forget (Recover) Section*/
