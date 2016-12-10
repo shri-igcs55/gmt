@@ -54,7 +54,8 @@ date_default_timezone_set('Asia/Kolkata');
           'modified_datetime'            => Date('Y-m-d h:i:s'),
           'modified_ip'                 => $order['modified_ip']  
           );				
-		$query = $this->db->insert('gmt_order_quotation',$quotation);		
+		$query = $this->db->insert('gmt_order_quotation',$quotation);
+		$this->db->where('odr_qtn_id', $last_id );
         if ($query == 1) {
 			$data['message'] = 'Order rate has been successfully posted.'; 
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
@@ -66,10 +67,22 @@ date_default_timezone_set('Asia/Kolkata');
         return $status;
 	}
 	public function acceptorder($order, $serviceName){
-		$query = $this->db->update('gmt_order_quotation',$quotation);
-		$data['message'] = 'Order rate has been successfully posted.'; 
-		$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
+		$this->db->where('user_id', $order['transpoter_id']);
+		$this->db->where('plc_odr_id_fk',$order['order_id']);
+		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5));
+		$data['message'] = 'Order rate has been sent successfully.'; 
+		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
+	
+	public function confirmorder($order, $serviceName){
+		$this->db->where('user_id', $order['transpoter_id']);
+		$this->db->where('plc_odr_id_fk',$order['order_id']);
+		$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
+		$data['message'] = 'Order rate has been sent successfully.'; 
+		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
+	}
+	
+	
 	
 
   }
