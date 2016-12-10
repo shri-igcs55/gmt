@@ -86,6 +86,20 @@
 	        exit;
 		}
 		
+		public function confirmOrder_post(){	
+			$serviceName = 'Order confirmed or cancled';
+			$order['order_id'] = trim($this->input->post('order_id'));			
+			$order['transpoter_id'] = trim($this->input->post('transpoter_id'));
+			$order['order_status'] = trim($this->input->post('order_status'));
+            $order['modified_ip'] = $_SERVER['REMOTE_ADDR'];
+			
+			$order = $this->Quotation_model->confirmorder($order, $serviceName);
+						
+	        header("content-type: application/json");
+	        echo $order;
+	        exit;
+		}
+		
 		
 		
 	}

@@ -5,6 +5,7 @@
 	{
 		public function User() 
 		{
+			
 			parent::__construct();
 			$this->load->model('User_model');
 			$this->load->library('email');
