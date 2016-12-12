@@ -9,9 +9,10 @@ class Email_sms {
 		$this->CI->load->library('email');
 	}
 
-    public function send_email_method($from_email, $to_email, $subject, $message)
+    public function send_email_method($to_email, $subject, $message)
     {
-    	
+    	$from_email = "noreply@getmytruck.in";
+
     	$this->CI->email->from($from_email, 'Getmytruck.in'); 
         $this->CI->email->to($to_email);
 		$this->CI->email->subject($subject); 
@@ -22,10 +23,11 @@ class Email_sms {
 		return $send_email_status;
 	}
 
-	public function send_sms_method($from_sender, $to_number, $message)
+	public function send_sms_method($to_number, $message)
     {
 
     	$gateway_user = "developer2@indglobal-consulting.com:indglobal123";
+    	$from_sender = "TEST SMS";
 
     	$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");

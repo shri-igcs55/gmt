@@ -549,21 +549,19 @@
 				if(!empty($em_data)){
 					
 					/*======================Forgot password Mailing Part======================*/
-			        $from_email = "noreply@getmytruck.in"; 
 			        $to_email = $em_data[0]->user_email; 
 			        $subject = 'New Password for GetMyTruck.in website.'; 
 			        $message ='Your new temporary password is: '.$ip['six_digit_random_number'].' To change Your Paasword Login with this password and change it from My Profile option, Please do not share this password with Anyone - https://goo.gl/oiBgvM';
 
-					$mailstatus = $this->email_sms->send_email_method($from_email, $to_email, $subject, $message);
+					$mailstatus = $this->email_sms->send_email_method($to_email, $subject, $message);
 			        if($mailstatus){
 
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
 							/*==================Forgot password sms=====================*/ 
-		                    $sender="TEST SMS";
-							$number = $em_data[0]->user_mob;
+		                    $number = $em_data[0]->user_mob;
 							$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM"; 
 							// echo $ip['six_digit_random_number'];
-							$smsstatus = $this->email_sms->send_sms_method($sender, $number, $message);
+							$smsstatus = $this->email_sms->send_sms_method($number, $message);
 							
 							/*==================Sending Otp Again=====================*/
 	         				$data['message'] = 'Temporary password sent, Please check email.';
