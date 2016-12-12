@@ -559,7 +559,7 @@
 
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
 							/*==================Forgot password sms=====================*/ 
-		                    $sender="GetMyTruck";
+		                    $sender="TEST SMS";
 							$number = $em_data[0]->user_mob;
 							$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM"; 
 							// echo $ip['six_digit_random_number'];
@@ -586,7 +586,7 @@
 		    	// print_r($em_data);exit();
 		    	if(!empty($em_data)){
 		    		/*=================Forgot password sms======================*/ 
-                    $sender="GetMyTruck";
+                    $sender="TEST SMS";
 					$number = $em_data[0]->user_mob;
 					$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM";
 					// echo $ip['six_digit_random_number'];
