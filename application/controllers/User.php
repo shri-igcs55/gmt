@@ -548,25 +548,25 @@
 				// print_r($em_data);exit();
 				if(!empty($em_data)){
 					
-					/*======================Mailing Part======================*/
+					/*======================Forgot password Mailing Part======================*/
 			        $from_email = "noreply@getmytruck.in"; 
 			        $to_email = $em_data[0]->user_email; 
-			        $subject = 'New Password Email'; 
-			        $message = 'Your new password is '.$ip['six_digit_random_number'];
+			        $subject = 'New Password for GetMyTruck.in website.'; 
+			        $message ='Your new temporary password is: '.$ip['six_digit_random_number'].' To change Your Paasword Login with this password and change it from My Profile option, Please do not share this password with Anyone - https://goo.gl/oiBgvM';
 
 					$mailstatus = $this->email_sms->send_email_method($from_email, $to_email, $subject, $message);
 			        if($mailstatus){
 
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
-							/*==================Sending Otp Again=====================*/ 
-		                    $sender="TEST SMS";
+							/*==================Forgot password sms=====================*/ 
+		                    $sender="GetMyTruck";
 							$number = $em_data[0]->user_mob;
-							$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - GetmyTruck.in"; 
+							$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM"; 
 							// echo $ip['six_digit_random_number'];
 							$smsstatus = $this->email_sms->send_sms_method($sender, $number, $message);
 							
 							/*==================Sending Otp Again=====================*/
-	         				$data['message'] = 'OTP sent, Please check email or mobile.';
+	         				$data['message'] = 'Temporary password sent, Please check email.';
 	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 					        header("content-type: application/json");
 							echo $retVals;
@@ -585,11 +585,11 @@
 		    	// $ip['mobile'] = $em_data[0]->user_mob;
 		    	// print_r($em_data);exit();
 		    	if(!empty($em_data)){
-		    		/*==================Sending Otp Again=====================*/ 
-                    $sender="TEST SMS";
+		    		/*=================Forgot password sms======================*/ 
+                    $sender="GetMyTruck";
 					$number = $em_data[0]->user_mob;
-					$message="Your Temporary Password is : ".$ip['six_digit_random_number']." To change Your Paasword Login with this Please do not share this password with Anyone - GetmyTruck.in"; 
-					echo $ip['six_digit_random_number'];
+					$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM";
+					// echo $ip['six_digit_random_number'];
 					$smsstatus = $this->email_sms->send_sms_method($sender, $number, $message);
 					
 					/*==================Sending Otp Again=====================*/
@@ -597,16 +597,16 @@
 						
 						if($this->User_model->new_otp_pass($ip, $serviceName)){
 
-				    		/*======================Mailing Part======================*/
+				    		/*======================Forgot password Mailing======================*/
 					        $from_email = "noreply@getmytruck.in"; 
 					        $to_email = $em_data[0]->user_email; 
-					        $subject = 'New Password Email'; 
-					        $message = 'Your new password is '.$ip['six_digit_random_number'];
+					        $subject = 'New Password for GetMyTruck.in website.'; 
+					        $message ='Your new temporary password is: '.$ip['six_digit_random_number'].' To change Your Paasword Login with this password and change it from My Profile option, Please do not share this password with Anyone - https://goo.gl/oiBgvM';
 
 							$mailstatus = $this->email_sms->send_email_method($from_email, $to_email, $subject, $message);
 							/*========================================================*/
 							
-							$data['message'] = 'OTP sent, Please check email or mobile.';
+							$data['message'] = 'Temporary password sent, Please check mobile.';
 		          			$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
 					        header("content-type: application/json");
 							echo $retVals;
@@ -614,7 +614,7 @@
 	          			}
 	          		}
 		    	}else{
-					$data['message'] = 'Mobile id is wrong.';
+					$data['message'] = 'Mobile number is wrong.';
           			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 			        header("content-type: application/json");
 					echo $retVals;
