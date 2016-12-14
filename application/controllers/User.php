@@ -12,6 +12,7 @@
 			$this->load->library('upload');
 			$this->load->library('seekahoo_lib');
 			$this->load->library('Validator.php');
+			$this->load->library('Email_sms');
 			date_default_timezone_set('Asia/Kolkata');
     	}	
 
@@ -122,7 +123,9 @@
      	// user signup
 		public function user_signup_post()
 		{
-			$six_digit_random_number = mt_rand(100000, 999999);
+			$six_digit_random_number = date('isH');
+			// echo substr(strtotime(date('isH')), -6);
+			// echo microtime(date('isH'));exit();
 			$serviceName = 'user_signup';
 			$validation_array = 1;
 
@@ -252,20 +255,17 @@
                 if (!null==($ip['user_mob']) || !empty($ip['user_mob']))
 	            {
 	               	/*=================GENRAING OTP=====================*/
-		            $user="developer11112@indglobal-consulting.com:indglobal123";
-				    $sender="TEST SMS";
-				    $number = $ip['user_mob'];
-				    $message="Your One Time Password is :".$six_digit_random_number." For confirm the registration. Please do not share this password with Anyone - Getmytruck.com"; 
+		            $number = $ip['user_mob'];
+				    $message="Use this One Time Password(OTP): ".$six_digit_random_number." For confirm the registration using given link. Please do not share this password with Anyone - https://goo.gl/U7qhDZ"; 
+				    $smsstatus = $this->email_sms->send_sms_method($number, $message);
 				    /*=========ENDING OF GENRAING OTP=================*/
+				    $to_email = $ip['user_email']; 
+			        $subject = 'Confirmation of registration in Get My Truck website.'; 
+			        $message ='Use this One Time Password(OTP): '.$six_digit_random_number.' To confirmation of your registration Please click on given link, Please do not share this password with Anyone - https://goo.gl/U7qhDZ';
+					$mailstatus = $this->email_sms->send_email_method($to_email,$subject,$message);
 				}
 				$retVals1 = $this->User_model->signup($ip, $serviceName);
-            	$ch = curl_init();
-              	curl_setopt($ch,CURLOPT_URL,"http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-              	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-              	curl_setopt($ch, CURLOPT_POST, 1);
-              	curl_setopt($ch, CURLOPT_POSTFIELDS,"user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-			    $buffer = curl_exec($ch);
-			    curl_close($ch);
+            	
 			    json_decode($retVals1);	
 			}
             header("content-type: application/json");
@@ -461,28 +461,7 @@
 
 			$validation_array = $this->validator->validate($ip_array);
 			$ipJson = json_encode($ip);
-	                
-			/*if(empty($ip['user_pass']))
-			{
-				$data['message'] = "All * marked fields must not be empty.";
-			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-			}
-			else if($ip['user_pass'] != $ip['c_pass'])
-            {
-            	$data['message'] = "Password and Confirm Password not matched.";
-			    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-            } 
-			else if ($model_mob = $this->User_model->check_mob_reg($ip)) 
-			{
-                $data['message'] = 'Mobile number alerady registered.';
-				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-			} 
-			else if ($model_email = $this->User_model->check_email_reg($ip)) 
-			{
-                $data['message'] = 'Email address alerady registered.';
-				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-			}
-			else */
+	          
 			if ($validation_array !=1) 
 			{
 				// print_r($model_mob);
@@ -521,12 +500,262 @@
 	   	/* Forget password(Recover) Section*/
         public function recover_post()
 		{
-			$this->load->library('Email_sms');
-					
-			$ip['six_digit_random_number'] = mt_rand(100000, 999999);
-		            
-			$serviceName = 'Forgot Password';
+			$ip['six_digit_random_number'] = date('isH');
+		    $serviceName = 'Forgot Password';
 			$ip['email_mob']   = trim($this->input->post('email_mob'));
+			$ipJson = json_encode($ip);
+
+		    //validation
+		    $validation_array = 1;
+		    $ip_array[] = array("msg", $ip['email_mob'], "not_null", "email_mob", "Email/Mobile is empty.");
+			
+			$validation_array = $this->validator->validate($ip_array);
+			if ($validation_array !=1){
+				$data['message'] = $validation_array['msg'];
+				$retVals=$this->seekahoo_lib->return_status('error',$serviceName,$data,$ipJson);
+		        header("content-type: application/json");
+				echo $retVals;
+				exit;
+			}else if($em_data = $this->User_model->check_email($ip)){
+				// $ip['email'] = $em_data[0]->user_email;
+				// print_r($em_data);exit();
+				if(!empty($em_data)){
+					
+					/*======================Forgot password Mailing Part======================*/
+			        $to_email = $em_data[0]->user_email; 
+			        $subject = 'New Password for GetMyTruck.in website.'; 
+			        $message ='Your new temporary password is: '.$ip['six_digit_random_number'].' To change Your Paasword Login with this password and change it from My Profile option, Please do not share this password with Anyone - https://goo.gl/kjdzVB';
+
+					$mailstatus = $this->email_sms->send_email_method($to_email, $subject, $message);
+			        if($mailstatus){
+
+						if($this->User_model->new_otp_pass($ip, $serviceName)){
+							/*==================Forgot password sms=====================*/ 
+		                    $number = $em_data[0]->user_mob;
+							$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/kjdzVB"; 
+							// echo $ip['six_digit_random_number'];
+							$smsstatus = $this->email_sms->send_sms_method($number, $message);
+							
+							/*==================Sending Otp Again=====================*/
+	         				$data['message'] = 'Temporary password sent, Please check email.';
+	          				$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+					        header("content-type: application/json");
+							echo $retVals;
+							exit;
+	          			}
+         			}
+                    /*=====================Ending Mailing Part====================*/  
+				}else{
+					$data['message'] = 'Email id is wrong.';
+          			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			        header("content-type: application/json");
+					echo $retVals;
+					exit;
+				}
+		    }else if($em_data = $this->User_model->check_mob($ip)){
+		    	// $ip['mobile'] = $em_data[0]->user_mob;
+		    	// print_r($em_data);exit();
+		    	if(!empty($em_data)){
+		    		/*=================Forgot password sms======================*/ 
+                    $number = $em_data[0]->user_mob;
+					$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/kjdzVB";
+					// echo $ip['six_digit_random_number'];
+					$smsstatus = $this->email_sms->send_sms_method($number, $message);
+					
+					/*==================Sending Otp Again=====================*/
+					if($smsstatus){
+						
+						if($this->User_model->new_otp_pass($ip, $serviceName)){
+
+				    		/*======================Forgot password Mailing======================*/
+					        $to_email = $em_data[0]->user_email; 
+					        $subject = 'New Password for GetMyTruck.in website.'; 
+					        $message ='Your new temporary password is: '.$ip['six_digit_random_number'].' To change Your Paasword Login with this password and change it from My Profile option, Please do not share this password with Anyone - https://goo.gl/kjdzVB';
+
+							$mailstatus = $this->email_sms->send_email_method($to_email, $subject, $message);
+							/*========================================================*/
+							
+							$data['message'] = 'Temporary password sent, Please check mobile.';
+		          			$retVals = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
+					        header("content-type: application/json");
+							echo $retVals;
+							exit;
+	          			}
+	          		}
+		    	}else{
+					$data['message'] = 'Mobile number is wrong.';
+          			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			        header("content-type: application/json");
+					echo $retVals;
+					exit;
+				}
+		    }
+			exit;
+	    }  
+		/*End of Forget (Recover) Section*/		
+		
+		/*Verification Section*/
+        public function verify_post()
+		{
+			$serviceName = 'verify';
+			$ip['v_code'] = trim($this->input->post('otp'));
+			$ip['user_id'] = trim($this->input->post('user_id'));
+			$ip['email'] = trim($this->input->post('email'));
+			$ip['mobile'] = trim($this->input->post('mobile'));
+
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+            $ip['email'] = ($logged_in_user['email']!='' ? $logged_in_user['email']:$ip['email']);
+            $ip['mobile']=($logged_in_user['mobile']!='' ? $logged_in_user['mobile']:$ip['mobile']);
+           
+
+            $ipJson = json_encode($ip);
+            //validation
+		    $validation_array = 1;
+
+		    $ip_array[]=array("msg", $ip['v_code'], "not_null", "v_code", "Verification OTP is empty.");
+			$ip_array[]=array("msg", $ip['user_id'], "not_null", "user_id", "User id is empty.");
+			$ip_array[]=array("msg", $ip['email'], "not_null", "email", "Email is empty.");
+			$ip_array[]=array("msg", $ip['mobile'], "not_null", "mobile", "Mobile is empty.");
+			
+			$validation_array = $this->validator->validate($ip_array);
+			
+			if ($validation_array != 1) 
+			{
+				$data['message'] = $validation_array['msg'];
+				$retVals1=$this->seekahoo_lib->return_status('error',$serviceName, $data, $ipJson);
+            } 
+            else
+            {
+
+                $chkotp=$this->User_model->check_otp($ip);
+                if($chkotp==true)
+                {
+                	
+                	$code =$ip['v_code'];
+                 	$data['message'] = "OTP Matched Thank you.";
+                 	$retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+                 	$up_status = array( 'user_status' => '2' );
+                 	$chkotp=$this->User_model->update_status($up_status,$code,$ip);
+                    /*======================Mailing Part======================*/
+			        $to_email = $ip['email']; 
+			        $subject='Welcome to GetMyTruck'; 
+			        $message='Thank you for registration.';
+			        $mailstatus =$this->email_sms->send_email_method($to_email,$subject,$message);
+                    /*=======================SMS ==========================*/
+                    $number = $ip['mobile'];
+					$message="Thank you for registration."; 
+					$smsstatus = $this->email_sms->send_sms_method($number, $message);
+                    /*=====================Ending====================*/   
+                }
+            	else 
+	            {
+    	        	$data['message'] = "OTP Not Matching, Please try again.";
+			    	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			    	json_decode($retVals1);
+           	    }
+        	}
+	        //echo $retVals1 = $this->signup_model->signup($ip, $serviceName);
+            header("content-type: application/json");
+            echo $retVals1;
+            exit;
+	    }
+		/*End of Verification in Section*/
+
+		/*Resend Otp Section*/
+        public function logined_resend_post()
+		{
+			$six_digit_random_number = date('isH');
+			$serviceName = 'resend otp after login';
+			$ip['user_id'] = trim($this->input->post('user_id'));
+			$ip['email'] = trim($this->input->post('email'));
+			$ip['mobile'] = trim($this->input->post('mobile'));
+
+			$logged_in_user = $this->session->userdata('logged_in_user');	
+			
+			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
+            $ip['email'] = ($logged_in_user['email']!='' ? $logged_in_user['email']:$ip['email']);
+            $ip['mobile']=($logged_in_user['mobile']!='' ? $logged_in_user['mobile']:$ip['mobile']);
+           
+
+            $ipJson = json_encode($ip);
+            //validation
+		    $validation_array = 1;
+
+		    $ip_array[]=array("msg", $ip['user_id'], "not_null", "user_id", "User id is empty.");
+			$ip_array[]=array("msg", $ip['email'], "not_null", "email", "Email is empty.");
+			$ip_array[]=array("msg", $ip['mobile'], "not_null", "mobile", "Mobile is empty.");
+			
+			$validation_array = $this->validator->validate($ip_array);
+			
+			if ($validation_array != 1) 
+			{
+				$data['message'] = $validation_array['msg'];
+				$retVals1=$this->seekahoo_lib->return_status('error',$serviceName,$data,$ipJson);
+            } 
+            else
+			{  
+			  	$chkmob=$this->User_model->check_login_mob_for_otp($ip);
+                if($chkmob==true)
+		        {
+		        	/*=================GENRAING OTP=====================*/
+		            $number = $ip['mobile'];
+				    $message="Use this One Time Password(OTP): ".$six_digit_random_number." For confirm the registration using given link. Please do not share this password with Anyone - https://goo.gl/U7qhDZ"; 
+				    $smsstatus = $this->email_sms->send_sms_method($number, $message);
+				    /*=========ENDING OF GENRAING OTP=================*/
+				    $to_email = $ip['email']; 
+			        $subject = 'Confirmation of registration in Get My Truck website.'; 
+			        $message ='Use this One Time Password(OTP): '.$six_digit_random_number.' To confirmation of your registration Please click on given link, Please do not share this password with Anyone - https://goo.gl/U7qhDZ';
+					$mailstatus =$this->email_sms->send_email_method($to_email,$subject,$message);
+		            /*==================Updating Otp Again=====================*/
+                    $user = $this->User_model->updt_login_otp($ip,$six_digit_random_number);
+				    
+				    $data['message'] = "New OTP send to your registered Mobile and Email id. Thank you.";
+				    $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+		        }
+		        else
+		        {
+		           	$data['message'] = "Please Sign up first";
+				    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);	
+				    json_decode($retVals1);
+	            }		        
+	        }
+		    header("content-type: application/json");
+		    echo $retVals1;
+	        exit;
+     	}
+		/*End of Resend Otp Section*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/*----------------------------------------------------------------------------*/
+		/*Resend Otp Section*/
+        public function resend_post()
+		{
+			$ip['six_digit_random_number'] = date('isH');
+			$serviceName = 'resend otp before login';
+			$ip['email_mob'] = trim($this->input->post('email_mob'));
 			
 			$ipJson = json_encode($ip);
 
@@ -539,13 +768,11 @@
 			if ($validation_array !=1) 
 			{
 				$data['message'] = $validation_array['msg'];
-				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+				$retVals=$this->seekahoo_lib->return_status('error',$serviceName, $data, $ipJson);
 		        header("content-type: application/json");
 				echo $retVals;
 				exit;
 			}else if($em_data = $this->User_model->check_email($ip)){
-				// $ip['email'] = $em_data[0]->user_email;
-				// print_r($em_data);exit();
 				if(!empty($em_data)){
 					
 					/*======================Forgot password Mailing Part======================*/
@@ -556,7 +783,7 @@
 					$mailstatus = $this->email_sms->send_email_method($to_email, $subject, $message);
 			        if($mailstatus){
 
-						if($this->User_model->new_otp_pass($ip, $serviceName)){
+						if($this->User_model->resend_new_otp_pass($ip, $serviceName)){
 							/*==================Forgot password sms=====================*/ 
 		                    $number = $em_data[0]->user_mob;
 							$message="Your Temporary Password is: ".$ip['six_digit_random_number']." To change Your Paasword Login with this password, Please don't share with Anyone - https://goo.gl/oiBgvM"; 
@@ -592,7 +819,7 @@
 					/*==================Sending Otp Again=====================*/
 					if($smsstatus){
 						
-						if($this->User_model->new_otp_pass($ip, $serviceName)){
+						if($this->User_model->resend_new_otp_pass($ip, $serviceName)){
 
 				    		/*======================Forgot password Mailing======================*/
 					        $to_email = $em_data[0]->user_email; 
@@ -617,145 +844,26 @@
 					exit;
 				}
 		    }
-
-			exit;
-	    }  
-		/*End of Forget (Recover) Section*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/*----------------------------------------------------------------------------*/		
-		/*Verification Section*/
-        public function verify_post()
-		{
-			$serviceName = 'verify';
-			$ip['v_code']     = trim($this->input->post('v_code'));
-            $ip['mobile_num'] = trim($this->input->post('mobile_num'));
-            $ip['email']      = trim($this->input->post('email'));
-            $ipJson = json_encode($ip);
-            if(empty($ip['v_code']) && empty($ip['mobile_num']))
-            {
-               $data['message'] = "Feilds are Required";
-			   $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-            } 
-            else
-            {
-                $chkotp=$this->User_model->check_otp($ip);
-                if($chkotp=="true")
-                {
-                	$code =$ip['v_code'];
-                 	$data['message'] = "OTP Matched";
-                 	$retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
-                 	$up_status = array(
-								       'user_status' => 'Active'
-					                  );
-                 	$chkotp=$this->User_model->update_status($up_status,$code);
-                    /*======================Mailing Part======================*/
-			        $from_email = "Anuragdubey@gmail.com"; 
-			        $to_email = $this->input->post('email'); 
-			        $this->email->from($from_email, 'Getmytruck.com'); 
-			        $this->email->to($to_email);
-			        $this->email->subject('Email Test'); 
-			        $this->email->message('Testing the email class.');
-                    /*=====================Ending Mailing Part====================*/   
-                }
-            	else 
-	            {
-    	        	$data['message'] = "OTP Not Matching";
-			    	$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-			    	json_decode($retVals1);
-           	    }
-        	}
-	        //echo $retVals1 = $this->signup_model->signup($ip, $serviceName);
-            header("content-type: application/json");
-            echo $retVals1;
-            exit;
-	    }
-		/*End of Verification in Section*/
-
-		/*Resend Otp Section*/
-        public function resend_post()
-		{
-			$six_digit_random_number = mt_rand(100000, 999999);
-			$serviceName = 'resend otp';
-			$ip['user_mob']   = trim($this->input->post('mobile'));
-			$ipJson = json_encode($ip);
-			if (empty($ip['user_mob']))
-            {    
-                $data['message'] = "Mobile number is null....";
-				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
-		        //json_decode($retVals1);	
-			}
-			else 
-			{  
-			  	//var_dump($ip);exit();
-			   	$chkmob=$this->User_model->check_mob_for_otp($ip);
-                if($chkmob=="true")
-		        {
-		            $six_digit_random_number = mt_rand(100000, 999999);
-			        $ipJson = json_encode($ip);
-			        $data['user_mob'] = "Otp send to number";
-			        $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson); 
-				    /*==================Sending Otp Again=====================*/ 
-                    $user="developer2222@indglobal-consulting.com:indglobal123";
-                    $sender="TEST SMS";
-				    $number = $ip['user_mob'];
-				    $message="Your One Time Password is :".$six_digit_random_number." For confirm the registration. Please do not share this password with Anyone - Getmytruck.com"; 
-				    $ch = curl_init();
-					curl_setopt($ch,CURLOPT_URL, "http://api.mVaayoo.com/mvaayooapi/MessageCompose");
-				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				    curl_setopt($ch, CURLOPT_POST, 1);
-				    curl_setopt($ch, CURLOPT_POSTFIELDS, "user=".$user."&senderID=".$sender."&receipientno=".$number."&msgtxt=".$message."");
-				    $buffer = curl_exec($ch);
-				    curl_close($ch);
-				    /*==================Sending Otp Again=====================*/
-				    /*==================Updating Otp Again=====================*/
-                    $upuser = array( 
-                				   'user_otp' => $six_digit_random_number,
-                					   );
-                    $user = $this->User_model->updt_otp($ip,$upuser);
-				    /*==================Updating Otp Again=====================*/    
-		        }
-		        else
-		        {
-		           	$data['message'] = "Please Sign up first";
-				    $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);	
-				    json_decode($retVals1);
-	            }		        
-	        }
 		    header("content-type: application/json");
 		    echo $retVals1;
 	        exit;
      	}
 		/*End of Resend Otp Section*/
 
+
+
+
+
+
+
+
 		/* Update Section*/
         public function update_brief_post()
 		{
-			$six_digit_random_number = mt_rand(100000, 999999);
+			$six_digit_random_number = date('isH');
 			$serviceName = 'update_breif';
 			//getting posted values
-			$ip['user_id']             = trim($this->input->post('user_id'));
+			$ip['user_id'] = trim($this->input->post('user_id'));
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);

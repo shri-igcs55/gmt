@@ -13,7 +13,7 @@ class Email_sms {
     {
     	$from_email = "noreply@getmytruck.in";
 
-    	$this->CI->email->from($from_email, 'Getmytruck.in'); 
+    	$this->CI->email->from($from_email, 'Get My Truck'); 
         $this->CI->email->to($to_email);
 		$this->CI->email->subject($subject); 
 		$this->CI->email->message($message);

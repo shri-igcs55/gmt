@@ -112,7 +112,8 @@ class User_model extends CI_model
                                   'last_name'           =>$result_row->last_name,
                                   'email'               =>$result_row->email,
                                   'mobile'              =>$result_row->mobile,
-                                  'package'             =>$result_row->package
+                                  'package'             =>$result_row->package,
+                                  'user_status'         =>$result_row->user_status
                                   )
                             );
       // $this->session->set_userdata('logged_in_user', $result[0]);
@@ -318,6 +319,28 @@ class User_model extends CI_model
     return $signup_data_last_id = $this->db->affected_rows();
   }
 
+  public function resend_new_otp_pass($input, $serviceName){
+    $otpcount = $this->db->select('resend_otp_count')
+                         ->from('gmt_user')
+                         ->where('user_email', $input['email_mob'])
+                         ->or_where('user_mob', $input['email_mob'])
+                         ->get();
+    $list_group=$otpcount->result_array();
+    $ipJson = json_encode($input);
+
+    $signup_data = array(
+      'user_pass'        => md5($input['six_digit_random_number']),
+      'resend_otp_count' => $list_group[0]['resend_otp_count']+1,
+      'modified_datetime'=> date('Y-m-d H:i:s'),
+      'modified_ip'      => $_SERVER['REMOTE_ADDR']
+    );
+    
+    $this->db->where('user_email', $input['email_mob']);
+    $this->db->or_where('user_mob', $input['email_mob']);
+    $updated_info=$this->db->update('gmt_user', $signup_data);
+    // echo $this->db->last_query($updated_info);exit();
+    return $signup_data_last_id = $this->db->affected_rows();
+  }
 
 
 
@@ -485,38 +508,74 @@ class User_model extends CI_model
     /*Verification Section Starts*/
     function check_otp($input) 
     {
+      //print_r($input);
+      //exit;
       $ipJson = json_encode($input);
       
       $this->db->select('*');
       $this->db->from('gmt_user');
-      $this->db->where('user_mob',$input['mobile_num'] );
+      $this->db->where('user_id',$input['user_id'] );
       $this->db->where('user_otp', $input['v_code']);
       $query = $this->db->get();
       $details = $query->result();
-          //echo $this->db->last_query();
-      $result = $query->num_rows();
-      if ($result > 0 ){
-        //print_r($details); die();
+      if ($details > 0 ){
         return true;
-
       }
       return false; 
     }
     
     /*Resend OTP Updating OTP Section */
-    function update_status($up_status,$code)
+    function update_status($up_status,$code,$input)
     {
-        $this->db->where('user_otp', $code);
-          $ins=$this->db->update('gmt_user', $up_status);
-          return $ins;
+      $this->db->where('user_otp', $code);
+      $this->db->where('user_id', $input['user_id']);
+      $ins=$this->db->update('gmt_user', $up_status);
+
+      $this->session->unset_userdata('logged_in_user');
+      $this->db->select('u.user_id, u.user_rand_id, u.user_email AS email, u.user_mob AS mobile, u.user_status, u.u_type_id, ut.u_parent_id AS user_type_parent, u.pkg_id AS package, u.user_fname AS first_name, u.user_lname AS last_name');
+      $this->db->from('gmt_user u');
+      $this->db->join('gmt_user_type ut', 'u.u_type_id = ut.u_type_id', 'LEFT');
+      $this->db->where('u.user_email', $input['email']);
+      $this->db->where('u.user_mob', $input['mobile']);
+      $this->db->where('u.user_id', $input['user_id']);
+      // $this->db->where('u.u_type_id', $input['user_type_id']);
+      $query = $this->db->get();
+      // echo $this->db->last_query($query); 
+      $resultRows = $query->num_rows();
+      $result_row = $query->row();
+      $result = $query->result_array();
+
+      if ($resultRows > 0) {
+        
+        $this->session->set_userdata('logged_in_user', 
+                              array('user_type'           =>$result_row->u_type_id,
+                                    'user_type_parent_id' =>$result_row->user_type_parent,
+                                    'user_id'             =>$result_row->user_id,
+                                    'user_code'           =>$result_row->user_rand_id,
+                                    'first_name'          =>$result_row->first_name,
+                                    'last_name'           =>$result_row->last_name,
+                                    'email'               =>$result_row->email,
+                                    'mobile'              =>$result_row->mobile,
+                                    'package'             =>$result_row->package,
+                                    'user_status'         =>$result_row->user_status
+                                    )
+                              );
+        // $this->session->set_userdata('logged_in_user', $result[0]);
+        
+        $data = $result[0];
+      }
+      return $ins;
+      // return $data;
     }
 
-    function check_mob_for_otp($input) 
+    function check_login_mob_for_otp($input) 
     {
       //echo $email;die();
       $this->db->select('*');
       $this->db->from('gmt_user');
-      $this->db->where('user_mob', $input['user_mob']);
+      $this->db->where('user_id', $input['user_id']);
+      $this->db->where('user_email', $input['email']);
+      $this->db->where('user_mob', $input['mobile']);
       $query = $this->db->get();
       $details = $query->result(); 
       //echo $this->db->last_query();   
@@ -526,14 +585,28 @@ class User_model extends CI_model
       }
       return false;
     }
-    /*End Resend OTP Updating OTP Section */  
-
-    /*Check mobnum exsist function or not Is also here*/
-    function updt_otp ($input,$upuser)
+    
+    /*update resended OTP*/
+    function updt_login_otp ($input,$six_digit_random_number)
     {
-      $this->db->where('user_mob',$input['mobile']);
+      $otpcount = $this->db->select('login_resend_otp_count')
+                         ->from('gmt_user')
+                         ->where('user_email', $input['email'])
+                         ->or_where('user_mob', $input['mobile'])
+                         ->get();
+      $list_group=$otpcount->result_array();
+      // print_r($list_group[0]['login_resend_otp_count']);exit();
+      $upuser = array( 'user_otp' => $six_digit_random_number,
+                       'user_status' => 1,
+                       'login_resend_otp_count' => $list_group[0]['login_resend_otp_count']+1);
+      
+      $this->db->where('user_id', $input['user_id']);
+      $this->db->where('user_email', $input['email']);
+      $this->db->where('user_mob', $input['mobile']);
       $ins=$this->db->update('gmt_user', $upuser);
       //echo $this->db->last_query($ins);
+      
+      return $ins;
     }
     /*End of Otp Section*/
 
@@ -679,8 +752,8 @@ class User_model extends CI_model
     }
 
 
-      /*$uploadPhoto,*/
-    function add_photo($ip) {
+    /*$uploadPhoto,*/
+    function add_photo($ip){
       $serviceName = 'add_media';
 
       $ipJson = json_encode($ip);
@@ -712,7 +785,6 @@ class User_model extends CI_model
       }
       return $uploadPhoto;
     }
-   
     /*End of Update Section*/
 
     /* forget(Recover) Section Starts*/
@@ -735,13 +807,12 @@ class User_model extends CI_model
         return false; 
     }
 
-    function updt_pass ($input,$upuser)
+    function updt_pass($input,$upuser)
     {
         $this->db->where('user_mob',$input['mobile']);
         $ins=$this->db->update('gmt_user', $upuser);
         //echo $this->db->last_query($ins);
     }
-
     /*End of Forget (Recover) Section*/
 
     /*View details Section Starts*/
