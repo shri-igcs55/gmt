@@ -10,11 +10,14 @@
 	    	$ipJson = json_encode($input);
 	    	
 	    	//a.plc_odr_from_area_location, a.plc_odr_to_area_location, a.plc_odr_from_address, a.plc_odr_to_address, IFNULL(f.sf_type,0) AS service_type, , ol.orl_from_city_id, ol.orl_to_city_id,
-						
+			// echo $input['user_id'];
+			// echo $input['order_status'];
+			// echo $input['user_type_parent_id'];
+			// echo $input['user_type']; //exit();
 			$arrOrderIds = array();
 			$this->db->select('plc_odr_id_fk');
 			$this->db->from('gmt_order_quotation');
-			$this->db->join('gmt_place_order a', 'a.plc_odr_id = gmt_order_quotation.plc_odr_id_fk');
+			$this->db->join('gmt_place_order a','a.plc_odr_id =gmt_order_quotation.plc_odr_id_fk');
 			$this->db->where('gmt_order_quotation.user_id =',$input['user_id']);
 			$this->db->or_where('a.user_id =',$input['user_id']);
 			$query = $this->db->get();	    	
@@ -38,9 +41,40 @@
 			// $this->db->join('gmt_transporter_cat h', 'a.trans_cat_id_fk = h.trans_cat_id', 'left');
 			$this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');			
 			$this->db->where('a.plc_odr_del_status =', 1);
-		
-			if(count($arrOrderIds))
-			$this->db->where_not_in('a.plc_odr_id',$orderId);
+
+			/*switch ($input['user_type']) {
+				case 8:
+					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));
+					// $this->db->where('a.vehicle_id_fk =', 7);
+					break;
+
+				case 9:
+					$this->db->where('a.vehicle_id_fk =', 2);
+					break;
+				
+				case 10:
+					$this->db->where('a.vehicle_id_fk =', 2);
+					break;
+				
+				case 11:
+					$this->db->where_in('a.vehicle_id_fk', array('6', '9'));
+					// $this->db->where('a.vehicle_id_fk =', 9);
+					break;
+
+				case 12:
+					$this->db->where('a.vehicle_id_fk =', 5);
+					break;
+				
+				case 13:
+					$this->db->where('a.vehicle_id_fk =', 8);
+					break;
+				
+				default:
+					
+					break;
+			}*/
+
+			if(count($arrOrderIds))	$this->db->where_not_in('a.plc_odr_id',$orderId);
 			
 			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
 				$this->db->where('a.user_id', $input['user_id']);
@@ -56,8 +90,9 @@
 			}
 			$this->db->order_by('a.plc_odr_schedule_date','ASC');
 			$details = array();
+			$arrOrder_details = array();
 	    	$query = $this->db->get();
-	    	//echo $this->db->last_query($query);exit();
+	    	// echo $this->db->last_query($query);//exit();
 	    	$details = $query->result_array();
 			
 			foreach($details as $order_details):
@@ -91,6 +126,39 @@
 			$this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');
 			$this->db->join('gmt_order_quotation oq', 'a.plc_odr_id = oq.plc_odr_id_fk');			
 			$this->db->where('a.plc_odr_del_status =', 1);
+			
+			/*switch ($input['user_type']) {
+				case 8:
+					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));
+					// $this->db->where('a.vehicle_id_fk =', 7);
+					break;
+
+				case 9:
+					$this->db->where('a.vehicle_id_fk =', 2);
+					break;
+				
+				case 10:
+					$this->db->where('a.vehicle_id_fk =', 2);
+					break;
+				
+				case 11:
+					$this->db->where_in('a.vehicle_id_fk', array('2', '6', '9'));
+					// $this->db->where('a.vehicle_id_fk =', 9);
+					break;
+
+				case 12:
+					$this->db->where('a.vehicle_id_fk =', 5);
+					break;
+				
+				case 13:
+					$this->db->where('a.vehicle_id_fk =', 8);
+					break;
+				
+				default:
+					
+					break;
+			}*/
+
 			$this->db->where('a.plc_odr_schedule_date >=',date('d-m-Y'));
 			$this->db->order_by('a.plc_odr_schedule_date','ASC');
 			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
