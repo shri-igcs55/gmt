@@ -86,12 +86,13 @@
 			$ip['user_id']          	= trim($this->input->post('user_id'));
 			$ip['order_status']			= trim($this->input->post('order_status'));
 			$ip['user_type_parent_id'] 	= trim($this->input->post('user_type_parent_id'));
-			
+			$ip['user_type'] = trim($this->input->post('user_type'));			
+
 			$logged_in_user = $this->session->userdata('logged_in_user');	
 			// print_r($logged_in_user);
 			$ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 			$ip['user_type_parent_id'] = ($logged_in_user['user_type_parent_id']!='' ? $logged_in_user['user_type_parent_id']:$ip['user_type_parent_id']);
-		
+			$ip['user_type']=($logged_in_user['user_type']!='' ? $logged_in_user['user_type']:$ip['user_type']);
 			$ip['order_status'] = ($ip['order_status']=='' ? 3 : $ip['order_status']);
 			// print_r($ip);
 			$ipJson = json_encode($ip);
@@ -100,6 +101,7 @@
 			$ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "user id is empty.");
 			$ip_array[] = array("msg", $ip['order_status'], "not_null", "order_status", "order status is empty.");
 			$ip_array[] = array("msg", $ip['user_type_parent_id'], "not_null", "user_type_parent_id", "user type parent id is empty.");
+			$ip_array[] = array("msg", $ip['user_type'], "not_null", "user_type", "user type is empty.");
 			// print_r($ip_array);
 			$validation_array = $this->validator->validate($ip_array);
 			// print_r($validation_array);
@@ -114,7 +116,7 @@
                 $data = $this->Book_history_model->rated_orders($ip, $serviceName);
                 //print_r($data);exit();
                 if($data){
-     
+					$tmpOrder = array();
 					foreach($data['order'] as $order):
 							//print_r($data['quotation'][$order['order_id']][0]);exit;
 							if(isset($data['quotation'][$order['order_id']][0]))

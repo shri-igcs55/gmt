@@ -53,16 +53,25 @@ date_default_timezone_set('Asia/Kolkata');
           'created_ip'                   => $order['created_ip'],
           'modified_datetime'            => Date('Y-m-d h:i:s'),
           'modified_ip'                 => $order['modified_ip']  
-          );				
-		$query = $this->db->insert('gmt_order_quotation',$quotation);
-		$this->db->where('odr_qtn_id', $last_id );
+          );
+		  
+		$this->db->select('user_id');
+        $this->db->from('gmt_order_quotation');
+        $this->db->where('user_id', $order['user_id']);
+		$this->db->where('plc_odr_id_fk', $order['order_id']);
+        $resource = $this->db->get();
+		if($resource->num_rows()){
+			$data['message'] = 'You have already rated to this order.'; 
+			return $status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, json_encode($order));
+		}
+		$query = $this->db->insert('gmt_order_quotation',$quotation);		
         if ($query == 1) {
 			$data['message'] = 'Order rate has been successfully posted.'; 
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 		}
 		else {
 			$data['message'] = 'Something went wrong while signup. Try Again.';
-			$status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			$status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, json_encode($order));
         }
         return $status;
 	}
