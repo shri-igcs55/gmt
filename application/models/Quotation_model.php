@@ -80,7 +80,7 @@ date_default_timezone_set('Asia/Kolkata');
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
 		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5));
-		$data['message'] = 'Order rate has been sent successfully.'; 
+		$data['message'] = 'Order rate has been sent successfully to the transpoter.'; 
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
 	
@@ -88,7 +88,7 @@ date_default_timezone_set('Asia/Kolkata');
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
 		$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
-		$data['message'] = 'Order rate has been sent successfully.'; 
+		$data['message'] = 'Order has been confirmed.'; 
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
 	
