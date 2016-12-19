@@ -26,7 +26,7 @@ date_default_timezone_set('Asia/Kolkata');
 						'plc_odr_feet'               => $input['feet'],
 						'vehicle_id_fk'              => $input['vehicle_type'],
 						'other_vehicle'				 => $input['other_vehicle_type'],
-						'plc_odr_item_qty'           => $input['no_of_vehicle'],
+						'plc_odr_vehicle_qty'        => $input['no_of_vehicle'],
 						'plc_odr_pick_points'        => $input['pickup_points'],
 						'plc_odr_drop_points'        => $input['destination_points'],
 						'plc_odr_schedule_date'      => date("d-m-Y", strtotime($input['sechdule_date'])),
