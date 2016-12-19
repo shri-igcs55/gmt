@@ -47,7 +47,8 @@ date_default_timezone_set('Asia/Kolkata');
 		$quotation = array(
           'user_id'                      => $order['user_id'],
           'plc_odr_id_fk'                => $order['order_id'],
-          'odr_qtn_amount'               => $order['quoted_rate'],          
+          'odr_qtn_amount'               => $order['quoted_rate'],
+		  'odr_amt_basis'               => $order['odr_amt_basis'],
           'status_id_fk'                 => 4,
           'created_datetime'             => Date('Y-m-d h:i:s'),
           'created_ip'                   => $order['created_ip'],

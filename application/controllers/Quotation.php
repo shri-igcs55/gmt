@@ -51,6 +51,7 @@
 			$order['user_id'] = $logged_in_user['user_id'];
 			$order['order_id'] = trim($this->input->post('order_id'));			
 			$order['quoted_rate'] = trim($this->input->post('quoted_rate'));
+			$order['odr_amt_basis'] = trim($this->input->post('odr_amt_basis'));
 			$order['created_ip']                 = $_SERVER['REMOTE_ADDR'];
             $order['modified_ip']                = $_SERVER['REMOTE_ADDR'];
 			//echo 'test';exit;
