@@ -73,7 +73,10 @@ class Contact_us extends REST_Controller
 	        // $this->email->message($user_msg);
 			// $to_email = "support@getmytruck.in"; 
 			$subject = 'Message from Get My Truck contact us'; 
-			$message = "Sender Name: ".$name."<br/>Sender Email: ".$from_email."<br/>Message: <br/>".$user_msg;
+			$message = "Sender Name: ".$name."
+						Sender Email: ".$from_email."
+						Message: 
+						".$user_msg;
 			$mailstatus = $this->email_sms->send_email_method($to_email,$subject,$message);
             /*=====================Ending Mailing Part====================*/
 
