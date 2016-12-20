@@ -63,8 +63,8 @@ class Contact_us extends REST_Controller
 
             /*======================Mailing Part======================*/
 	        $from_email = $ip['user_email'];
-	        // $to_email =  "support@getmytruck.in"; 
-	        $to_email = "codeigniter1@indglobal-consulting.com"; 
+	        $to_email =  "support@getmytruck.in"; 
+	        // $to_email = "codeigniter1@indglobal-consulting.com"; 
 	        $name = $ip['full_name'];
 	        $user_msg = $ip['c_msg'];
 	        // $this->email->from($from_email, $name); 
