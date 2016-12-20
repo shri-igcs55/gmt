@@ -54,23 +54,25 @@ class Contact_us extends REST_Controller
             $retVals1 = $this->contact_us_model->contact_msg($ip, $serviceName);
         	
         	/*======================Mailing Part======================*/
-	        $from_email = "Anuragdubey@gmail.com"; 
 	        $to_email = $ip['user_email']; 
-	        $this->email->from($from_email, 'GetMyTruck'); 
-	        $this->email->to($to_email);
-	        $this->email->subject('Get My Truck Website'); 
-	        $this->email->message('Thank you for Contacting us.');
+	        $subject = 'Get My Truck Website.'; 
+	        $message ='Thank you for contacting us, our executive will contact you soon.';
+			$mailstatus = $this->email_sms->send_email_method($to_email,$subject,$message);
             /*=====================Ending Mailing Part====================*/ 
 
             /*======================Mailing Part======================*/
 	        $from_email = $ip['user_email'];
-	        $to_email =  "Anuragdubey@gmail.com"; 
+	        $to_email =  "support@getmytruck.in"; 
 	        $name = $ip['full_name'];
 	        $user_msg = $ip['c_msg'];
 	        $this->email->from($from_email, $name); 
 	        $this->email->to($to_email);
 	        $this->email->subject('Message from Get My Truck contact us'); 
 	        $this->email->message($user_msg);
+			// $to_email = "support@getmytruck.in"; 
+			// $subject = 'Get My Truck Website.'; 
+			// $message ='Thank you for contacting us, our executive will contact you soon.';
+			// $mailstatus = $this->email_sms->send_email_method($to_email,$subject,$message);
             /*=====================Ending Mailing Part====================*/
 
 		    json_decode($retVals1);	

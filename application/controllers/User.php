@@ -208,7 +208,7 @@
 				}
 
 			    $ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
-			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			    // $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty."); // as said by client on 20-12-16
 			}
 			else if($ip['user_type']== 5 || $ip['user_type']== 6 || $ip['user_type']== 8 || 
 			   		$ip['user_type']== 9 || $ip['user_type']==10 || $ip['user_type']==11 || 
