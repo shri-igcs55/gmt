@@ -13,6 +13,7 @@ class Contact_us extends REST_Controller
 		parent::__construct();
 		$this->load->model('contact_us_model');
 		$this->load->library('email');
+		$this->load->library('email_sms');
 		$this->load->library('seekahoo_lib');
 		$this->load->library('Validator.php');
 		date_default_timezone_set('Asia/Kolkata');
