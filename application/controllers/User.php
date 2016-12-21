@@ -158,7 +158,8 @@
             $ip['device_token']     = trim($this->input->post('device_token'));
             // $ip['pkg_id']     		= trim($this->input->post('pkg_id'));
             $ip['user_otp']         = $six_digit_random_number;
-            $ip['user_status']      = '1';
+            // $ip['user_status']      = '1';
+            $ip['user_status']      = '2';
             $ip['created_datetime'] = Date('Y-m-d h:i:s');
             $ip['created_ip']       = $_SERVER['REMOTE_ADDR'];
             $ip['modified_datetime']= Date('Y-m-d h:i:s');
