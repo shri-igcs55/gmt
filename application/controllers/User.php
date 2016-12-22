@@ -294,7 +294,7 @@
 			if ($validation_array !=1) 
 			{
 				$data['message'] = $validation_array['msg'];
-				$retVals=$this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+				$retVals=$this->seekahoo_lib->return_status('error',$serviceName, $data, $ipJson);
 			}else if($em_data = $this->User_model->check_email($ip)){
 				// $ip['email'] = $em_data[0]->user_email;
 				if(!empty($em_data)){
@@ -312,8 +312,14 @@
           			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 				}
 		    }else{
-		    	$data['message'] = 'Please check login details you Entered.';
-          		$retVals=$this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+		    	$retVals = $this->User_model->check_signin($ip, $serviceName);
+		    	if($retVals){
+			    	$data['message'] = 'Login Successfull.';
+	          		$retVals=$this->seekahoo_lib->return_status('success',$serviceName, $data, $ipJson);
+		    	}else{
+			    	$data['message'] = 'Please check login details you Entered.';
+	          		$retVals=$this->seekahoo_lib->return_status('Error',$serviceName, $data, $ipJson);    		
+		    	}
 		    }
 			json_decode($retVals);
 			header("content-type: application/json");
