@@ -20,12 +20,12 @@
             
             $ip['user_id'] = ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
             
-            $ip['cont_name']           = trim($this->input->post('cont_name'));
-            $ip['cont_email']          = trim($this->input->post('cont_email'));
-            $ip['cont_number']         = trim($this->input->post('cont_number'));
+            $ip['cont_name']        = trim($this->input->post('cont_name'));
+            $ip['cont_email']       = trim($this->input->post('cont_email'));
+            $ip['cont_number']      = trim($this->input->post('cont_number'));
 
-            $ip['reg_id_fk']           = trim($this->input->post('reg_id_fk'));
-            $ip['cont_group_id']     = trim($this->input->post('cont_group_id'));
+            $ip['reg_id_fk']        = trim($this->input->post('reg_id_fk'));
+            $ip['cont_group_id']    = trim($this->input->post('cont_group_id'));
             
             $ipJson = json_encode($ip);
             

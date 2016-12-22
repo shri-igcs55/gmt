@@ -158,7 +158,8 @@
             $ip['device_token']     = trim($this->input->post('device_token'));
             // $ip['pkg_id']     		= trim($this->input->post('pkg_id'));
             $ip['user_otp']         = $six_digit_random_number;
-            $ip['user_status']      = '1';
+            // $ip['user_status']      = '1';
+            $ip['user_status']      = '2';
             $ip['created_datetime'] = Date('Y-m-d h:i:s');
             $ip['created_ip']       = $_SERVER['REMOTE_ADDR'];
             $ip['modified_datetime']= Date('Y-m-d h:i:s');
@@ -208,7 +209,7 @@
 				}
 
 			    $ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
-			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			    // $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty."); // as said by client on 20-12-16
 			}
 			else if($ip['user_type']== 5 || $ip['user_type']== 6 || $ip['user_type']== 8 || 
 			   		$ip['user_type']== 9 || $ip['user_type']==10 || $ip['user_type']==11 || 
