@@ -7,6 +7,7 @@
 		{
 			parent::__construct();
 			$this->load->model('Quotation_model');
+			$this->load->library('Email_sms');
 			$this->load->library('seekahoo_lib');
 			$this->load->library('Validator.php');
 		}		

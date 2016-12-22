@@ -88,12 +88,38 @@ date_default_timezone_set('Asia/Kolkata');
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
 		$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
-		$data['message'] = 'Order has been confirmed.'; 
+		
+		//Getting data of Transoter
+		$userTranspoter = $this->View_profile->view_profile($order['transpoter_id']);		
+		$userTranspoter = $userTranspoter['data'];
+		
+		//Getting Data for Customer
+		$userCustomer = $this->View_profile->view_profile($order['order_id']);		
+		$userCustomer = $userCustomer['data'];
+		$orderNo = 'Order no:'.$order['order_id'];
+		if($order['order_status']==7){
+			$subject = $orderNo.' Order has been cancled';
+			$data['message'] = 'Order has been cancled.'; 
+		}		
+		if($order['order_status']==9){
+			$subject = $orderNo.' Order has been confirmed';
+			$data['message'] = 'Order has been confirmed.'; 
+		}
+		$messageHeader = 'Hello, '.$userTranspoter['first_name'];
+		$messageBody = '<b>Order details are as below</b>';
+		$messageBody .='';
+		
+		//Send SMS & Email to Transoter
+		$smsstatus = $this->email_sms->send_sms_method($userTranspoter['mobile'], $messageHeader.$messageBody);
+		$mailstatus = $this->email_sms->send_email_method($userTranspoter['email'],$subject,$messageHeader.$messageBody);
+		
+		$messageHeader = 'Hello, '.$userCustomer['first_name'];
+		//Send SMS & Email to Customer
+		$smsstatus = $this->email_sms->send_sms_method($userCustomer['mobile'], $messageHeader.$messageBody);
+		$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
+			
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
-	
-	
-	
 
   }
   
