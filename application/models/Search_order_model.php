@@ -27,6 +27,38 @@
       $this->db->where('a.plc_odr_status_id_fk =', 3);
       $this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
       
+      switch ($input['user_type']) {
+        case 8:
+          $this->db->where_in('a.vehicle_id_fk', array('4', '7'));
+          // $this->db->where('a.vehicle_id_fk =', 7);
+          break;
+
+        case 9:
+          $this->db->where('a.vehicle_id_fk =', 2);
+          break;
+        
+        case 10:
+          $this->db->where('a.vehicle_id_fk =', 2);
+          break;
+        
+        case 11:
+          $this->db->where_in('a.vehicle_id_fk', array('6', '9'));
+          // $this->db->where('a.vehicle_id_fk =', 9);
+          break;
+
+        case 12:
+          $this->db->where('a.vehicle_id_fk =', 5);
+          break;
+        
+        case 13:
+          $this->db->where('a.vehicle_id_fk =', 8);
+          break;
+        
+        default:
+          
+          break;
+      }
+      
       if(isset($input['from_city']) && !empty($input['from_city'])){
         $this->db->where('ol.orl_from_city_id =', $input['from_city']);
       }
@@ -39,9 +71,9 @@
         $this->db->where('a.plc_odr_weight =', $input['weight']);
       }
 
-      if (isset($input['vehicle_type']) && !empty($input['vehicle_type'])) {
+      /*if (isset($input['vehicle_type']) && !empty($input['vehicle_type'])) {
         $this->db->where('a.vehicle_id_fk =', $input['vehicle_type']);
-      }
+      }*/
 
       if (isset($input['sehdule_date']) && !empty($input['sehdule_date'])) {
         $this->db->where('a.plc_odr_schedule_date =', $input['sehdule_date']);
