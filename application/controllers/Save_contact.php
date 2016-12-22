@@ -143,6 +143,9 @@
             
             $ip['cont_group_id']= trim($this->input->post('cont_group_id'));
             $ip['contact_id']   = trim($this->input->post('contact_id'));
+            $ip['contact_name'] = trim($this->input->post('contact_name'));
+            $ip['contact_phone']= trim($this->input->post('contact_phone'));
+            $ip['contact_email']= trim($this->input->post('contact_email'));
             
             $ipJson = json_encode($ip);
             
@@ -150,7 +153,10 @@
             $validation_array = 1;
             $ip_array[] = array("msg", $ip['user_id'], "not_null", "user_id", "user id is empty.");
             $ip_array[] = array("msg", $ip['cont_group_id'], "not_null", "cont_group_id", "contact group name id is empty.");
-            $ip_array[] = array("msg",$ip['contact_id'],"not_null","contact_id","Please select Contact number first.");
+            $ip_array[] = array("msg",$ip['contact_id'],"not_null","contact_id","Please select Contact id first.");
+            $ip_array[] = array("msg",$ip['contact_name'],"not_null","contact_name","Contact name can not be empty.");
+            $ip_array[] = array("msg",$ip['contact_phone'],"not_null","contact_phone","Contact phone can not be empty.");
+            $ip_array[] = array("msg",$ip['contact_email'],"not_null","contact_email","Contact email can not be empty.");
 
             $validation_array = $this->validator->validate($ip_array);
             if ($validation_array !=1) 

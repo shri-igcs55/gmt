@@ -22,6 +22,22 @@
   		//exit();
       // $details = $query->row();
     	return $details;
-    }  
+    }
+
+    function view_order_profile($input)
+    {
+      $ipJson = json_encode($input);
+      $this->db->select('b.user_id AS id, b.user_fname AS first_name, b.user_lname AS last_name, b.user_email AS email, b.user_mob AS mobile, b.user_firm_name AS firm_name, IFNULL(b.user_designation, 0) AS designation_id');
+      $this->db->from('gmt_place_order a'); 
+      $this->db->join('gmt_user b', 'a.user_id = b.user_id');
+      $this->db->where('a.plc_odr_id',$input['order_id']);
+      $query = $this->db->get();
+      //echo $this->db->last_query();
+      $details = $query->result_array();
+      //print_r($details);
+      //exit();
+      // $details = $query->row();
+      return $details;
+    }
 	}
 ?>

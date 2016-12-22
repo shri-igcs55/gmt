@@ -13,7 +13,7 @@
 			$this->load->library('Validator.php');
 		}
 		public function book_history_post()
-		{					
+		{
 			$serviceName = 'Book_history';
 			//getting posted values
 			$ip['user_id']          	= trim($this->input->post('user_id'));
@@ -80,7 +80,7 @@
 	    }
 		
 		public function rated_orders_post()
-		{			
+		{
 			$serviceName = 'rated_orders';
 			//getting posted values
 			$ip['user_id']          	= trim($this->input->post('user_id'));
@@ -151,7 +151,7 @@
 	    }
 
 	    public function confirm_orders_post()
-		{			
+		{
 			$serviceName = 'rated_orders';
 			//getting posted values
 			$ip['user_id']          	= trim($this->input->post('user_id'));
