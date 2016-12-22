@@ -9,7 +9,7 @@ date_default_timezone_set('Asia/Kolkata');
 		function select_station($input, $serviceName) {
 			$ipJson = json_encode($input);
 			
-			 	$select_station = array(
+			 		$select_station = array(
 					    'user_id'                => $input['user_id'],
 						'created_datetime'       => Date('Y-m-d h:i:s'),
 						'created_ip'             => $input['created_ip'],
@@ -18,8 +18,8 @@ date_default_timezone_set('Asia/Kolkata');
 					);
 					
 					$index = 0;	
-					$input['to_city'] = $this->input->post('to_city');
-					foreach($this->input->post('from_city') as $form_city):						
+					// $input['to_city'] = $this->input->post('to_city');
+					foreach($input['from_city'] as $form_city):						
 						$query =  $this->db->insert('gmt_transporter_station',
 							array('source_city_id_fk'=>$form_city,
 								'destination_city_id_fk'=>$input['to_city'][$index++],
@@ -33,7 +33,7 @@ date_default_timezone_set('Asia/Kolkata');
 			
 				if ($query == 1) {
 
-					$this->db->select('b.state AS from_state, b.city AS from_city, b.id AS from_city_id, c.state AS to_state, c.city AS to_city, c.id AS to_city_id');
+					$this->db->select('b.state AS from_state, CONCAT(b.city, ", ", b.district) AS from_city, b.id AS from_city_id, c.state AS to_state, CONCAT(c.city, ", ", c.district) AS to_city, c.id AS to_city_id');
 				  	$this->db->from('gmt_transporter_station a'); 
 				    $this->db->join('gmt_indian_city_list b', 'a.source_city_id_fk=b.id', 'left');
 				    $this->db->join('gmt_indian_city_list c', 'a.destination_city_id_fk=c.id', 'left');
