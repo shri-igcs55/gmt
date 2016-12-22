@@ -79,7 +79,7 @@ date_default_timezone_set('Asia/Kolkata');
 	public function acceptorder($order, $serviceName){
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
-		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5));
+		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5,'modified_datetime'=>Date('Y-m-d h:i:s')));
 		$data['message'] = 'Order rate has been sent successfully to the transpoter.'; 
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
@@ -88,37 +88,29 @@ date_default_timezone_set('Asia/Kolkata');
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
 		$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
+		return $order['order_status'];		
+	}
+	
+	public function reOrder($order_id){
 		
-		//Getting data of Transoter
-		$userTranspoter = $this->View_profile->view_profile($order['transpoter_id']);		
-		$userTranspoter = $userTranspoter['data'];
-		
-		//Getting Data for Customer
-		$userCustomer = $this->View_profile->view_profile($order['order_id']);		
-		$userCustomer = $userCustomer['data'];
-		$orderNo = 'Order no:'.$order['order_id'];
-		if($order['order_status']==7){
-			$subject = $orderNo.' Order has been cancled';
-			$data['message'] = 'Order has been cancled.'; 
-		}		
-		if($order['order_status']==9){
-			$subject = $orderNo.' Order has been confirmed';
-			$data['message'] = 'Order has been confirmed.'; 
-		}
-		$messageHeader = 'Hello, '.$userTranspoter['first_name'];
-		$messageBody = '<b>Order details are as below</b>';
-		$messageBody .='';
-		
-		//Send SMS & Email to Transoter
-		$smsstatus = $this->email_sms->send_sms_method($userTranspoter['mobile'], $messageHeader.$messageBody);
-		$mailstatus = $this->email_sms->send_email_method($userTranspoter['email'],$subject,$messageHeader.$messageBody);
-		
-		$messageHeader = 'Hello, '.$userCustomer['first_name'];
-		//Send SMS & Email to Customer
-		$smsstatus = $this->email_sms->send_sms_method($userCustomer['mobile'], $messageHeader.$messageBody);
-		$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
+			$this->db->select('plc_odr_id_fk');
+	    	$this->db->from('gmt_order_quotation'); 
+			$this->db->where('plc_odr_id_fk =', $order_id);
+			$query = $this->db->get();
+			echo $totalQuotedOrder = $query->num_rows();
 			
-		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
+			$this->db->select('plc_odr_id_fk');
+	    	$this->db->from('gmt_order_quotation'); 
+			$this->db->where('plc_odr_id_fk =', $order_id);
+			$this->db->where('status_id_fk =', 7);//Vehicle not avilable
+			$this->db->or_where('status_id_fk =', 8); //Time out
+			$query = $this->db->get();
+			if($totalQuotedOrder == $query->num_rows())
+			{
+				$this->db->where('plc_odr_id_fk', $order_id);
+				$this->db->delete('gmt_order_quotation'); 
+			}
+			 
 	}
 
   }

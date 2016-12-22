@@ -220,5 +220,28 @@
 		    echo $retVals1;
 		    exit;
 	    }
+		
+		public function getOrderDetail($input)
+		{
+			$serviceName = 'Order Details';
+			$ip['user_id'] = $input['order_id'];
+			$ipJson = json_encode($ip);
+			$ip_array[] = array("msg", $ip['order_id'], "not_null", "order_id", "order id is empty.");
+			$validation_array = 1;
+			$validation_array = $this->validator->validate($ip_array);			
+        	if ($validation_array !=1) 
+			{
+				$data['message'] = $validation_array['msg'];
+				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+			} 
+			else
+			{
+				 $retVals1 = $this->Book_history_model->getOrderDetail($ip, $serviceName);
+			}
+			header("content-type: application/json");
+		    echo $retVals1;
+		    exit;
+		}
+		
 	}
 ?>

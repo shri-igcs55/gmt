@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');	
-	require('application/libraries/REST_Controller.php');  
+	require('application/controllers/view_profile.php');  
 	//error_reporting(0);
 	class Quotation extends REST_Controller
 	{
@@ -9,7 +9,7 @@
 			$this->load->model('Quotation_model');
 			$this->load->library('Email_sms');
 			$this->load->library('seekahoo_lib');
-			$this->load->library('Validator.php');
+			$this->load->library('Validator.php');			
 		}		
 		public function quotation_post()
 		{			
@@ -88,18 +88,49 @@
 	        exit;
 		}
 		
-		public function confirmOrder_post(){	
+		public function confirmOrder_post(){
+			
 			$serviceName = 'Order confirmed or cancled';
 			$order['order_id'] = trim($this->input->post('order_id'));			
 			$order['transpoter_id'] = trim($this->input->post('transpoter_id'));
 			$order['order_status'] = trim($this->input->post('order_status'));
-            $order['modified_ip'] = $_SERVER['REMOTE_ADDR'];
+			$order['modified_ip'] = $_SERVER['REMOTE_ADDR'];			
+			$order_status = $this->Quotation_model->confirmorder($order, $serviceName);			
 			
-			$order = $this->Quotation_model->confirmorder($order, $serviceName);
-						
-	        header("content-type: application/json");
-	        echo $order;
-	        exit;
+			//Getting data of Transoter
+			$userTranspoter = $this->View_profile->view_profile($order['transpoter_id']);		
+			$userTranspoter = $userTranspoter['data'];
+			
+			//Getting Data for Customer
+			$userCustomer = $this->View_profile->view_order_profile($order['order_id']);		
+			$userCustomer = $userCustomer['data'];
+			$orderNo = 'Order no:'.$order['order_id'];
+			if($order_status==7){
+				$subject = $orderNo.' Order has been cancled';
+				$data['message'] = 'Order has been cancled.'; 
+				$messageBody = '<b>Your order no:'.$order['order_id'].' has been cancled</b>';
+			}		
+			if($order_status==9){
+				$subject = $orderNo.' Order has been confirmed';
+				$data['message'] = 'Order has been confirmed.'; 
+				$messageBody = '<b>Your order no:'.$order['order_id'].' has been confirmed</b>';
+			}
+			$messageHeader = 'Hello, '.$userTranspoter['first_name'];
+					
+			//Send SMS & Email to Transoter
+			$smsstatus = $this->email_sms->send_sms_method($userTranspoter['mobile'], $messageHeader.$messageBody);
+			$mailstatus = $this->email_sms->send_email_method($userTranspoter['email'],$subject,$messageHeader.$messageBody);
+			
+			$messageHeader = 'Hello, '.$userCustomer['first_name'];
+			//Send SMS & Email to Customer
+			$smsstatus = $this->email_sms->send_sms_method($userCustomer['mobile'], $messageHeader.$messageBody);
+			$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
+			
+			$this->Quotation_model->reOrder($order['order_id']);
+			return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
+			header("content-type: application/json");
+			echo $status;
+			exit;
 		}
 		
 		
