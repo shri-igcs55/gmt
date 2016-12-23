@@ -151,12 +151,31 @@
 			$ipJson = json_encode($value);		
 			
 			$edit_cont_count = array(
-					'cont_group_id' => $value['cont_group_id']
+					'cont_group_id' => $value['cont_group_id'],
+					'cont_name'		=> $value['contact_name'],
+					'cont_mob'		=> $value['contact_phone'],
+					'cont_email'	=> $value['contact_email']
 				);
 			$this->db->where('user_id', $value['user_id']);
 			$this->db->where('cont_id', $value['contact_id']);
 			$update_group = $this->db->update('gmt_contact',$edit_cont_count);
-			return $afted_rows = $this->db->affected_rows(); // exit();
+
+			if($update_group){
+				$this->db->select('gmt_contact.cont_id,
+								gmt_contact.cont_name,
+								gmt_contact.cont_mob,
+								gmt_contact.cont_email, 
+								gmt_contact_group.cgrp_id,
+								gmt_contact_group.cgrp_group_name');
+				$this->db->from('gmt_contact');
+				$this->db->join('gmt_contact_group','gmt_contact_group.cgrp_id = gmt_contact.cont_group_id');
+				$this->db->where('gmt_contact.cont_id', $value['contact_id']);
+				$this->db->where('gmt_contact.user_id', $value['user_id'] );
+			    $detail_last_user = $this->db->get();
+			    return $afted_rows = $detail_last_user->result_array();
+			}else{
+				return false; // exit();
+			}
 		}
 
 		public function edit_one_contact($value, $serviceName){

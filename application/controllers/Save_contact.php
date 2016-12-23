@@ -166,11 +166,13 @@
             } 
             else  
             {
-                if($this->Save_contact_model->edit_contact($ip, $serviceName)){
+                $contact_data = $this->Save_contact_model->edit_contact($ip, $serviceName);
+                if($contact_data){
+                    $data['contact_info'] = $contact_data;
                     $data['message'] = "Contact edited and saved Successfully.";
                     $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
                 }else{
-                    $data['message'] = "Nothing  is edited.";
+                    $data['message'] = "Something went wrong while storing contact.";
                     $retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
                 }
             }
