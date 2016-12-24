@@ -97,7 +97,7 @@ class User_model extends CI_model
     $query = $this->db->get();
     // echo $this->db->last_query($query);exit();
     $resultRows = $query->num_rows();
-    //print_r($resultRows);exit();
+    // print_r($resultRows);exit();
     $result_row = $query->row();
     $result = $query->result_array();
 
@@ -121,13 +121,13 @@ class User_model extends CI_model
       
       $data = $result[0];
       $data['message'] = 'Login Successfully';
-      $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
+      return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
     }
     else {
-      $data['message'] = 'Email address and Password does not match';
-      $status = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
+      $data['message'] = 'Email or Mobile and Password does not match';
+      return $status = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
     }
-    return $status;
+    // return $status;
   }
 
   /*Sign Up*/
