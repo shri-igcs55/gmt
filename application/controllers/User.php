@@ -283,12 +283,11 @@
 		    $ip['password'] = trim($this->input->post('password'));
 		    // $ip['user_type_id'] = trim($this->input->post('utype_id'));
 		    $ipJson = json_encode($ip);
-
 		    //validation
 		    $validation_array = 1;
 		    
-		    $ip_array[] = array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
-			$ip_array[]=array("msg",$ip['password'], "not_null", "password", "Password is empty.");
+		    $ip_array[]=array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
+			$ip_array[]=array("msg",$ip['password'],"not_null", "password", "Password is empty.");
 			// $ip_array[] = array("msg", $ip['user_type_id'], "not_null", "user_type_id", "User role is empty.");
 			$validation_array = $this->validator->validate($ip_array);
 			if ($validation_array !=1) 
@@ -296,6 +295,7 @@
 				$data['message'] = $validation_array['msg'];
 				$retVals=$this->seekahoo_lib->return_status('error',$serviceName, $data, $ipJson);
 			}else if($em_data = $this->User_model->check_email($ip)){
+				// echo "email"; var_dump($em_data);exit();
 				// $ip['email'] = $em_data[0]->user_email;
 				if(!empty($em_data)){
 					$retVals = $this->User_model->check_signin($ip, $serviceName);
@@ -304,7 +304,8 @@
           			$retVals = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 				}
 		    }else if($em_data = $this->User_model->check_mob($ip)){
-		    	// $ip['mobile'] = $em_data[0]->user_mob;
+		    	// echo "mob"; var_dump($em_data); exit();
+				// $ip['mobile'] = $em_data[0]->user_mob;
 		    	if(!empty($em_data)){
 					$retVals = $this->User_model->check_signin($ip, $serviceName);
 		    	}else{
@@ -313,13 +314,14 @@
 				}
 		    }else{
 		    	$retVals = $this->User_model->check_signin($ip, $serviceName);
-		    	if($retVals){
+		    	// echo "last"; var_dump($retVals); exit();
+				/*if(!empty($retVals)){
 			    	$data['message'] = 'Login Successfull.';
 	          		$retVals=$this->seekahoo_lib->return_status('success',$serviceName, $data, $ipJson);
 		    	}else{
 			    	$data['message'] = 'Please check login details you Entered.';
 	          		$retVals=$this->seekahoo_lib->return_status('Error',$serviceName, $data, $ipJson);    		
-		    	}
+		    	}*/
 		    }
 			json_decode($retVals);
 			header("content-type: application/json");
