@@ -481,7 +481,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_email', $input['user_email']);
-      // $this->db->where('u_type_id', $utype);
+      $this->db->where('u_type_id', $input['user_type']);
       $query = $this->db->get();
       $details = $query->result();    
       $result = $query->num_rows();
@@ -497,7 +497,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_mob', $input['user_mob']);
-      // $this->db->where('u_type_id', $utype);
+      $this->db->where('u_type_id', $input['user_type']);
       $query = $this->db->get();
       $details = $query->result(); 
       $result = $query->num_rows();
