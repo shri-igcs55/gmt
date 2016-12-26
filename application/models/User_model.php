@@ -91,11 +91,13 @@ class User_model extends CI_model
     $this->db->from('gmt_user u');
     $this->db->join('gmt_user_type ut', 'u.u_type_id = ut.u_type_id', 'LEFT');
     $this->db->where('u.user_pass', md5($input['password']));
-    $this->db->where('u.user_email', $input['email_mob']);
+	$this->db->group_start();
+    $this->db->or_where('u.user_email', $input['email_mob']);
     $this->db->or_where('u.user_mob', $input['email_mob']);
+	$this->db->group_end();
     // $this->db->where('u.u_type_id', $input['user_type_id']);
     $query = $this->db->get();
-    // echo $this->db->last_query($query);exit();
+    //echo $this->db->last_query($query);exit();
     $resultRows = $query->num_rows();
     //print_r($resultRows);exit();
     $result_row = $query->row();
