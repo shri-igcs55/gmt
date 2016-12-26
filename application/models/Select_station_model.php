@@ -11,9 +11,9 @@ date_default_timezone_set('Asia/Kolkata');
 			
 			 		$select_station = array(
 					    'user_id'                => $input['user_id'],
-						'created_datetime'       => Date('Y-m-d h:i:s'),
+						'created_datetime'       => Date('Y-m-d H:i:s'),
 						'created_ip'             => $input['created_ip'],
-                        'modified_datetime'      => Date('Y-m-d h:i:s'),
+                        'modified_datetime'      => Date('Y-m-d H:i:s'),
                         'modified_ip'            => $input['modified_ip']
 					);
 					

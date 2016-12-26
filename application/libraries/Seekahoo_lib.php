@@ -29,7 +29,7 @@ class seekahoo_lib
 			'status' => $status['status'],
 			'request' => $ipJson,
 			'response' => $opJson,
-			'log_created_date' => date('Y-m-d H:i:s')
+			'log_created_date' => Date('Y-m-d H:i:s')
 		);
 		$this->CI->db->insert('web_service_logs', $data);
 	}

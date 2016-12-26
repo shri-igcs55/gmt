@@ -11,7 +11,7 @@ date_default_timezone_set('Asia/Kolkata');
 
       $doc_del_data = array(
         'del_status' => '2',
-        'modified_datetime'  => Date('Y-m-d h:i:s'),
+        'modified_datetime'  => Date('Y-m-d H:i:s'),
         'modified_ip'        => $_SERVER['REMOTE_ADDR']
       );
 	    

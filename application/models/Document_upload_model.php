@@ -13,9 +13,9 @@ date_default_timezone_set('Asia/Kolkata');
 				    'trans_doc_name'    	=> $input['doc_name'],
 					'trans_doc_path'		=> $doc[0]['profile_org_url'],
 					'trans_doc_thumb_url'	=> $doc[0]['profile_thumb_url'],
-					'created_datetime'  	=> Date('Y-m-d h:i:s'),
+					'created_datetime'  	=> Date('Y-m-d H:i:s'),
 					'created_ip'        	=> $_SERVER['REMOTE_ADDR'],
-                    'modified_datetime' 	=> Date('Y-m-d h:i:s'),
+                    'modified_datetime' 	=> Date('Y-m-d H:i:s'),
                     'modified_ip'       	=> $_SERVER['REMOTE_ADDR']
 				);
 			$query = $this->db->insert('gmt_transporter_doc', $document_upload);

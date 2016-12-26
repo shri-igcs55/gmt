@@ -53,7 +53,7 @@ class Uploader
 				mkdir($chatPic, 0755, true);
 				mkdir($chatThumb, 0755, true);
 			}
-			$name = rand().strtotime(date('Y-m-d H:i:s')).'.'.$extension;
+			$name = rand().strtotime(Date('Y-m-d H:i:s')).'.'.$extension;
 			if ($flag == 'profile') {
 				$pathName = $profilePic."/". $name;
 				$thumnail_path = $profileThumb."/". $name;
@@ -82,7 +82,7 @@ class Uploader
 				 	 $out['type'] = 'video';
 				 }
 				if (($value["type"] == "video/mp4")  || ($value["type"] == "video/quicktime")  || ($value["type"] == "video/x-m4v")) {
-					$nameVideo = rand().strtotime(date('Y-M-D H:I:S')).'.'.'jpeg';
+					$nameVideo = rand().strtotime(Date('Y-m-d H:i:s')).'.'.'jpeg';
 					$thumbpathVideo = $postUploadThumb;
 					$out['profile_thumb_url'] = $this->makeVideoThumbnails($out['profile_org_url'], $nameVideo,$thumbpathVideo);;
 				} else {
@@ -143,7 +143,7 @@ class Uploader
 				mkdir($chatThumb, 0755, true);
 			}
 			
-			$name = rand().strtotime(date('Y-m-d H:i:s')).'.'.$extension;
+			$name = rand().strtotime(Date('Y-m-d H:i:s')).'.'.$extension;
 			if ($flag == 'profile') {
 				$pathName = $profilePic."/". $name;
 				$thumnail_path = $profileThumb."/". $name;
@@ -166,7 +166,7 @@ class Uploader
 				 	 $out['type'] = 'video';
 				 }
 				if (($value["type"] == "video/mp4")  || ($value["type"] == "video/quicktime")  || ($value["type"] == "video/x-m4v")) {
-					$nameVideo = rand().strtotime(date('Y-M-D H:I:S')).'.'.'jpeg';
+					$nameVideo = rand().strtotime(Date('Y-m-d H:i:s')).'.'.'jpeg';
 					$thumbpathVideo = $postUploadThumb;
 					$out['thumbnail_url'] = $this->makeVideoThumbnails_android($out['photo_url'], $nameVideo,$thumbpathVideo);;
 				} else {
@@ -413,7 +413,7 @@ class Uploader
 				mkdir($postUploadOrg, 0755, true);
 				mkdir($postUploadThumb, 0755, true);
 			}
-			$name = rand().strtotime(date('Y-m-d H:i:s')).'.'.$extension;
+			$name = rand().strtotime(Date('Y-m-d H:i:s')).'.'.$extension;
 			if ($flag == 'profile') {
 				$pathName = $profilePic."/". $name;
 				$thumnail_path = $profileThumb."/". $name;
@@ -432,7 +432,7 @@ class Uploader
 				 	 $out['type'] = 'video';
 				 }
 				if (($value["type"] == "video/mp4")  || ($value["type"] == "video/quicktime")  || ($value["type"] == "video/x-m4v")) {
-					$nameVideo = rand().strtotime(date('Y-M-D H:I:S')).'.'.'jpeg';
+					$nameVideo = rand().strtotime(Date('Y-m-d H:i:s')).'.'.'jpeg';
 					$thumbpathVideo = $postUploadThumb;
 					//$out['thumbnail_url'] = $this->makeVideoThumbnails($out['photo_url'], $nameVideo,$thumbpathVideo);;
 				} else {

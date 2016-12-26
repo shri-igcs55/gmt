@@ -160,9 +160,9 @@
             $ip['user_otp']         = $six_digit_random_number;
             // $ip['user_status']      = '1';
             $ip['user_status']      = '2';
-            $ip['created_datetime'] = Date('Y-m-d h:i:s');
+            $ip['created_datetime'] = Date('Y-m-d H:i:s');
             $ip['created_ip']       = $_SERVER['REMOTE_ADDR'];
-            $ip['modified_datetime']= Date('Y-m-d h:i:s');
+            $ip['modified_datetime']= Date('Y-m-d H:i:s');
             $ip['modified_ip']      = $_SERVER['REMOTE_ADDR'];
 
 	        	 if($ip['user_type'] == 3) { $user_code = 'cust_indv-';	} //Customer 
@@ -421,7 +421,7 @@
             // $ip['user_status']      = '1';
             $ip['tin'] 				= trim($this->input->post('tin'));
             $ip['stax'] 			= trim($this->input->post('stax'));
-            $ip['modified_datetime']= Date('Y-m-d h:i:s');
+            $ip['modified_datetime']= Date('Y-m-d H:i:s');
             $ip['modified_ip']      = $_SERVER['REMOTE_ADDR'];
 
 	        	/* if($ip['user_type'] == 3) { $user_code = 'cust_indv-';	} //Customer 
@@ -886,9 +886,9 @@
 		    $ip['u_detail_stax']       = trim($this->input->post('u_detail_stax'));
 		    $ip['comp_type_id_fk']     = trim($this->input->post('comp_type_id_fk'));
 		    $ip['trans_cat_id_fk']     = trim($this->input->post('trans_cat_id_fk'));
-		    $ip['created_datetime']    = Date('Y-m-d h:i:s');
+		    $ip['created_datetime']    = Date('Y-m-d H:i:s');
             $ip['created_ip']          = $_SERVER['REMOTE_ADDR'];
-		    $ip['modified_datetime']   = Date('Y-m-d h:i:s');
+		    $ip['modified_datetime']   = Date('Y-m-d H:i:s');
 		    $ip['modified_ip']         = $_SERVER['REMOTE_ADDR'];
 			//var_dump($_FILES['user_pic']);exit();
             // print_r($ip); exit();

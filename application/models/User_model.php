@@ -311,7 +311,7 @@ class User_model extends CI_model
 
     $signup_data = array(
       'user_pass'        => md5($input['six_digit_random_number']),
-      'modified_datetime'=> date('Y-m-d H:i:s'),
+      'modified_datetime'=> Date('Y-m-d H:i:s'),
       'modified_ip'      => $_SERVER['REMOTE_ADDR']
     );
     
@@ -334,7 +334,7 @@ class User_model extends CI_model
     $signup_data = array(
       'user_pass'        => md5($input['six_digit_random_number']),
       'resend_otp_count' => $list_group[0]['resend_otp_count']+1,
-      'modified_datetime'=> date('Y-m-d H:i:s'),
+      'modified_datetime'=> Date('Y-m-d H:i:s'),
       'modified_ip'      => $_SERVER['REMOTE_ADDR']
     );
     
@@ -766,8 +766,8 @@ class User_model extends CI_model
               'media_type' => $uploadPhoto[0]['type'],
               'media_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
               'media_org_url' => $uploadPhoto[0]['photo_url'],
-              'media_created_date' => date('Y-m-d H:i:s'),
-              'media_modified_date' => date('Y-m-d H:i:s')
+              'media_created_date' => Date('Y-m-d H:i:s'),
+              'media_modified_date' => Date('Y-m-d H:i:s')
           );
           $photoIns = $this->db->insert('media', $photoArray);
       } else { 
@@ -775,7 +775,7 @@ class User_model extends CI_model
           $photoArray = array(
               'profile_thumb_url' => $uploadPhoto[0]['thumbnail_url'],
               'profile_org_url'   => $uploadPhoto[0]['photo_url'],
-              'reg_date_time'     => date('Y-m-d H:i:s')
+              'reg_date_time'     => Date('Y-m-d H:i:s')
           );
           $this->db->where('id', $ip['user_id']);
           $photoIns = $this->db->update('signup', $photoArray);

@@ -29,7 +29,7 @@
 
 
             $ip['created_ip']   = $_SERVER['REMOTE_ADDR'];
-            $ip['created_datetime']  = Date('Y-m-d h:i:s');
+            $ip['created_datetime']  = Date('Y-m-d H:i:s');
 
             $ipJson = json_encode($ip);
             //validation

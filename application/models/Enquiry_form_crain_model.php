@@ -26,9 +26,9 @@ date_default_timezone_set('Asia/Kolkata');
 						'dw_id_fk'				     => $input['desc_of_goods'],
 						'other_work_desc'			 => $input['other_desc_of_work'],
 						'plc_odr_schedule_date'      => Date('d-m-Y', strtotime($input['sechdule_date'])),
-						'created_datetime'           => Date('Y-m-d h:i:s'),
+						'created_datetime'           => Date('Y-m-d H:i:s'),
 						'created_ip'                 => $input['created_ip'],
-                        'modified_datetime'          => Date('Y-m-d h:i:s'),
+                        'modified_datetime'          => Date('Y-m-d H:i:s'),
                         'modified_ip'                => $input['modified_ip']
 						
 					);

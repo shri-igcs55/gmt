@@ -12,9 +12,9 @@ date_default_timezone_set('Asia/Kolkata');
 					    'to_user_id'                 => $input['to_user_id'],
 						'rt_subject'                 => $input['subject'],
 						'rt_feadback'                => $input['feadback'],
-						'created_datetime'           => Date('Y-m-d h:i:s'),
+						'created_datetime'           => Date('Y-m-d H:i:s'),
 						'created_ip'                 => $input['created_ip'],
-                        'modified_datetime'          => Date('Y-m-d h:i:s'),
+                        'modified_datetime'          => Date('Y-m-d H:i:s'),
                         'modified_ip'                => $input['modified_ip']	
 					);
 				$query = $this->db->insert('gmt_rating', $rating);

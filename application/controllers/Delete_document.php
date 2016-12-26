@@ -51,7 +51,7 @@
 			
 			$ip['user_id'] 	= ($logged_in_user['user_id']!='' ? $logged_in_user['user_id']:$ip['user_id']);
 	    	
-            $ip['modified_datetime']= Date('Y-m-d h:i:s');
+            $ip['modified_datetime']= Date('Y-m-d H:i:s');
             $ip['modified_ip']      = $_SERVER['REMOTE_ADDR'];
 
 	    	$ipJson =  json_encode($ip);

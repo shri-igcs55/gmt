@@ -14,9 +14,9 @@ date_default_timezone_set('Asia/Kolkata');
           'odr_qtn_delivered_datetime'   => $input['odr_qtn_delivered_datetime'],
           'odr_amt_basis'                => $input['odr_amt_basis'],
           'status_id_fk'                 => $input['status_id_fk'],
-          'created_datetime'             => Date('Y-m-d h:i:s'),
+          'created_datetime'             => Date('Y-m-d H:i:s'),
           'created_ip'                   => $input['created_ip'],
-          'modified_datetime'            => Date('Y-m-d h:i:s'),
+          'modified_datetime'            => Date('Y-m-d H:i:s'),
           'modified_ip'                 => $input['modified_ip']  
           );
         $query = $this->db->insert('gmt_order_quotation', $quotation);
@@ -50,9 +50,9 @@ date_default_timezone_set('Asia/Kolkata');
           'odr_qtn_amount'               => $order['quoted_rate'],
 		  'odr_amt_basis'               => $order['odr_amt_basis'],
           'status_id_fk'                 => 4,
-          'created_datetime'             => Date('Y-m-d h:i:s'),
+          'created_datetime'             => Date('Y-m-d H:i:s'),
           'created_ip'                   => $order['created_ip'],
-          'modified_datetime'            => Date('Y-m-d h:i:s'),
+          'modified_datetime'            => Date('Y-m-d H:i:s'),
           'modified_ip'                 => $order['modified_ip']  
           );
 		  
@@ -79,7 +79,7 @@ date_default_timezone_set('Asia/Kolkata');
 	public function acceptorder($order, $serviceName){
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
-		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5,'modified_datetime'=>Date('Y-m-d h:i:s')));
+		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5,'modified_datetime'=>Date('Y-m-d H:i:s')));
 		$data['message'] = 'Order rate has been sent successfully to the transpoter.'; 
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}

@@ -33,7 +33,7 @@ class Contact_us extends REST_Controller
 
 		$ip['device_token']     = trim($this->input->post('device_token'));
 
-        $ip['created_datetime'] = Date('Y-m-d h:i:s');
+        $ip['created_datetime'] = Date('Y-m-d H:i:s');
         $ip['created_ip']       = $_SERVER['REMOTE_ADDR'];
         
 		//validation

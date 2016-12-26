@@ -14,9 +14,9 @@
 				    'cont_mob'			=> $input['cont_number'],
 				    'reg_id_fk'         => $input['reg_id_fk'],
 					'cont_group_id'   	=> $input['cont_group_id'],
-					'created_datetime'  => Date('Y-m-d h:i:s'),
+					'created_datetime'  => Date('Y-m-d H:i:s'),
 					'created_ip'        => $_SERVER['REMOTE_ADDR'],
-                    'modified_datetime'	=> Date('Y-m-d h:i:s'),
+                    'modified_datetime'	=> Date('Y-m-d H:i:s'),
                     'modified_ip'       => $_SERVER['REMOTE_ADDR']	
 				);
 			$query = $this->db->insert('gmt_contact', $save_contact);
@@ -76,7 +76,7 @@
 			// print_r($cont_id);
 			$doc_del_data = array(
 		        'del_status' => '2',
-		        'modified_datetime'  => Date('Y-m-d h:i:s'),
+		        'modified_datetime'  => Date('Y-m-d H:i:s'),
 		        'modified_ip'        => $_SERVER['REMOTE_ADDR']
 		    );
 			    
@@ -93,9 +93,9 @@
 			$save_contact = array(
 				    'user_id'           => $input['user_id'],
 				    'cgrp_group_name'   => ucwords($input['cont_group_name']),
-					'created_datetime'  => Date('Y-m-d h:i:s'),
+					'created_datetime'  => Date('Y-m-d H:i:s'),
 					'created_ip'        => $_SERVER['REMOTE_ADDR'],
-                    'modified_datetime'	=> Date('Y-m-d h:i:s'),
+                    'modified_datetime'	=> Date('Y-m-d H:i:s'),
                     'modified_ip'       => $_SERVER['REMOTE_ADDR']	
 				);
 			$query = $this->db->insert('gmt_contact_group', $save_contact);
@@ -135,7 +135,7 @@
 			// print_r($cont_id);
 			$doc_del_data = array(
 		        'cgrp_del_status' 	=> '2',
-		        'modified_datetime' => Date('Y-m-d h:i:s'),
+		        'modified_datetime' => Date('Y-m-d H:i:s'),
 		        'modified_ip'       => $_SERVER['REMOTE_ADDR']
 		    );
 			    
