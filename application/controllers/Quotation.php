@@ -127,7 +127,7 @@
 			$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
 			
 			$this->Quotation_model->reOrder($order['order_id']);
-			return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
+			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
 			header("content-type: application/json");
 			echo $status;
 			exit;
