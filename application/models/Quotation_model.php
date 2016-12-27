@@ -86,6 +86,7 @@ date_default_timezone_set('Asia/Kolkata');
 	
 	public function confirmorder($order, $serviceName){
 		
+			
 			if($order['order_status']==9){
 				$this->db->where('user_id', $order['transpoter_id']);
 				$this->db->where('plc_odr_id_fk',$order['order_id']);
@@ -96,6 +97,7 @@ date_default_timezone_set('Asia/Kolkata');
 				$this->db->where('plc_odr_id_fk',$order['order_id']);
 				$this->db->delete('gmt_order_quotation'); 
 			}
+			
 		return $order['order_status'];		
 	}
 	
@@ -105,7 +107,7 @@ date_default_timezone_set('Asia/Kolkata');
 	    	$this->db->from('gmt_order_quotation'); 
 			$this->db->where('plc_odr_id_fk =', $order_id);
 			$query = $this->db->get();
-			echo $totalQuotedOrder = $query->num_rows();
+			$totalQuotedOrder = $query->num_rows();
 			
 			$this->db->select('plc_odr_id_fk');
 	    	$this->db->from('gmt_order_quotation'); 

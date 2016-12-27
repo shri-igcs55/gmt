@@ -97,6 +97,7 @@
 			$order['modified_ip'] = $_SERVER['REMOTE_ADDR'];			
 			$order_status = $this->Quotation_model->confirmorder($order, $serviceName);			
 			
+			
 			//Getting data of Transoter
 			$userTranspoter = $this->View_profile->view_profile($order['transpoter_id']);		
 			$userTranspoter = $userTranspoter['data'];
@@ -104,6 +105,7 @@
 			//Getting Data for Customer
 			$userCustomer = $this->View_profile->view_order_profile($order['order_id']);		
 			$userCustomer = $userCustomer['data'];
+			
 			$orderNo = 'Order no:'.$order['order_id'];
 			if($order_status==7){
 				$subject = $orderNo.' Order has been cancled';
@@ -116,7 +118,8 @@
 				$messageBody = '<b>Your order no:'.$order['order_id'].' has been confirmed</b>';
 			}
 			$messageHeader = 'Hello, '.$userTranspoter['first_name'];
-					
+			
+			
 			//Send SMS & Email to Transoter
 			$smsstatus = $this->email_sms->send_sms_method($userTranspoter['mobile'], $messageHeader.$messageBody);
 			$mailstatus = $this->email_sms->send_email_method($userTranspoter['email'],$subject,$messageHeader.$messageBody);

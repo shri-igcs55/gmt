@@ -19,6 +19,19 @@
                     'modified_datetime'	=> Date('Y-m-d H:i:s'),
                     'modified_ip'       => $_SERVER['REMOTE_ADDR']	
 				);
+			
+			  $this->db->select('*');
+			  $this->db->from('gmt_contact');
+			  $this->db->where('user_id', $save_contact['user_id']);
+			  $this->db->where('cont_mob', $save_contact['cont_mob']);
+			  $query = $this->db->get();
+			  $result = $query->num_rows();
+			  if ($result > 0 ){												
+				$data['message'] = 'Contact is already saved';
+				return $status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+			  }
+			
+			
 			$query = $this->db->insert('gmt_contact', $save_contact);
 			$last_id = $this->db->insert_id();
 					
@@ -54,7 +67,7 @@
 			}
 			else {
 				$data['message'] = 'Something went wrong while signup. Try Again.';
-				$status =$this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
+				$status = $this->seekahoo_lib->return_status('Error', $serviceName, $data, $ipJson);
 			}
 			return $status;
 		}

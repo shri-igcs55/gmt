@@ -45,8 +45,7 @@
             } 
             else  
             {
-                $data['details'] = $this->Save_contact_model->save_contact($ip, $serviceName);
-                $data['message'] = "Contact saved Successfully.";
+                $data['details'] = $this->Save_contact_model->save_contact($ip, $serviceName);                
                 $retVals1 = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
             }
             header("content-type: application/json");
