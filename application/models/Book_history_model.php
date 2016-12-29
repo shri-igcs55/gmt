@@ -90,6 +90,8 @@
 			$this->db->group_end();
 			
 			
+			
+			
 			if(count($arrOrderIds))	$this->db->where_not_in('a.plc_odr_id',$orderId);
 			
 			if($input['order_status'] == 3){
@@ -165,55 +167,69 @@
 			$this->db->where('oq.modified_datetime <', $time);
 			
 
-			if(count($arrOrderIds))	$this->db->where_not_in('a.plc_odr_id',$orderId);
+			$this->db->group_start();
+						
+			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
+				$this->db->or_where('a.user_id', $input['user_id']);
+			}
+			
+			if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6 || $input['user_type_parent_id'] == 7){
+				$this->db->group_start();
+				$this->db->or_where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);				
+				$this->db->where('oq.user_id', $input['user_id']);				
+				$this->db->or_where('a.user_id', $input['user_id']);
+				$this->db->group_end();
+			}
 			
 			switch ($input['user_type']) {
 				case 8:
-					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));
-					// $this->db->where('a.vehicle_id_fk =', 7);
+					$this->db->or_where_in('a.vehicle_id_fk', array('4', '7'));					
 					break;
 
 				case 9:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);					
 					break;
 				
 				case 10:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);					
 					break;
-				
+			
 				case 11:
-					$this->db->where_in('a.vehicle_id_fk', array('6', '9'));
-					// $this->db->where('a.vehicle_id_fk =', 9);
+					$this->db->or_where_in('a.vehicle_id_fk', array('6', '9'));					
 					break;
 
 				case 12:
-					$this->db->where('a.vehicle_id_fk =', 5);
+					$this->db->or_where('a.vehicle_id_fk =', 5);					
 					break;
 				
 				case 13:
-					$this->db->where('a.vehicle_id_fk =', 8);
+					$this->db->or_where('a.vehicle_id_fk =', 8);					
 					break;
 				
 				default:
 					
 					break;
 			}
-				
-			if ($input['user_type_parent_id'] != 2)
-				$this->db->where('oq.user_id =',$input['user_id']);
-		
-			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
-				$this->db->where('a.user_id', $input['user_id']);
-			}
+			
+			$this->db->group_end();
+			
+			
+			
+			
+			
+			if(count($arrOrderIds))	$this->db->where_not_in('a.plc_odr_id',$orderId);
+			
 			if($input['order_status'] == 3){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 				$this->db->where('a.plc_odr_status_id_fk <=', 9);
 			}else if($input['order_status'] == 9){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 			}
-			if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6 || $input['user_type_parent_id'] == 7){
-				$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
-			}
+			
+			
+			
+			
+			
 			$this->db->order_by('a.plc_odr_schedule_date','ASC');
 			$details = array();
 			$arrOrder_details = array();
@@ -266,53 +282,63 @@
 			
 			$this->db->where('a.plc_odr_del_status =', 1);
 			$this->db->where('oq.status_id_fk =', 9);
-
+			
+			$this->db->group_start();
+			
+			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
+				$this->db->or_where('a.user_id', $input['user_id']);
+			}
+			
+			if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6 || $input['user_type_parent_id'] == 7){
+				$this->db->group_start();
+				$this->db->or_where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);				
+				$this->db->where('oq.user_id', $input['user_id']);				
+				$this->db->or_where('a.user_id', $input['user_id']);
+				$this->db->group_end();
+			}
+			
 			switch ($input['user_type']) {
 				case 8:
-					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));
-					// $this->db->where('a.vehicle_id_fk =', 7);
+					$this->db->or_where_in('a.vehicle_id_fk', array('4', '7'));					
 					break;
 
 				case 9:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);					
 					break;
 				
 				case 10:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);					
 					break;
-				
+			
 				case 11:
-					$this->db->where_in('a.vehicle_id_fk', array('6', '9'));
-					// $this->db->where('a.vehicle_id_fk =', 9);
+					$this->db->or_where_in('a.vehicle_id_fk', array('6', '9'));					
 					break;
 
 				case 12:
-					$this->db->where('a.vehicle_id_fk =', 5);
+					$this->db->or_where('a.vehicle_id_fk =', 5);					
 					break;
 				
 				case 13:
-					$this->db->where('a.vehicle_id_fk =', 8);
+					$this->db->or_where('a.vehicle_id_fk =', 8);					
 					break;
 				
 				default:
 					
 					break;
 			}
+			
+			$this->db->group_end();
 						
-			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
-				$this->db->where('a.user_id', $input['user_id']);
-			}
+			
+			
+			
 			if($input['order_status'] == 3){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 				$this->db->where('a.plc_odr_status_id_fk <=', 9);
 			}else if($input['order_status'] == 9){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 			}
-			if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6 || $input['user_type_parent_id'] == 7){
-				$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
-				
-				$this->db->where('oq.user_id', $input['user_id']);
-			}
+			
 			$this->db->order_by('a.plc_odr_schedule_date','ASC');
 			$details = array();
 			$arrOrder_details = array();
