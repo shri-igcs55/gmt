@@ -97,7 +97,7 @@
 			$order['modified_ip'] = $_SERVER['REMOTE_ADDR'];			
 			$order_status = $this->Quotation_model->confirmorder($order, $serviceName);			
 			
-			
+			/*
 			//Getting data of Transoter
 			$userTranspoter = $this->View_profile->view_profile_post($order['transpoter_id']);		
 			$userTranspoter = $userTranspoter['data'];
@@ -105,7 +105,7 @@
 			//Getting Data for Customer
 			$userCustomer = $this->View_profile->view_order_profile_post($order['order_id']);		
 			$userCustomer = $userCustomer['data'];
-			
+			*/
 			$orderNo = 'Order no:'.$order['order_id'];
 			if($order_status==7){
 				$subject = $orderNo.' Order has been cancled';
@@ -117,9 +117,9 @@
 				$data['message'] = 'Order has been confirmed.'; 
 				$messageBody = '<b>Your order no:'.$order['order_id'].' has been confirmed</b>';
 			}
-			$messageHeader = 'Hello, '.$userTranspoter['first_name'];
+			//$messageHeader = 'Hello, '.$userTranspoter['first_name'];
 			
-			
+			/*
 			//Send SMS & Email to Transoter
 			$smsstatus = $this->email_sms->send_sms_method($userTranspoter['mobile'], $messageHeader.$messageBody);
 			$mailstatus = $this->email_sms->send_email_method($userTranspoter['email'],$subject,$messageHeader.$messageBody);
@@ -128,7 +128,7 @@
 			//Send SMS & Email to Customer
 			$smsstatus = $this->email_sms->send_sms_method($userCustomer['mobile'], $messageHeader.$messageBody);
 			$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
-			
+			*/
 			$this->Quotation_model->reOrder($order['order_id']);
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
 			header("content-type: application/json");
