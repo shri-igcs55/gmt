@@ -8,12 +8,7 @@
 	    function book_history($input)
 	    {	    	
 	    	$ipJson = json_encode($input);
-	    	
-	    	//a.plc_odr_from_area_location, a.plc_odr_to_area_location, a.plc_odr_from_address, a.plc_odr_to_address, IFNULL(f.sf_type,0) AS service_type, , ol.orl_from_city_id, ol.orl_to_city_id,
-			// echo $input['user_id'];
-			// echo $input['order_status'];
-			// echo $input['user_type_parent_id'];
-			// echo $input['user_type']; //exit();
+		    	
 			$arrOrderIds = array();
 			$this->db->select('plc_odr_id_fk');
 			$this->db->from('gmt_order_quotation');
@@ -38,56 +33,75 @@
 			$this->db->join('gmt_service_for f', 'a.sf_id_fk=f.sf_id', 'left');
 			$this->db->join('gmt_desc_work g', 'a.dw_id_fk = g.dw_id', 'left');
 			$this->db->join('gmt_status h', 'h.sta_id = a.plc_odr_status_id_fk', 'left');			
-			// $this->db->join('gmt_transporter_cat h', 'a.trans_cat_id_fk = h.trans_cat_id', 'left');
 			$this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');			
 			$this->db->where('a.plc_odr_del_status =', 1);
 
+			
+			//logged in user is order owner or not			
+			/*
+			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
+				$this->db->where('a.user_id', $input['user_id']);
+			}
+			*/
+			
+			$this->db->group_start();
+				$this->db->or_where('a.user_id', $input['user_id']);
+				if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6){
+					$this->db->or_where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
+				}			
+			
+			
 			switch ($input['user_type']) {
 				case 8:
-					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));
-					// $this->db->where('a.vehicle_id_fk =', 7);
+					$this->db->or_where_in('a.vehicle_id_fk', array('4', '7'));
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 
 				case 9:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 				
 				case 10:
-					$this->db->where('a.vehicle_id_fk =', 2);
+					$this->db->or_where('a.vehicle_id_fk =', 2);
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
-				
+			
 				case 11:
-					$this->db->where_in('a.vehicle_id_fk', array('6', '9'));
-					// $this->db->where('a.vehicle_id_fk =', 9);
+					$this->db->or_where_in('a.vehicle_id_fk', array('6', '9'));
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 
 				case 12:
-					$this->db->where('a.vehicle_id_fk =', 5);
+					$this->db->or_where('a.vehicle_id_fk =', 5);
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 				
 				case 13:
-					$this->db->where('a.vehicle_id_fk =', 8);
+					$this->db->or_where('a.vehicle_id_fk =', 8);
+					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 				
 				default:
 					
 					break;
 			}
-
+			
+			$this->db->group_end();
+			
+			
 			if(count($arrOrderIds))	$this->db->where_not_in('a.plc_odr_id',$orderId);
 			
-			if ($input['user_type_parent_id'] == 2 || $input['user_type_parent_id'] == 2) {
-				$this->db->where('a.user_id', $input['user_id']);
-			}
 			if($input['order_status'] == 3){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 				$this->db->where('a.plc_odr_status_id_fk <=', 9);
 			}else if($input['order_status'] == 9){
 				$this->db->where('a.plc_odr_status_id_fk >=', $input['order_status']);
 			}
-			if($input['user_type_parent_id'] == 5 || $input['user_type_parent_id'] == 6 || $input['user_type_parent_id'] == 7){
-				$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
-			}
+			
+			
+			
+			
 			$this->db->order_by('a.plc_odr_schedule_date','ASC');
 			$details = array();
 			$arrOrder_details = array();
