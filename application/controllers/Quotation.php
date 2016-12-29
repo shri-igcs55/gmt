@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');	
-	require('application/controllers/View_profile.php');  
+	require('application/controllers/view_profile.php');  
 	//error_reporting(0);
 	class Quotation extends REST_Controller
 	{
