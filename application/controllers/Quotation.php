@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');	
-	require('application/controllers/view_profile.php');  
+	require('application/controllers/View_profile.php');  
 	//error_reporting(0);
 	class Quotation extends REST_Controller
 	{
@@ -99,11 +99,11 @@
 			
 			
 			//Getting data of Transoter
-			$userTranspoter = $this->view_profile->view_profile($order['transpoter_id']);		
+			$userTranspoter = $this->View_profile->view_profile_post($order['transpoter_id']);		
 			$userTranspoter = $userTranspoter['data'];
 			
 			//Getting Data for Customer
-			$userCustomer = $this->view_profile->view_order_profile($order['order_id']);		
+			$userCustomer = $this->View_profile->view_order_profile_post($order['order_id']);		
 			$userCustomer = $userCustomer['data'];
 			
 			$orderNo = 'Order no:'.$order['order_id'];
