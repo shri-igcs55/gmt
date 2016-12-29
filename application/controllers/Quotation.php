@@ -99,11 +99,11 @@
 			
 			
 			//Getting data of Transoter
-			$userTranspoter = $this->View_profile->view_profile($order['transpoter_id']);		
+			$userTranspoter = $this->view_profile->view_profile($order['transpoter_id']);		
 			$userTranspoter = $userTranspoter['data'];
 			
 			//Getting Data for Customer
-			$userCustomer = $this->View_profile->view_order_profile($order['order_id']);		
+			$userCustomer = $this->view_profile->view_order_profile($order['order_id']);		
 			$userCustomer = $userCustomer['data'];
 			
 			$orderNo = 'Order no:'.$order['order_id'];
