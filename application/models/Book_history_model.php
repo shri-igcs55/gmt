@@ -69,7 +69,7 @@
 					break;
 			
 				case 11:
-					$this->db->or_where_in('a.vehicle_id_fk', array('6', '9'));
+					$this->db->or_where_in('a.vehicle_id_fk', array('2','6', '9'));	
 					$this->db->where('a.ord_to_u_type_id_fk =', $input['user_type_parent_id']);
 					break;
 
@@ -317,8 +317,8 @@
 					$this->db->or_where('a.vehicle_id_fk =', 2);					
 					break;
 			
-				case 11:
-					$this->db->or_where_in('a.vehicle_id_fk', array('6', '9'));					
+				case 11:					
+					$this->db->or_where_in('a.vehicle_id_fk', array('2','6', '9'));	
 					break;
 
 				case 12:
