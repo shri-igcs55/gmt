@@ -1,6 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');	
-	require('application/controllers/View_profile.php');  
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');		
 	//error_reporting(0);
+	require_once(APPPATH.'controllers/View_profile.php'); //include controller
 	class Quotation extends REST_Controller
 	{
 		public function Quotation() 
@@ -9,7 +9,7 @@
 			$this->load->model('Quotation_model');
 			$this->load->library('Email_sms');
 			$this->load->library('seekahoo_lib');
-			$this->load->library('Validator.php');			
+			$this->load->library('Validator.php');				
 		}		
 		public function quotation_post()
 		{			
@@ -89,7 +89,7 @@
 		}
 		
 		public function confirmOrder_post(){
-			
+			            
 			$serviceName = 'Order confirmed or cancled';
 			$order['order_id'] = trim($this->input->post('order_id'));			
 			$order['transpoter_id'] = trim($this->input->post('transpoter_id'));
@@ -97,15 +97,15 @@
 			$order['modified_ip'] = $_SERVER['REMOTE_ADDR'];			
 			$order_status = $this->Quotation_model->confirmorder($order, $serviceName);			
 			
-			/*
+			
 			//Getting data of Transoter
-			$userTranspoter = $this->View_profile->view_profile_post($order['transpoter_id']);		
-			$userTranspoter = $userTranspoter['data'];
+			//$userTranspoter = $this->View_profile->view_profile_post($order['transpoter_id']);
+			//$userTranspoter = $userTranspoter['data'];
 			
 			//Getting Data for Customer
-			$userCustomer = $this->View_profile->view_order_profile_post($order['order_id']);		
-			$userCustomer = $userCustomer['data'];
-			*/
+			//$userCustomer = $this->View_profile->view_order_profile_post($order['order_id']);		
+			//$userCustomer = $userCustomer['data'];
+			
 			$orderNo = 'Order no:'.$order['order_id'];
 			if($order_status==7){
 				$subject = $orderNo.' Order has been cancled';
@@ -129,11 +129,16 @@
 			$smsstatus = $this->email_sms->send_sms_method($userCustomer['mobile'], $messageHeader.$messageBody);
 			$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
 			*/
+			
 			$this->Quotation_model->reOrder($order['order_id']);
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
 			header("content-type: application/json");
 			echo $status;
 			exit;
+		}
+		
+		public function deleteTimeOutOrder(){
+			$this->Quotation_model->deleteTimeOutOrder();
 		}
 		
 		

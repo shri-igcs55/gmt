@@ -52,7 +52,7 @@ date_default_timezone_set('Asia/Kolkata');
           'status_id_fk'                 => 4,
           'created_datetime'             => Date('Y-m-d H:i:s'),
           'created_ip'                   => $order['created_ip'],
-          'modified_datetime'            => Date('Y-m-d H:i:s'),
+          'modified_datetime'            => Date('Y-m-d H:i:s'),		  
           'modified_ip'                 => $order['modified_ip']  
           );
 		  
@@ -85,21 +85,42 @@ date_default_timezone_set('Asia/Kolkata');
 	}
 	
 	public function confirmorder($order, $serviceName){
-		
 			
-			if($order['order_status']==9){
-				$this->db->where('user_id', $order['transpoter_id']);
-				$this->db->where('plc_odr_id_fk',$order['order_id']);
-				$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
+			$this->db->select('user_id');
+			$this->db->from('gmt_order_quotation');
+			$this->db->where('user_id', $order['transpoter_id']);
+			$this->db->where('plc_odr_id_fk',$order['order_id']);
+			$resource = $this->db->get();
+			if($resource->num_rows()){
+				
+				if($order['order_status']==9){
+					$this->db->where('user_id', $order['transpoter_id']);
+					$this->db->where('plc_odr_id_fk',$order['order_id']);
+					$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
+				}
+				else{
+					$this->db->where('user_id', $order['transpoter_id']);
+					$this->db->where('plc_odr_id_fk',$order['order_id']);
+					$this->db->delete('gmt_order_quotation'); 
+				}
 			}
-			else{
-				$this->db->where('user_id', $order['transpoter_id']);
-				$this->db->where('plc_odr_id_fk',$order['order_id']);
-				$this->db->delete('gmt_order_quotation'); 
+			else
+			{
+				return 7;
+				
 			}
 			
 		return $order['order_status'];		
 	}
+	
+	public function deleteTimeOutOrder()
+	{
+		$this->db->where('oq.status_id_fk =',5);
+		$this->db->where('TIMESTAMPDIFF(MINUTE, oq.modified_datetime, NOW()) <',35);		
+		$this->db->delete('gmt_order_quotation oq');
+	}
+	
+	
 	
 	public function reOrder($order_id){
 		
