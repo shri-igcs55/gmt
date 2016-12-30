@@ -115,9 +115,9 @@ date_default_timezone_set('Asia/Kolkata');
 	
 	public function deleteTimeOutOrder()
 	{		
-		$this->db->where('oq.status_id_fk =',5);
-		$this->db->where('TIMESTAMPDIFF(MINUTE, oq.modified_datetime, NOW()) <',35);		
-		$this->db->delete('gmt_order_quotation oq');
+		$this->db->where('status_id_fk =',5);
+		$this->db->where('TIMESTAMPDIFF(MINUTE, modified_datetime, NOW()) <',35);		
+		$this->db->delete('gmt_order_quotation');
 		return true;
 	}
 	
