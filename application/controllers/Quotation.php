@@ -140,6 +140,12 @@
 		public function deletetimeoutorder(){
 			return $this->Quotation_model->deleteTimeOutOrder();
 		}
+		public function deletetimeoutorder_post(){
+			return $this->Quotation_model->deleteTimeOutOrder();
+		}
+		public function deletetimeoutorder_get(){
+			return $this->Quotation_model->deleteTimeOutOrder();
+		}
 		
 		
 		
