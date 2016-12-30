@@ -115,8 +115,9 @@ date_default_timezone_set('Asia/Kolkata');
 	
 	public function deleteTimeOutOrder()
 	{		
+		$currentDateTime = Date('Y-m-d H:i:s');
 		$this->db->where('status_id_fk =',5);
-		$this->db->where('TIMESTAMPDIFF(MINUTE, modified_datetime, NOW()) <',35);		
+		$this->db->where('TIMESTAMPDIFF(MINUTE, modified_datetime, "'.$currentDateTime.'") <',35);		
 		$this->db->delete('gmt_order_quotation');
 		return true;
 	}

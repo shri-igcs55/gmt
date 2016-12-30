@@ -36,7 +36,7 @@
 			$this->db->join('gmt_status h', 'h.sta_id = a.plc_odr_status_id_fk', 'left');			
 			$this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');			
 			$this->db->where('a.plc_odr_del_status =', 1);
-
+					
 			
 			//logged in user is order owner or not			
 			/*
