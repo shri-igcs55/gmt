@@ -115,9 +115,18 @@ date_default_timezone_set('Asia/Kolkata');
 	
 	public function deleteTimeOutOrder()
 	{
+		$to = "bhavesh.rakhshiya@gmail.com";
+		$subject = "My subject";
+		$txt = "Hello world!";
+		$headers = "From: magento3@indglobal.in" . "\r\n";		
+		mail($to,$subject,$txt,$headers);
+		
+		exit;
+		
 		$this->db->where('oq.status_id_fk =',5);
 		$this->db->where('TIMESTAMPDIFF(MINUTE, oq.modified_datetime, NOW()) <',35);		
 		$this->db->delete('gmt_order_quotation oq');
+		return true;
 	}
 	
 	

@@ -138,7 +138,7 @@
 		}
 		
 		public function deleteTimeOutOrder(){
-			$this->Quotation_model->deleteTimeOutOrder();
+			return $this->Quotation_model->deleteTimeOutOrder();
 		}
 		
 		
