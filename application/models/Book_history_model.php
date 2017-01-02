@@ -305,7 +305,7 @@ switch ($input['user_type']) {
 				$this->db->where('oq.user_id', $input['user_id']);
 
 
-switch ($input['user_type']) {
+			switch ($input['user_type']) {
 				case 8:
 					$this->db->where_in('a.vehicle_id_fk', array('4', '7'));					
 					break;

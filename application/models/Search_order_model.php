@@ -19,8 +19,7 @@
       $this->db->join('gmt_vehicle e', 'a.vehicle_id_fk=e.vehicle_id', 'left');
       $this->db->join('gmt_service_for f', 'a.sf_id_fk=f.sf_id', 'left');
       $this->db->join('gmt_desc_work g', 'a.dw_id_fk = g.dw_id', 'left');
-      $this->db->join('gmt_status h', 'h.sta_id = a.plc_odr_status_id_fk', 'left');
-      // $this->db->join('gmt_transporter_cat h', 'a.trans_cat_id_fk = h.trans_cat_id', 'left');
+      $this->db->join('gmt_status h', 'h.sta_id = a.plc_odr_status_id_fk', 'left');      
       $this->db->join('gmt_user_type i', 'a.ord_to_u_type_id_fk = i.u_type_id', 'left');
       
       // $this->db->where('a.ord_to_u_type_id_fk', $input['user_type']);
@@ -29,8 +28,7 @@
       
       switch ($input['user_type']) {
         case 8:
-          $this->db->where_in('a.vehicle_id_fk', array('4', '7'));
-          // $this->db->where('a.vehicle_id_fk =', 7);
+          $this->db->where_in('a.vehicle_id_fk', array('4', '7'));          
           break;
 
         case 9:
@@ -41,9 +39,8 @@
           $this->db->where('a.vehicle_id_fk =', 2);
           break;
         
-        case 11:
-          $this->db->where_in('a.vehicle_id_fk', array('6', '9'));
-          // $this->db->where('a.vehicle_id_fk =', 9);
+        case 11:          
+          $this->db->where_in('a.vehicle_id_fk', array('2','6', '9'));
           break;
 
         case 12:
