@@ -94,18 +94,23 @@ date_default_timezone_set('Asia/Kolkata');
 			if($resource->num_rows()){
 				
 				if($order['order_status']==9){
-
-					$this->db->where('plc_odr_id_fk',$order['order_id']);
-					$this->db->update('gmt_order_quotation',array('status_id_fk'=>8));
-
+					
 					$this->db->where('user_id', $order['transpoter_id']);
 					$this->db->where('plc_odr_id_fk',$order['order_id']);
-					$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));
+					$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));	
+					
+					$this->db->where('plc_odr_id',$order['order_id']);
+					$this->db->update('gmt_place_order',array('plc_odr_status_id_fk'=>$order['order_status']));
+					
+					$this->db->where('plc_odr_id_fk',$order['order_id']);
+					$this->db->where('status_id_fk <>',9);
+					$this->db->delete('gmt_order_quotation');
 				}
 				else{
+					
 					$this->db->where('user_id', $order['transpoter_id']);
 					$this->db->where('plc_odr_id_fk',$order['order_id']);
-					$this->db->delete('gmt_order_quotation'); 
+					$this->db->delete('gmt_order_quotation');					
 				}
 			}
 			else
