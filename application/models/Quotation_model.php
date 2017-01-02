@@ -94,6 +94,10 @@ date_default_timezone_set('Asia/Kolkata');
 			if($resource->num_rows()){
 				
 				if($order['order_status']==9){
+
+					$this->db->where('plc_odr_id_fk',$order['order_id']);
+					$this->db->update('gmt_order_quotation',array('status_id_fk'=>8));
+
 					$this->db->where('user_id', $order['transpoter_id']);
 					$this->db->where('plc_odr_id_fk',$order['order_id']);
 					$this->db->update('gmt_order_quotation',array('status_id_fk'=>$order['order_status']));

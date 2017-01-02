@@ -111,6 +111,7 @@
 				$subject = $orderNo.' Order has been cancled';
 				$data['message'] = 'Order has been cancled.'; 
 				$messageBody = '<b>Your order no:'.$order['order_id'].' has been cancled</b>';
+
 			}		
 			if($order_status==9){
 				$subject = $orderNo.' Order has been confirmed';
@@ -130,7 +131,7 @@
 			$mailstatus = $this->email_sms->send_email_method($userCustomer['email'],$subject,$messageHeader.$messageBody);
 			*/
 			
-			$this->Quotation_model->reOrder($order['order_id']);
+			
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));				
 			header("content-type: application/json");
 			echo $status;
