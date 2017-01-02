@@ -73,6 +73,17 @@ class Validator{
 								}
 
 								break;
+								
+							case "max_lenght_ten":
+							
+								if(!$this->isNotNull($inputs[1])){
+									$error = "1";
+								}
+								if(strlen(trim($inputs[1]))!=10){
+									$error = "1";
+								}
+
+								break;
 
 							case "email":
 

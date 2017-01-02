@@ -216,7 +216,7 @@
 			   		$ip['user_type']==12)
 			{
 				$ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
-			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan is empty.");
+			    $ip_array[] = array("msg", $ip['pan'], "max_lenght_ten", "pan", "Pan number should be 10 charcters long");
 			}
 
 			$validation_array = $this->validator->validate($ip_array);
@@ -456,14 +456,14 @@
                 $ip_array[] = array("msg", $ip['company_type'], "not_null", "company_type", "Company Type is empty.");
 			    $ip_array[] = array("msg", $ip['designation'], "not_null", "designation", "Designation is empty.");
 			    $ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
-			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			    $ip_array[] = array("msg", $ip['pan'], "max_lenght_ten", "pan", "Pan number should be 10 charcters long.");
 			}
 			else if($ip['user_type']== 5 || $ip['user_type']== 6 || $ip['user_type']== 8 || 
 			   		$ip['user_type']== 9 || $ip['user_type']==10 || $ip['user_type']==11 || 
 			   		$ip['user_type']==12)
 			{
 				$ip_array[] = array("msg", $ip['firm_name'], "not_null", "firm_name", "Firm name is empty.");
-			    $ip_array[] = array("msg", $ip['pan'], "not_null", "pan", "Pan Number is empty.");
+			    $ip_array[] = array("msg", $ip['pan'], "max_lenght_ten", "pan", "Pan number should be 10 charcters long.");
 			    $ip_array[] = array("msg", $ip['tin'], "not_null", "tin", "VAT-TIN Number is empty.");
 			    $ip_array[] = array("msg", $ip['stax'], "not_null", "stax", "Service Tax Number is empty.");
 			}
