@@ -145,6 +145,8 @@
 		
 		
 		
+		/* Added for Notification */
+		
 		public function notification_post($user_id='')
 		{
 			header("content-type: application/json");
@@ -169,6 +171,8 @@
 			echo $this->seekahoo_lib->return_status('success','Notification Read', $data, json_encode(array('id'=>$id)));
 			exit;
 		}
+		
+		/* End for Notification */
 		
 		
 	}
