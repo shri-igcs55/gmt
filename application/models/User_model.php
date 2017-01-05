@@ -425,10 +425,10 @@ class User_model extends CI_model
         // if($input['email_mob'] && $input['user_type_id']){
         if($input['email_mob']){
           $email = $input['email_mob'];
-          // $utype = $input['user_type_id'];
+           $utype = $input['user_type_id'];
         }else{
           $email = $input['user_email'];
-          // $utype = $input['user_type'];
+           $utype = $input['user_type'];
         }
       }else{
         $email = $input;
