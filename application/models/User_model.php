@@ -425,10 +425,10 @@ class User_model extends CI_model
         // if($input['email_mob'] && $input['user_type_id']){
         if($input['email_mob']){
           $email = $input['email_mob'];
-           $utype = $input['user_type'];
+           //$utype = $input['user_type'];
         }else{
           $email = $input['user_email'];
-           $utype = $input['user_type'];
+           //$utype = $input['user_type'];
         }
       }else{
         $email = $input;
@@ -437,7 +437,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_email', $email);
-      $this->db->where('u_type_id', $utype);
+      //$this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result();    
       $result = $query->num_rows();
