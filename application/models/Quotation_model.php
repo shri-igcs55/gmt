@@ -67,6 +67,12 @@ date_default_timezone_set('Asia/Kolkata');
 		}
 		$query = $this->db->insert('gmt_order_quotation',$quotation);		
         if ($query == 1) {
+			
+			$user = $this->getUserIdFromOrderId($order['order_id']);			
+			$Notification = '<b>Order id:'.$order["order_id"].'</b> Order has been rated by Transpoter. Quotation Amount is '.$order['quoted_rate'].' ('.$order["odr_amt_basis"].')';
+			$link = 'userdashboard/rated_orders?order_id='.$order["order_id"];
+			$this->notification->add($user[0]['user_id'],$Notification,$link); // Add Notification
+			
 			$data['message'] = 'Order rate has been successfully posted.'; 
 			$status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 		}
@@ -80,6 +86,11 @@ date_default_timezone_set('Asia/Kolkata');
 		$this->db->where('user_id', $order['transpoter_id']);
 		$this->db->where('plc_odr_id_fk',$order['order_id']);
 		$this->db->update('gmt_order_quotation',array('status_id_fk'=>5,'modified_datetime'=>Date('Y-m-d H:i:s')));
+					
+		$Notification = '<b>Order id:'.$order["order_id"].'</b> Quotation rate has been accepted from customer.';
+		$link = 'userdashboard/rated_orders?order_id='.$order["order_id"];
+		$this->notification->add($order['transpoter_id'],$Notification,$link); // Add Notification
+			
 		$data['message'] = 'Order rate has been sent successfully to the transpoter.'; 
 		return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, json_encode($order));
 	}
@@ -105,6 +116,12 @@ date_default_timezone_set('Asia/Kolkata');
 					$this->db->where('plc_odr_id_fk',$order['order_id']);
 					$this->db->where('status_id_fk <>',9);
 					$this->db->delete('gmt_order_quotation');
+					
+					$user = $this->getUserIdFromOrderId($order['order_id']);			
+					$Notification = '<b>Order id:'.$order["order_id"].'</b> Order has been confirmed.';
+					$link = 'userdashboard/confirm_orders?order_id='.$order["order_id"];
+					$this->notification->add($user[0]['user_id'],$Notification,$link); // Add Notification
+		
 				}
 				else{
 					
@@ -126,7 +143,7 @@ date_default_timezone_set('Asia/Kolkata');
 	{		
 		$currentDateTime = Date('Y-m-d H:i:s');
 		$this->db->where('status_id_fk =',5);
-		$this->db->where('TIMESTAMPDIFF(MINUTE, modified_datetime, NOW()) >',34);		
+		$this->db->where('TIMESTAMPDIFF(MINUTE, modified_datetime, "'.$currentDateTime.'") >',34);		
 		$this->db->delete('gmt_order_quotation');
 		return true;
 	}
@@ -154,7 +171,13 @@ date_default_timezone_set('Asia/Kolkata');
 			}
 			 
 	}
-
+	public function getUserIdFromOrderId($orderId){
+		$this->db->select('user_id');
+		$this->db->from('gmt_place_order'); 
+		$this->db->where('plc_odr_id =', $orderId);
+		$query = $this->db->get();
+		return $query->result_array();
+	}
   }
   
 ?>

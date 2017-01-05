@@ -91,10 +91,11 @@ class User_model extends CI_model
     $this->db->from('gmt_user u');
     $this->db->join('gmt_user_type ut', 'u.u_type_id = ut.u_type_id', 'LEFT');
     $this->db->where('u.user_pass', md5($input['password']));
-	$this->db->group_start();
-    $this->db->or_where('u.user_email', $input['email_mob']);
-    $this->db->or_where('u.user_mob', $input['email_mob']);
-	$this->db->group_end();
+	$this->db->where('u.user_mob', $input['email_mob']);
+	//$this->db->group_start();
+    //$this->db->or_where('u.user_email', $input['email_mob']);
+   // $this->db->or_where('u.user_mob', $input['email_mob']);
+	//$this->db->group_end();
     // $this->db->where('u.u_type_id', $input['user_type_id']);
     $query = $this->db->get();
     //echo $this->db->last_query($query);exit();
@@ -436,7 +437,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_email', $email);
-      // $this->db->where('u_type_id', $utype);
+      $this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result();    
       $result = $query->num_rows();
@@ -465,7 +466,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_mob', $mob);
-      // $this->db->where('u_type_id', $utype);
+      //$this->db->where('u_type_id', $utype);
       $query = $this->db->get();
       $details = $query->result(); 
       //echo $this->db->last_query();   
@@ -497,7 +498,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('gmt_user');
       $this->db->where('user_mob', $input['user_mob']);
-      $this->db->where('u_type_id', $input['user_type']);
+      //$this->db->where('u_type_id', $input['user_type']);
       $query = $this->db->get();
       $details = $query->result(); 
       $result = $query->num_rows();
@@ -743,6 +744,7 @@ class User_model extends CI_model
       $this->db->select('*');
       $this->db->from('user_reg');
       $this->db->where('email', $input['email']);
+	  $this->db->where('u_type_id', $input['user_type']);
       $query = $this->db->get();
       $details = $query->result();
       $result = $query->num_rows();

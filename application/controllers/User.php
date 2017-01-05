@@ -22,7 +22,7 @@
 			$serviceName = 'User_type_list';
 			$ip = '';
 			$ipJson = json_encode($ip);			
-			$data =$this->User_model->get_user_type();
+			$data = $this->User_model->get_user_type();
 		    $data = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
 			header("content-type: application/json");
 		    echo $data;
@@ -242,10 +242,7 @@
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			}
 			else if ($validation_array !=1) 
-			{
-				// print_r($model_mob);
-				// echo "<br/>";
-				// print_r($model_email);
+			{				
                 $data['message'] = $validation_array['msg'];
 				$retVals1 = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
 			} 
@@ -285,7 +282,8 @@
 		    //validation
 		    $validation_array = 1;
 		    
-		    $ip_array[]=array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
+		    //$ip_array[]=array("msg", $ip['email_mob'], "not_null", "email_mob", "Email id or Mobile number is empty.");
+			$ip_array[]=array("msg", $ip['email_mob'], "not_null", "email_mob", "Mobile number is empty.");
 			$ip_array[]=array("msg",$ip['password'],"not_null", "password", "Password is empty.");
 			// $ip_array[] = array("msg", $ip['user_type_id'], "not_null", "user_type_id", "User role is empty.");
 			$validation_array = $this->validator->validate($ip_array);

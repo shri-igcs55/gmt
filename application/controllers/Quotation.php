@@ -1,15 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');		
 	//error_reporting(0);
-	require_once(APPPATH.'controllers/View_profile.php'); //include controller
+	require_once(APPPATH.'controllers/View_profile.php'); //include controller	
 	class Quotation extends REST_Controller
 	{
 		public function Quotation() 
 		{
-			parent::__construct();
+			parent::__construct();			
 			$this->load->model('Quotation_model');
 			$this->load->library('Email_sms');
 			$this->load->library('seekahoo_lib');
-			$this->load->library('Validator.php');				
+			$this->load->library('Validator.php');
+			$this->load->library('Notification');			
 		}		
 		public function quotation_post()
 		{			
@@ -46,7 +47,7 @@
 	        exit;
 	   	}
 		
-		public function rateToOrder_post(){			
+		public function rateToOrder_post(){						 		
 			$serviceName = 'Rate to Order by the customer';
 			$logged_in_user = $this->session->userdata('logged_in_user');
 			$order['user_id'] = $logged_in_user['user_id'];
@@ -142,6 +143,32 @@
 			return $this->Quotation_model->deleteTimeOutOrder();
 		}
 		
+		
+		
+		public function notification_post($user_id='')
+		{
+			header("content-type: application/json");
+			echo json_encode($this->notification->get($user_id)); // Add Notification
+			exit;
+		}
+		public function notificationdelete_post($id = '')
+		{	
+			$id = trim($this->input->post('id'));	
+			$this->notification->del($id); // Del Notification
+			header("content-type: application/json");
+			$data['message'] = "Notificaton deleted successfully.";
+			echo $this->seekahoo_lib->return_status('success','Notification Delete', $data, json_encode(array('id'=>$id)));
+			exit;
+		}
+		public function notificationread_post($id = '')
+		{			
+			$id = trim($this->input->post('id'));
+			$this->notification->read($id); // Read Notification
+			header("content-type: application/json");
+			$data['message'] = "Notificaton has been read.";
+			echo $this->seekahoo_lib->return_status('success','Notification Read', $data, json_encode(array('id'=>$id)));
+			exit;
+		}
 		
 		
 	}

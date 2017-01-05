@@ -147,11 +147,12 @@
 			endforeach;
 			
 			$time = date("Y-m-d H:i:s", time() - 35);			
-
+			$currentDateTime = Date('Y-m-d H:i:s');
+			
 	    	$this->db->select('oq.modified_datetime,oq.odr_amt_basis,oq.odr_qtn_amount,oq.status_id_fk,a.plc_odr_id AS order_id, a.ord_to_u_type_id_fk AS order_place_for_id, IFNULL(i.u_type_name,0) AS order_place_for, h.sta_name AS order_status, a.user_id, IFNULL(e.vehicle_typ,0) AS vehicle_type, a.other_vehicle, a.plc_odr_item_qty AS item_qty, a.plc_odr_vehicle_qty AS vehicle_qty, a.plc_odr_from_address AS from_address, a.plc_odr_to_address AS to_address, IFNULL((select `sf_type` from `gmt_service_for` where `sf_id` = IFNULL(a.sf_id_fk,0)),0) AS service_type_name, a.other_service_for, a.plc_odr_by_fname AS first_name, a.plc_odr_by_lname AS last_name, a.plc_odr_by_mob AS mobile, IFNULL(d.mat_type,0) AS material_type, a.other_material, a.plc_odr_weight AS weight, a.plc_odr_feet AS length, a.plc_odr_descrp_goods AS pm_goods_description, CONCAT(IFNULL(b.city,0), ", ", IFNULL(b.district,0), ", ", IFNULL(b.state,0)) AS from_city, CONCAT(IFNULL(c.city,0), ", ", IFNULL(c.district,0), ", ", IFNULL(c.state,0)) AS to_city, a.plc_odr_pick_points AS order_pickup_points, a.plc_odr_drop_points AS order_drop_points, a.plc_odr_schedule_date AS order_schedule_date, a.plc_odr_from_floor AS order_from_floor, a.plc_odr_from_lift AS order_from_lift, a.plc_odr_to_floor AS order_to_floor, a.plc_odr_to_lift AS order_to_lift, ol.orl_pickup_location AS pickup_area_location, ol.orl_drop_location AS drop_area_location, IFNULL(g.dw_type,0) AS crane_work_type, a.other_work_desc, a.plc_odr_del_status,
 			CONCAT("00:",
   MINUTE(TIMEDIFF("'.$time.'",oq.modified_datetime)),":",
-  SECOND(TIMEDIFF("'.$time.'",oq.modified_datetime))) as time_left, IF(a.user_id='.$input["user_id"].',1,0) as is_owner,TIMESTAMPDIFF(MINUTE, oq.modified_datetime, NOW()) as minutes');
+  SECOND(TIMEDIFF("'.$time.'",oq.modified_datetime))) as time_left, IF(a.user_id='.$input["user_id"].',1,0) as is_owner,TIMESTAMPDIFF(MINUTE, oq.modified_datetime, "'.$currentDateTime.'") as minutes');
 	    	$this->db->from('gmt_place_order a'); 		
 			$this->db->join('gmt_order_location ol', 'a.plc_odr_id=ol.plc_odr_id');
 			$this->db->join('gmt_indian_city_list b', 'ol.orl_from_city_id=b.id', 'left');
@@ -169,7 +170,7 @@
 			$this->db->group_start();
 			$this->db->or_where('oq.status_id_fk =',4);
 			$this->db->or_where('oq.status_id_fk =',5);
-			$this->db->where('TIMESTAMPDIFF(MINUTE, oq.modified_datetime, NOW()) <',35);	
+			$this->db->where('TIMESTAMPDIFF(MINUTE, oq.modified_datetime, "'.$currentDateTime.'") <',35);	
 			$this->db->group_end();
 
 			$this->db->group_start();

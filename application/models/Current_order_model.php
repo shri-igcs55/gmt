@@ -7,11 +7,12 @@
 	{
   function current_order($input)
   {
+	$currentDateTime = Date('Y-m-d H:i:s');
   	$ipJson = json_encode($input);
   	$this->db->select('*');
   	$this->db->from('gmt_place_order'); 
   	$this->db->where('user_id',$input['user_id']);
-    $this->db->where('plc_odr_schedule_date > NOW()', NULL, FALSE);
+    $this->db->where('plc_odr_schedule_date > "'.$currentDateTime.'"', NULL, FALSE);
   	$query = $this->db->get();
   	//echo $this->db->last_query();
   	$details = $query->result();
