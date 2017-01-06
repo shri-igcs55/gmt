@@ -127,7 +127,7 @@ class User_model extends CI_model
       return $status = $this->seekahoo_lib->return_status('success', $serviceName, $data, $ipJson);
     }
     else {
-      $data['message'] = 'Email or Mobile and Password does not match';
+      $data['message'] = 'Email or Mobile and Password does not match1';
       return $status = $this->seekahoo_lib->return_status('error', $serviceName, $data, $ipJson);
     }
     // return $status;
