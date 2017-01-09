@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');		
-	//error_reporting(0);
+	error_reporting(0);
 	require_once(APPPATH.'controllers/View_profile.php'); //include controller	
 	class Quotation extends REST_Controller
 	{
@@ -149,13 +149,18 @@
 		
 		public function notification_post($user_id='')
 		{
+			if($user_id=='')
+			$user_id = trim($this->input->post('user_id'));
+		
 			header("content-type: application/json");
 			echo json_encode($this->notification->get($user_id)); // Add Notification
 			exit;
 		}
 		public function notificationdelete_post($id = '')
 		{	
-			$id = trim($this->input->post('id'));	
+			if($id=='')
+			$id = trim($this->input->post('id'));
+		
 			$this->notification->del($id); // Del Notification
 			header("content-type: application/json");
 			$data['message'] = "Notificaton deleted successfully.";
@@ -163,8 +168,10 @@
 			exit;
 		}
 		public function notificationread_post($id = '')
-		{			
-			$id = trim($this->input->post('id'));
+		{		
+			if($id=='')
+			$id = trim($this->input->post('id'));			
+		
 			$this->notification->read($id); // Read Notification
 			header("content-type: application/json");
 			$data['message'] = "Notificaton has been read.";
